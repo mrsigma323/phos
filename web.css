@@ -171,3 +171,4 @@ h1,h2,h3{font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--wine
 .ptable th,.ptable td{padding:10px 14px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}.ptable th{background:var(--wine);color:var(--paper)}.ptable tr.same td{background:#FBF1CF;font-weight:700}
 .acta{background:#fff;border-radius:12px;padding:16px 20px;margin-top:28px}
 .art-c .tag{align-self:flex-start;margin:0}.arts{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.band .calsw{background:#fff}

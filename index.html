@@ -14,7 +14,7 @@
 <meta property="og:image" content="https://phosbiblias.com/og.png">
 <meta name="color-scheme" content="light">
 <link rel="preload" href="/fonts/cormorant-lat.woff2" as="font" type="font/woff2" crossorigin> <link rel="preload" href="/fonts/sourcesans3-lat.woff2" as="font" type="font/woff2" crossorigin> <link rel="stylesheet" href="/fonts/fonts.css">
-<link rel="stylesheet" href="web.css">
+<link rel="stylesheet" href="web.css?v=105e0c0a">
 <link rel="canonical" href="https://phosbiblias.com/">
 <meta property="og:url" content="https://phosbiblias.com/">
 <meta property="og:type" content="website">
@@ -41,11 +41,27 @@
  <div class="pills"><span class="kicker" id="hDate">—</span><span class="pill" id="hFast">—</span></div>
  <h1>La luz de Cristo para cada día</h1>
  <p class="lead">La Palabra de Jesucristo, las oraciones de la Iglesia, las fiestas y el ayuno de hoy, y una vida sana de cuerpo y alma.</p>
- <p class="gkline">Palabra griega del día: <b id="gkW">φῶς</b> <i id="gkT">phōs</i> · <span id="gkM">luz</span></p>
- <div class="btns"><a href="lecturas.html" class="btn">Lecturas de hoy</a><a href="salud.html" class="btn ghost">Salud y bienestar</a></div>
  <div class="brsw"><div class="calsw" role="group" aria-label="Rama cristiana"><button data-br="ortodoxa">Ortodoxa</button><button data-br="catolica">Católica</button><button data-br="protestante">Protestante</button></div><div class="calsw" role="group" aria-label="Calendario"><button data-cal="0">Calendario nuevo</button><button data-cal="1">Calendario juliano</button></div></div>
 </section>
-<section class="wrap today3">
+<p class="gkline center" style="margin:-24px 0 32px">Palabra griega del día: <b id="gkW">φῶς</b> <i id="gkT">phōs</i> · <span id="gkM">luz</span></p>
+<div class="wrap cols">
+ <main class="main">
+  <article id="lecturas" class="card pad40">
+   <p class="kicker">Palabra de hoy</p>
+   <p class="sub" id="lSeason">—</p>
+   <div class="reading" id="gospelBox" hidden><h2 id="gRef">Evangelio de la fiesta</h2><p class="scripture" id="gTxt">…</p><button type="button" class="sharebtn" data-img="g">🖼️ Compartir como imagen</button></div>
+   <div class="reading"><h2 id="vRef">Versículo del día</h2><p class="scripture" id="vTxt">…</p><button type="button" class="sharebtn" data-img="v">🖼️ Compartir como imagen</button></div>
+   <p class="small">Texto: Reina-Valera 1909 (dominio público).</p>
+  </article>
+  <article class="card dark pad40" id="reflexion">
+   <p class="kicker gold">Reflexión del día</p>
+   <h2 id="rTitle">—</h2>
+   <p class="rtext" id="rText">—</p>
+   <p class="rref" id="rRef">—</p>
+   <div class="btns left"><button type="button" class="obtn" id="rListen">Escuchar en audio</button><button type="button" class="obtn" id="rShare">Compartir</button></div>
+  </article>
+ </main>
+ <aside class="side">
   <section class="card pad28" id="santoral">
    <p class="kicker">Hoy se celebra</p>
    <div class="saint"><span class="sico" id="sIco" aria-hidden="true">✨</span><div><h3 id="sName">—</h3><p id="sMore">—</p></div></div>
@@ -66,12 +82,14 @@
    <p class="prayer" id="pTxt">…</p>
   </section>
 <section class="card pad28" id="foodToday"><p class="kicker">Hoy en la cocina</p><h3 id="ftTitle">—</h3><p id="ftText">—</p><a href="recetas.html" class="more" id="ftLink">Ver recetas →</a></section>
-</section>
+ </aside>
+</div>
 <section class="wrap sect" style="padding-top:8px"><p class="kicker center">Para leer con calma</p><h2 class="h2 center">Artículos</h2><div class="xgrid arts" style="margin-top:24px"><a href="art-dos-pascuas.html" class="xcard art-c"><span class="xi">☀️</span><span class="tag">Fiestas</span><b>¿Por qué hay dos Pascuas?</b><span>Ortodoxos y católicos celebran la Resurrección en fechas distintas: te explicamos por qué.</span><em>Leer →</em></a><a href="art-ayuno-ortodoxo.html" class="xcard art-c"><span class="xi">🕯️</span><span class="tag">Ayuno</span><b>El ayuno ortodoxo: qué es y cómo se vive</b><span>Los cuatro grandes ayunos, sus niveles y su sentido espiritual.</span><em>Leer →</em></a><a href="art-tres-iglesias.html" class="xcard art-c"><span class="xi">⛪</span><span class="tag">Iglesias</span><b>Ortodoxos, católicos y protestantes: lo que nos une y lo que nos distingue</b><span>Una comparación respetuosa entre las tres grandes tradiciones cristianas.</span><em>Leer →</em></a></div><p class="center" style="margin:24px 0 0"><a href="articulos.html" class="btn ghost">Ver todos los artículos</a></p></section>
 <section id="calendario" class="band">
  <div class="wrap narrow">
   <p class="kicker center"><span id="calBr">Calendario ortodoxo</span></p>
   <h2 class="h2 center">Fiestas y ayunos del mes</h2>
+  <div class="center" style="margin:0 0 20px"><div class="brsw"><div class="calsw" role="group" aria-label="Rama cristiana"><button data-br="ortodoxa">Ortodoxa</button><button data-br="catolica">Católica</button><button data-br="protestante">Protestante</button></div><div class="calsw" role="group" aria-label="Calendario"><button data-cal="0">Calendario nuevo</button><button data-cal="1">Calendario juliano</button></div></div></div>
   <div class="card pad28" id="cal"></div>
   <p class="center" style="margin:20px 0 0"><a href="fiestas.html" class="btn ghost">⛪ Una fiesta, tres Iglesias</a></p>
  </div>
@@ -93,8 +111,8 @@
   <nav aria-label="Legal" class="legal"><a href="articulos.html">Artículos</a><a href="aviso-legal.html">Aviso legal</a><a href="privacidad.html">Privacidad</a><a href="cookies.html">Cookies</a></nav>
  </div>
 </footer>
-<script src="phos-web-core.js"></script>
-<script src="santos.js"></script>
-<script src="web.js"></script>
+<script src="phos-web-core.js?v=105e0c0a"></script>
+<script src="santos.js?v=105e0c0a"></script>
+<script src="web.js?v=105e0c0a"></script>
 </body>
 </html>
