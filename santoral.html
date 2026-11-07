@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<script>(function(){try{var q=location.search,L=localStorage;if(/[?&]desktop=1/.test(q))L.setItem('phos:desk','1');if(L.getItem('phos:desk'))return;var u=navigator.userAgent||'';if(/bot|crawl|spider|lighthouse|slurp|preview/i.test(u))return;var phone=/iPhone|iPod|Windows Phone|BlackBerry|Opera Mini/i.test(u)||(/Android/i.test(u)&&/Mobile/i.test(u))||(window.matchMedia&&matchMedia('(max-width:700px) and (pointer:coarse)').matches);if(phone)location.replace('biblia/')}catch(e){}})();</script>
+<script>(function(){try{var q=location.search,L=localStorage;if(/[?&]desktop=1/.test(q))L.setItem('phos:desk','1');if(L.getItem('phos:desk'))return;if(/(santoral|fiestas|recetas)[.]html/.test(location.pathname))return;var u=navigator.userAgent||'';if(/bot|crawl|spider|lighthouse|slurp|preview/i.test(u))return;var phone=/iPhone|iPod|Windows Phone|BlackBerry|Opera Mini/i.test(u)||(/Android/i.test(u)&&/Mobile/i.test(u))||(window.matchMedia&&matchMedia('(max-width:700px) and (pointer:coarse)').matches);if(phone)location.replace('biblia/')}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Santoral de hoy: qué santo es hoy y onomásticas · Phos</title>
 <meta name="description" content="Qué santo se celebra hoy en el calendario ortodoxo y católico, y buscador de onomásticas: cuándo es tu santo.">
@@ -10,11 +10,17 @@
 <link rel="icon" href="biblia/icon-192.png">
 <link rel="apple-touch-icon" href="biblia/apple-touch-icon.png">
 <meta property="og:title" content="Santoral de hoy: qué santo es hoy y onomásticas · Phos">
-<meta property="og:description" content="Ayuno, fiestas, oraciones y la Biblia completa, cada día.">
-<meta property="og:image" content="biblia/icon-512.png">
+<meta property="og:description" content="Qué santo se celebra hoy en el calendario ortodoxo y católico, y buscador de onomásticas: cuándo es tu santo.">
+<meta property="og:image" content="https://phosbiblias.com/og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="web.css">
+<link rel="canonical" href="https://phosbiblias.com/santoral.html">
+<meta property="og:url" content="https://phosbiblias.com/santoral.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Phos">
+<meta property="og:locale" content="es_ES">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
 <a class="skip" href="#inicio">Saltar al contenido</a>
@@ -53,7 +59,7 @@
   <input id="nameQ" type="search" placeholder="Por ejemplo: María, José, Teresa, Jorge…" autocomplete="off">
   <ul class="slist" id="nameR"></ul>
  </div>
- <p class="small center" style="margin:16px 0 0">Fuentes: Calendario Romano General y calendario de fiestas de la Iglesia ortodoxa.</p>
+ <p class="small center" style="margin:16px 0 0">Fuentes: Calendario Romano General, santoral tradicional del Martirologio y calendario de fiestas de la Iglesia ortodoxa.</p>
 </section>
 
 <section class="wrap explore"><p class="kicker center">Sigue explorando</p><h2 class="h2 center">Descubre más en Phos</h2><div class="xgrid"><a href="index.html" class="xcard"><span class="xi">🏠</span><b>Inicio</b><span>Hoy: ayuno, fiesta y oración del momento.</span><em>Entrar →</em></a><a href="lecturas.html" class="xcard"><span class="xi">📜</span><b>Lecturas</b><span>Las palabras de Jesús, el versículo del día y la reflexión.</span><em>Entrar →</em></a><a href="escrituras.html" class="xcard"><span class="xi">📖</span><b>Biblia</b><span>El salmo del día y las Biblias de cada Iglesia.</span><em>Entrar →</em></a><a href="salud.html" class="xcard"><span class="xi">🌿</span><b>Salud y bienestar</b><span>Ayuno, descanso, alimentos y hábitos según la Biblia.</span><em>Entrar →</em></a><a href="oraciones.html" class="xcard"><span class="xi">🙏</span><b>Oraciones</b><span>Las oraciones de la Iglesia y la de este momento.</span><em>Entrar →</em></a><a href="calendario.html" class="xcard"><span class="xi">📅</span><b>Calendario</b><span>Fiestas, santos y ayunos de cada día del mes.</span><em>Entrar →</em></a><a href="fiestas.html" class="xcard"><span class="xi">⛪</span><b>Una fiesta, tres Iglesias</b><span>Cómo vive cada Iglesia las fiestas de Cristo.</span><em>Entrar →</em></a><a href="recetas.html" class="xcard"><span class="xi">🥣</span><b>Recetas de ayuno</b><span>Qué cocinar según el ayuno de hoy.</span><em>Entrar →</em></a></div></section>

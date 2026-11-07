@@ -14,3 +14,5 @@
 <FilesMatch "sw\.js$">
   Header set Cache-Control "no-cache"
 </FilesMatch>
+
+ErrorDocument 404 /404.html

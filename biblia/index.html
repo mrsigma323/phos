@@ -2422,6 +2422,14 @@ renderArticles=async function(sec){if(sec==='sport'&&S.view!=='topic')return ren
  const pcl=()=>{const x=PC[LANG]||PC.en;pc.setAttribute('aria-label',x);pc.title=x};pcl();
  const _al2=applyLang;applyLang=function(){_al2();pcl()};
  st.textContent+='#pcBtn{display:inline-flex;align-items:center;justify-content:center;color:inherit;text-decoration:none}';
+ // 5) Novedades de la web (en español) dentro de «Hoy»
+ const _rtW=renderToday;
+ renderToday=function(){_rtW.apply(this,arguments);if(LANG!=='es'||!view)return;
+  const L=[['../santoral.html','😇','Santoral','Qué santo es hoy y cuándo es tu onomástica.'],['../fiestas.html','⛪','Una fiesta, tres Iglesias','Cómo vive cada Iglesia la Navidad, la Pascua…'],['../recetas.html','🥣','Recetas de ayuno','Qué cocinar según el ayuno de hoy.']];
+  const d=document.createElement('section');d.className='card wlx';
+  d.innerHTML='<h2>✨ Descubre más en Phos</h2>'+L.map(x=>`<a href="${x[0]}" class="wla"><span>${x[1]}</span><div><b>${x[2]}</b><small>${x[3]}</small></div><i>›</i></a>`).join('');
+  view.append(d)};
+ st.textContent+='.wlx{padding:16px 18px;margin-top:16px}.wlx h2{font-size:22px;margin:0 0 6px}.wla{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid rgba(0,0,0,.08);text-decoration:none;color:inherit}.wla:first-of-type{border-top:0}.wla span{font-size:28px}.wla div{flex:1;display:flex;flex-direction:column}.wla b{font-size:17px}.wla small{opacity:.75;font-size:14px}.wla i{font-style:normal;font-size:24px;opacity:.5}';
 })();
 
 applyLang();
