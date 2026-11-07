@@ -2425,7 +2425,7 @@ renderArticles=async function(sec){if(sec==='sport'&&S.view!=='topic')return ren
  // 5) Novedades de la web (en español) dentro de «Hoy»
  const _rtW=renderToday;
  renderToday=function(){_rtW.apply(this,arguments);if(LANG!=='es'||!view)return;
-  const L=[['../santoral.html','😇','Santoral','Qué santo es hoy y cuándo es tu onomástica.'],['../fiestas.html','⛪','Una fiesta, tres Iglesias','Cómo vive cada Iglesia la Navidad, la Pascua…'],['../recetas.html','🥣','Recetas de ayuno','Qué cocinar según el ayuno de hoy.']];
+  const L=[['../santoral.html','😇','Santoral','Qué santo es hoy y cuándo es tu onomástica.'],['../fiestas.html','⛪','Una fiesta, tres Iglesias','Cómo vive cada Iglesia la Navidad, la Pascua…'],['../recetas.html','🥣','Recetas de ayuno','Qué cocinar según el ayuno de hoy.'],['../apoya.html','🕯️','Apoya Phos','Colabora con un donativo voluntario.']];
   const d=document.createElement('section');d.className='card wlx';
   d.innerHTML='<h2>✨ Descubre más en Phos</h2>'+L.map(x=>`<a href="${x[0]}" class="wla"><span>${x[1]}</span><div><b>${x[2]}</b><small>${x[3]}</small></div><i>›</i></a>`).join('');
   view.append(d)};

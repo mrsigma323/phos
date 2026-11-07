@@ -172,3 +172,9 @@ h1,h2,h3{font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--wine
 .acta{background:#fff;border-radius:12px;padding:16px 20px;margin-top:28px}
 .art-c .tag{align-self:flex-start;margin:0}.arts{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
 .band .calsw{background:#fff}
+.dongrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.don{display:flex;flex-direction:column;gap:10px}.don .xi{font-size:34px}.don h2,.dnote h2,.h3{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--wine);margin:0}
+.don p{margin:0;color:var(--muted)}.don .btn{margin-top:auto}.don .small{margin:4px 0 0}
+.btn.soon{background:var(--sand);color:var(--muted);cursor:default}.btn.soon:hover{color:var(--muted)}
+.dnote{border-left:4px solid var(--gold)}.dnote .alist li{color:var(--muted)}
+.supband{text-align:center}.supband .btn{margin-top:20px}
