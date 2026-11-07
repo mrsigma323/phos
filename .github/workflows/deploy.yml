@@ -71,3 +71,7 @@ jobs:
             -e "ssh -i ~/.ssh/sg -p ${SG_PORT:-18765}" \
             ./ "$SG_USER@$SG_HOST:www/$SG_DOMAIN/public_html/"
           echo "Publicado en https://$SG_DOMAIN"
+          if [ -n "$DB_NAME" ] && [ -n "$DB_USER" ] && [ -n "$DB_PASS" ]; then
+            $SSH "$SG_USER@$SG_HOST" "cd www/$SG_DOMAIN/public_html && PHOS_CONFIG=../phos-config.php php -r 'require \"api/_lib/boot.php\"; \$p=db(); \$n=\$p->query(\"SELECT COUNT(*) FROM users\")->fetchColumn(); echo \"Cuentas: base de datos conectada y tablas listas (usuarios: \$n).\n\";'" \
+              || echo "::error::Cuentas: no se ha podido conectar con la base de datos. Revisa DB_NAME, DB_USER y DB_PASS, y que el usuario esté asignado a la base de datos."
+          fi
