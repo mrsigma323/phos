@@ -41,7 +41,10 @@ jobs:
           SITE_PASS: ${{ secrets.SITE_PASS }}
         run: |
           SSH="ssh -i ~/.ssh/sg -p ${SG_PORT:-18765}"
+          trim(){ printf '%s' "$1" | tr -d '\r\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'; }
+          SITE_USER=$(trim "$SITE_USER"); SITE_PASS=$(trim "$SITE_PASS")
           if [ -n "$SITE_PASS" ]; then
+            echo "Usuario: ${#SITE_USER} caracteres. Contraseña: ${#SITE_PASS} caracteres."
             H=$($SSH "$SG_USER@$SG_HOST" 'echo $HOME')
             PW="$H/www/$SG_DOMAIN/.htpasswd"
             printf '%s:%s\n' "${SITE_USER:-phos}" "$(openssl passwd -apr1 "$SITE_PASS")" | $SSH "$SG_USER@$SG_HOST" "cat > www/$SG_DOMAIN/.htpasswd && chmod 644 www/$SG_DOMAIN/.htpasswd"
