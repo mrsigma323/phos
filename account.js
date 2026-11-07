@@ -111,7 +111,7 @@ function renderIn(){
  const box=$('acBox');if(!box||!ME)return;const p=ME.prefs||{};
  const welcome=/bienvenida=1/.test(location.search);
  const br=LS.get('todayBr','ortodoxa'),old=!!LS.get('oldCal',false);
- const food=(p.food||'').split('|');
+ const food=(p.food||'').split('|');const live=!!(ME.monthly&&ME.monthly.active);
  box.innerHTML=`${welcome?'<p class="acok">✅ Has entrado en tu cuenta.</p>':''}
  <div class="card pad40">
   <p class="kicker">Mi Phos</p><h2 class="h3">Hola${ME.name?', '+esc(ME.name):''}</h2>
@@ -143,7 +143,13 @@ function renderIn(){
  </div>
  <div class="card pad40">
   <h2 class="h3">Tu cuenta y tus datos</h2>
-  <div class="acbtns"><a class="btn ghost" href="${API}exportar.php">Descargar mis datos</a><button class="btn ghost" type="button" id="acOutBtn">Cerrar sesión</button><button class="btn danger" type="button" id="acDel">Borrar mi cuenta</button></div>
+  <div class="acbtns"><a class="btn ghost" href="${API}exportar.php">Descargar mis datos</a><button class="btn ghost" type="button" id="acOutBtn">Cerrar sesión</button></div>
+ </div>
+ <div class="card pad40 acdel" id="eliminar">
+  <h2 class="h3">Eliminar mi cuenta</h2>
+  <p>Se borrarán para siempre tu cuenta y todo lo que hayas guardado en ella: tu nombre, tu santo, tus preferencias y tu historial de lecturas. Esto no se puede deshacer.</p>
+  ${live?`<p class="acwarn">🔒 Tienes un <b>donativo mensual activo</b>${ME.monthly.amount?` de <b>${(ME.monthly.amount/100).toLocaleString('es-ES',{style:'currency',currency:'EUR'})}</b>`:''}. Para que no quede ningún cobro sin control, primero tienes que <a href="#donativo">cancelarlo</a>. Después podrás eliminar tu cuenta.</p>`:'<p class="small">Si tienes un donativo mensual, cancélalo antes: no se puede eliminar una cuenta con un donativo mensual activo.</p>'}
+  <div class="acbtns"><button class="btn danger" type="button" id="acDel" ${live?'disabled aria-disabled="true"':''}>Eliminar mi cuenta</button></div>
   <p class="acmsg" id="dMsg" role="status"></p>
  </div>`;
  $('pSanto').addEventListener('input',e=>{$('pSantoR').innerHTML=onomastica(e.target.value)});
@@ -157,10 +163,10 @@ function renderIn(){
  };
  $('acOutBtn').onclick=async()=>{await call('logout.php',{});ME=null;headerLink();renderOut('Has cerrado la sesión.')};
  let armed=false;
- $('acDel').onclick=async()=>{const m=$('dMsg');
-  if(!armed){armed=true;$('acDel').textContent='Sí, borrar mi cuenta para siempre';m.className='acmsg err';m.textContent='Se borrarán tu cuenta y tus preferencias guardadas. Esto no se puede deshacer. Pulsa otra vez para confirmar.';return}
-  const j=await call('borrar.php',{confirmo:'BORRAR'});
-  if(j.ok){ME=null;headerLink();renderOut('Tu cuenta y tus datos se han borrado.')}else{m.textContent=j.error}
+ $('acDel').onclick=async()=>{const m=$('dMsg');if(live)return;
+  if(!armed){armed=true;$('acDel').textContent='Sí, eliminar mi cuenta para siempre';m.className='acmsg err';m.textContent='¿Seguro? Pulsa otra vez para confirmar. Esto no se puede deshacer.';return}
+  $('acDel').disabled=true;const j=await call('borrar.php',{confirmo:'BORRAR'});
+  if(j.ok){ME=null;headerLink();renderOut('Tu cuenta y tus datos se han eliminado.')}else{$('acDel').disabled=false;m.className='acmsg err';m.textContent=j.error}
  };
 }
 

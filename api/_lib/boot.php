@@ -67,6 +67,13 @@ function migrate(PDO $pdo): void {
         expires_at DATETIME NOT NULL,
         created_at DATETIME NOT NULL
     )$tail");
+    // Donativo mensual (lo actualizará Stripe cuando esté activo)
+    try { $pdo->query('SELECT sub_status FROM users LIMIT 1'); }
+    catch (PDOException $e) {
+        $pdo->exec('ALTER TABLE users ADD COLUMN sub_id VARCHAR(64) NULL');
+        $pdo->exec('ALTER TABLE users ADD COLUMN sub_status VARCHAR(32) NULL');
+        $pdo->exec('ALTER TABLE users ADD COLUMN sub_amount INT NULL');
+    }
     $pdo->exec("CREATE TABLE IF NOT EXISTS rate_hits (
         id $id,
         k VARCHAR(200) NOT NULL,
@@ -176,6 +183,12 @@ function clean_prefs(array $in, bool $religConsent): array {
     return $p;
 }
 
+// Estados de Stripe en los que el donativo mensual sigue vivo (o puede volver a cobrarse)
+const PHOS_SUB_LIVE = ['active', 'trialing', 'past_due', 'unpaid', 'incomplete', 'paused'];
+function has_live_monthly(array $u): bool {
+    return !empty($u['sub_status']) && in_array($u['sub_status'], PHOS_SUB_LIVE, true);
+}
+
 function public_user(array $u): array {
     return [
         'email' => $u['email'],
@@ -183,5 +196,6 @@ function public_user(array $u): array {
         'religConsent' => (bool)(int)$u['relig_consent'],
         'prefs' => prefs_of($u),
         'since' => substr((string)$u['created_at'], 0, 10),
+        'monthly' => has_live_monthly($u) ? ['active' => true, 'amount' => isset($u['sub_amount']) ? (int)$u['sub_amount'] : null] : ['active' => false],
     ];
 }

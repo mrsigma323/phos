@@ -5,6 +5,8 @@ require_same_origin();
 $u = require_user();
 $in = body_json();
 if (($in['confirmo'] ?? '') !== 'BORRAR') fail('Confirma el borrado.');
+// No se puede borrar la cuenta con un donativo mensual vivo: así nunca quedan cobros sin una cuenta desde la que cancelarlos
+if (has_live_monthly($u)) fail('Tienes un donativo mensual activo. Cancélalo primero desde «Donativo mensual» y después podrás borrar tu cuenta.', 409);
 $pdo = db();
 $pdo->prepare('DELETE FROM sessions WHERE user_id = ?')->execute([$u['id']]);
 $pdo->prepare('DELETE FROM login_tokens WHERE email = ?')->execute([$u['email']]);
