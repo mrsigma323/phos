@@ -44,7 +44,7 @@ function renderToday(){
  else{setTxt('sIco',BR==='ortodoxa'?'☦️':'✝️');setTxt('sName',snName(info.s));setTxt('sMore',tdL().ui[3]+(up?' La próxima: '+celName(up[0])+', '+fmtD(new Date(up[1]))+'.':''));}
  document.querySelectorAll('[data-br]').forEach(b=>{const on=b.dataset.br===BR;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
  document.querySelectorAll('[data-cal]').forEach(b=>b.parentNode.hidden=BR!=='ortodoxa');
- const cb=$('calBr');if(cb)cb.textContent='Calendario cristiano · Iglesia '+BRN[BR];
+ const cb=$('calBr');if(cb)cb.textContent={ortodoxa:'Calendario ortodoxo',catolica:'Calendario católico',protestante:'Calendario protestante'}[BR];
  if(info.color&&$('cSeason'))setTxt('cSeason',snName(info.s)+' · color '+tdL().ui[['tdViolet','tdWhite','tdGreen','tdRed'].indexOf(info.color)+22]);
  document.querySelectorAll('[data-cal]').forEach(b=>{const on=(b.dataset.cal==='1')===tdOld();b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
  return info;
