@@ -37,7 +37,17 @@ jobs:
           SG_USER: ${{ secrets.SG_USER }}
           SG_PORT: ${{ secrets.SG_PORT }}
           SG_DOMAIN: phosbiblias.com
+          SITE_USER: ${{ secrets.SITE_USER }}
+          SITE_PASS: ${{ secrets.SITE_PASS }}
         run: |
+          SSH="ssh -i ~/.ssh/sg -p ${SG_PORT:-18765}"
+          if [ -n "$SITE_PASS" ]; then
+            H=$($SSH "$SG_USER@$SG_HOST" 'echo $HOME')
+            PW="$H/www/$SG_DOMAIN/.htpasswd"
+            printf '%s:%s\n' "${SITE_USER:-phos}" "$(openssl passwd -apr1 "$SITE_PASS")" | $SSH "$SG_USER@$SG_HOST" "cat > www/$SG_DOMAIN/.htpasswd && chmod 644 www/$SG_DOMAIN/.htpasswd"
+            { printf '# Web privada mientras se prepara\nAuthType Basic\nAuthName "Phos (en preparacion)"\nAuthUserFile "%s"\nRequire valid-user\n<IfModule mod_headers.c>\n  Header set X-Robots-Tag "noindex, nofollow"\n</IfModule>\n\n' "$PW"; cat .htaccess; } > .htaccess.new && mv .htaccess.new .htaccess
+            echo "Modo privado: se pide usuario y contraseña."
+          fi
           rsync -rltz --exclude '.git*' --exclude 'README.md' \
             -e "ssh -i ~/.ssh/sg -p ${SG_PORT:-18765}" \
             ./ "$SG_USER@$SG_HOST:www/$SG_DOMAIN/public_html/"
