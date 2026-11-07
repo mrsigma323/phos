@@ -165,10 +165,11 @@ let sd=TD;
 const CMOVK=new Set(C_MOV.map(x=>x[0])),OMOVK=new Set(O_MOV.map(x=>x[0]));
 function cathOn(t){const d=new Date(t),m=d.getUTCMonth()+1,dd=d.getUTCDate();
  return celebsOn('catolica',t).filter(k=>CMOVK.has(k)||k==='christKing'||k==='holyFamily'||k==='baptism'||k==='advent1').map(celName).filter(Boolean).concat(SANTOS.filter(x=>x[0]===m&&x[1]===dd).map(x=>x[2]))}
+function orthOn(t){const cd=new Date(t-(tdOld()?13*DAY:0)),m=cd.getUTCMonth()+1,dd=cd.getUTCDate();return (typeof SANTOS_O!=='undefined'?SANTOS_O:[]).filter(x=>x[0]===m&&x[1]===dd).map(x=>x[2])}
 function drawSaints(){
  if(!$('sdO'))return;setTxt('sdDate',fmtLong(new Date(sd)));
- const o=celebsOn('ortodoxa',sd).filter(c=>celName(c));
- $('sdO').innerHTML=o.length?o.map(c=>`<li>${evIco(c)} ${esc(celName(c))}</li>`).join(''):'<li class="muted">Ninguna gran fiesta ni santo principal este día.</li>';
+ const o=celebsOn('ortodoxa',sd).filter(c=>celName(c));const so=orthOn(sd);
+ $('sdO').innerHTML=(o.length||so.length)?o.map(c=>`<li>${evIco(c)} ${esc(celName(c))}</li>`).join('')+so.map(n=>`<li>☦️ ${esc(n)}</li>`).join(''):'<li class="muted">Ninguna gran fiesta ni santo principal este día.</li>';
  const c=[...new Set(cathOn(sd))];
  $('sdC').innerHTML=c.length?c.map(n=>`<li>✝️ ${esc(n)}</li>`).join(''):'<li class="muted">Feria: ningún santo en el calendario general este día.</li>';
 }
@@ -176,6 +177,7 @@ let NIDX=null;
 function nameIndex(){
  if(NIDX)return NIDX;const y=now.getFullYear();NIDX=SANTOS.map(([m,d,n])=>[m,d,n,'Católica']);
  yearEvents('ortodoxa',y).filter(e=>!OMOVK.has(e[0])).forEach(e=>{const n=celName(e[0]);if(!n)return;const dt=new Date(e[1]);NIDX.push([dt.getUTCMonth()+1,dt.getUTCDate(),n,'Ortodoxa'])});
+ (typeof SANTOS_O!=='undefined'?SANTOS_O:[]).forEach(([m,d,n])=>{const dt=new Date(utc(y,m,d)+(tdOld()?13*DAY:0));NIDX.push([dt.getUTCMonth()+1,dt.getUTCDate(),n,'Ortodoxa'])});
  return NIDX}
 const MES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 function searchName(q){

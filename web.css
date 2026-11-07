@@ -161,3 +161,13 @@ h1,h2,h3{font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--wine
 .nsearch input:focus{outline:none;border-color:var(--gold)}
 .nav{gap:6px 16px;font-size:15.5px}.cta{padding:10px 16px;font-size:14px;white-space:nowrap}
 @media (max-width:1240px) and (min-width:641px){.brand small{display:none}.nav{gap:6px 13px;font-size:15px}}
+/* artículos */
+.art{padding-top:56px;padding-bottom:8px}.art h1{font-size:clamp(36px,4.5vw,54px);line-height:1.1;margin:4px 0 16px}
+.alead{font-size:21px;line-height:1.55;color:var(--muted);margin:0 0 28px}
+.art h2{font-size:30px;margin:36px 0 10px}.art p,.art li{font-size:18px;line-height:1.7;color:#3A322E}
+.art a{font-weight:700}.alist{padding-left:22px}.alist li{margin:8px 0}
+.quote{font-family:'Cormorant Garamond',serif;font-size:28px!important;line-height:1.4!important;color:var(--wine)!important;border-left:4px solid var(--gold);padding:6px 0 6px 20px;margin:20px 0}
+.tablewrap{overflow-x:auto;margin:16px 0}.ptable{border-collapse:collapse;width:100%;background:#fff;border-radius:12px;overflow:hidden;font-size:16px}
+.ptable th,.ptable td{padding:10px 14px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}.ptable th{background:var(--wine);color:var(--paper)}.ptable tr.same td{background:#FBF1CF;font-weight:700}
+.acta{background:#fff;border-radius:12px;padding:16px 20px;margin-top:28px}
+.art-c .tag{align-self:flex-start;margin:0}.arts{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
