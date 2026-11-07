@@ -178,3 +178,7 @@ h1,h2,h3{font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--wine
 .btn.soon{background:var(--sand);color:var(--muted);cursor:default}.btn.soon:hover{color:var(--muted)}
 .dnote{border-left:4px solid var(--gold)}.dnote .alist li{color:var(--muted)}
 .supband{text-align:center}.supband .btn{margin-top:20px}
+.supgrid{padding-bottom:56px}.sup2{grid-template-columns:repeat(2,minmax(0,320px));justify-content:center;margin-top:24px}
+.fsup{max-width:340px}.fsup p{margin:0 0 8px}.flinks{display:flex;flex-direction:column;gap:6px}.flinks a{color:var(--gold);font-weight:700;text-decoration:none}.flinks a:hover{text-decoration:underline}
+@media (max-width:640px){.fsup{max-width:none}}
+.don{scroll-margin-top:100px}
