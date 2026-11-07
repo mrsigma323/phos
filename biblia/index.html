@@ -2430,6 +2430,11 @@ renderArticles=async function(sec){if(sec==='sport'&&S.view!=='topic')return ren
   d.innerHTML='<h2>✨ Descubre más en Phos</h2>'+L.map(x=>`<a href="${x[0]}" class="wla"><span>${x[1]}</span><div><b>${x[2]}</b><small>${x[3]}</small></div><i>›</i></a>`).join('');
   view.append(d)};
  st.textContent+='.wlx{padding:16px 18px;margin-top:16px}.wlx h2{font-size:22px;margin:0 0 6px}.wla{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid rgba(0,0,0,.08);text-decoration:none;color:inherit}.wla:first-of-type{border-top:0}.wla span{font-size:28px}.wla div{flex:1;display:flex;flex-direction:column}.wla b{font-size:17px}.wla small{opacity:.75;font-size:14px}.wla i{font-style:normal;font-size:24px;opacity:.5}';
+ // 6) Idiomas de la web: de momento solo español (se irán abriendo uno a uno)
+ const WEB_LANGS=['es'];
+ if(!WEB_LANGS.includes(store.get('lang','auto')))store.set('lang',WEB_LANGS[0]);
+ try{detectLang=function(){return WEB_LANGS[0]}}catch(e){}
+ if(WEB_LANGS.length<2){const lb=$('#langBtn');if(lb){lb.hidden=true;lb.style.display='none'}}
 })();
 
 applyLang();
