@@ -2383,6 +2383,39 @@ function renderHabits(){
 const _renderArticlesH2=renderArticles;
 renderArticles=async function(sec){if(sec==='sport'&&S.view!=='topic')return renderHabits();return _renderArticlesH2(sec)};
 
+// ---------- Versión web (lite): sin cursos, sin audio, sin modo noche, con aviso de la app en desarrollo ----------
+(function(){
+ // 1) Fuera la sección de cursos (y con ella el audio de pronunciación)
+ const i=SECS.indexOf('learn');
+ if(i>=0){SECS.splice(i,1);for(const l in NAV)if(Array.isArray(NAV[l])&&NAV[l].length>SECS.length)NAV[l].splice(i,1)}
+ if(S.sec==='learn')S.sec=SECS[0];
+ try{say=function(){}}catch(e){}
+ // 2) Siempre en modo claro, sin botón de modo noche
+ applyTheme=function(){document.documentElement.dataset.theme='light'};
+ applyTheme();
+ const tb=$('#themeBtn');if(tb)tb.remove();
+ // 3) Franja fija: app para móviles en desarrollo
+ const TX={
+  es:['📱 App para móviles en desarrollo','Estás usando la versión web. Los cursos, el audio y más funciones llegarán con la app.'],
+  en:['📱 Mobile app in development','You are using the web version. Courses, audio and more will come with the app.'],
+  pt:['📱 App para celular em desenvolvimento','Você está usando a versão web. Os cursos, o áudio e mais funções chegarão com o app.'],
+  fr:['📱 Application mobile en développement','Vous utilisez la version web. Les cours, l’audio et d’autres fonctions arriveront avec l’application.'],
+  it:['📱 App per dispositivi mobili in sviluppo','Stai usando la versione web. I corsi, l’audio e altre funzioni arriveranno con l’app.'],
+  de:['📱 Mobile App in Entwicklung','Du nutzt die Webversion. Kurse, Audio und mehr kommen mit der App.'],
+  el:['📱 Εφαρμογή για κινητά υπό ανάπτυξη','Χρησιμοποιείτε την έκδοση web. Τα μαθήματα, ο ήχος και άλλα θα έρθουν με την εφαρμογή.'],
+  ru:['📱 Мобильное приложение в разработке','Вы пользуетесь веб-версией. Курсы, аудио и другие функции появятся в приложении.'],
+  ro:['📱 Aplicație pentru mobil în dezvoltare','Folosești versiunea web. Cursurile, audio și alte funcții vor veni odată cu aplicația.']};
+ const bar=document.createElement('div');bar.id='appBar';bar.setAttribute('role','note');
+ const h=document.querySelector('header.top');h.after(bar);
+ const fill=()=>{const x=TX[LANG]||TX.en;bar.innerHTML=`<b>${esc(x[0])}</b><span>${esc(x[1])}</span>`};
+ const pos=()=>{bar.style.top=h.offsetHeight+'px'};
+ fill();pos();addEventListener('resize',pos);
+ const _al=applyLang;applyLang=function(){_al();fill();pos()};
+ const st=document.createElement('style');
+ st.textContent='#appBar{position:sticky;z-index:4;background:#E2C27A;color:#4A1416;padding:8px 16px;display:flex;flex-wrap:wrap;gap:2px 10px;align-items:baseline;font-size:14px;line-height:1.35;box-shadow:0 1px 3px rgba(0,0,0,.12)}#appBar b{font-size:15px}';
+ document.head.append(st);
+})();
+
 applyLang();
 render();
 try{if('serviceWorker' in navigator&&window.top===window)navigator.serviceWorker.register('sw.js').catch(function(){})}catch(e){}

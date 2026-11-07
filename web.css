@@ -110,3 +110,4 @@ h1,h2,h3{font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--wine
 .foot p{margin:0;line-height:1.5}.fbrand{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--paper);margin-bottom:8px!important}
 .legal{display:flex;flex-wrap:wrap;gap:10px 24px;align-items:flex-start}.legal a{color:#E0CFC9}
 @media (max-width:640px){.pad40{padding:26px}.hero{padding-top:40px}.nav{display:none}.cd{min-height:52px}.cd i{font-size:15px}}
+.tile.soon{opacity:.92}.tile em{font-style:normal;font-weight:700;font-size:14px;color:var(--goldtx);margin-top:auto}
