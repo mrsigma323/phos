@@ -196,3 +196,6 @@ label.chk{display:flex!important;gap:10px;align-items:flex-start;font-weight:400
 .acbtns{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px}.btn.danger{background:transparent;border:2px solid #A3261F;color:#A3261F;padding:13px 26px;cursor:pointer}.btn.ghost{cursor:pointer}
 .mysanto h3{margin:0}.mysanto .small{margin:8px 0}
 @media (max-width:640px){.acct{font-size:14px;padding:8px 2px}.pad40.acform,.acbox .pad40{padding:24px}}
+.nav a.navdon{color:var(--gold);border:1.5px solid var(--gold);border-radius:999px;padding:5px 14px;margin:5px 0;align-self:center}.nav a.navdon:hover{background:var(--gold);color:var(--wine)}.nav a.navdon[aria-current]{background:var(--gold);color:var(--wine);box-shadow:none}
+@media (min-width:641px){.brand small{display:none}.nav{gap:6px 14px;font-size:15px}.acct{font-size:15px}.nav a.navdon{padding:4px 12px}}
+@media (max-width:1200px) and (min-width:641px){.cta .ctxt{display:none}.cta{padding:10px 13px}.nav{gap:6px 11px;font-size:14.5px}}
