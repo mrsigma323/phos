@@ -182,3 +182,17 @@ h1,h2,h3{font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--wine
 .fsup{max-width:340px}.fsup p{margin:0 0 8px}.flinks{display:flex;flex-direction:column;gap:6px}.flinks a{color:var(--gold);font-weight:700;text-decoration:none}.flinks a:hover{text-decoration:underline}
 @media (max-width:640px){.fsup{max-width:none}}
 .don{scroll-margin-top:100px}
+.acct{color:var(--paper);text-decoration:none;font-weight:700;white-space:nowrap;padding:10px 4px}.acct:hover{color:var(--gold)}
+.acbox{display:flex;flex-direction:column;gap:20px;padding-bottom:40px}.acbox .h3{margin-bottom:8px}
+.acform label,.acprefs label{display:block;font-weight:700;margin:18px 0 6px}
+.acform input[type=email],.acprefs input:not([type]),.acprefs input[type=text]{width:100%;font:inherit;font-size:17px;padding:13px 16px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}
+.acform input:focus,.acprefs input:focus{outline:none;border-color:var(--wine)}
+.acform .btn,.acprefs .btn{margin-top:22px}
+label.chk{display:flex!important;gap:10px;align-items:flex-start;font-weight:400!important;margin:10px 0!important;cursor:pointer}label.chk input{margin-top:5px;width:18px;height:18px;accent-color:var(--wine);flex:none}
+.acprefs fieldset{border:0;padding:0;margin:22px 0 0}.acprefs legend{font-weight:700;padding:0}.consent{background:var(--sand);padding:12px 14px;border-radius:10px}
+.acmsg{min-height:1.4em;margin:14px 0 0;color:var(--muted)}.acmsg.err{color:#A3261F}.acmsg.okk{color:#2F6B3A}
+.acok{background:#E7F1E4;color:#2F6B3A;padding:12px 16px;border-radius:12px;margin:0;font-weight:700}
+.acrecent{list-style:none;padding:0;margin:16px 0 0}.acrecent li{margin:6px 0}
+.acbtns{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px}.btn.danger{background:transparent;border:2px solid #A3261F;color:#A3261F;padding:13px 26px;cursor:pointer}.btn.ghost{cursor:pointer}
+.mysanto h3{margin:0}.mysanto .small{margin:8px 0}
+@media (max-width:640px){.acct{font-size:14px;padding:8px 2px}.pad40.acform,.acbox .pad40{padding:24px}}

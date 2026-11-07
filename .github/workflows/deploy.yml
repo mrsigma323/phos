@@ -39,6 +39,10 @@ jobs:
           SG_DOMAIN: phosbiblias.com
           SITE_USER: ${{ secrets.SITE_USER }}
           SITE_PASS: ${{ secrets.SITE_PASS }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASS: ${{ secrets.DB_PASS }}
+          MAIL_FROM: ${{ secrets.MAIL_FROM }}
         run: |
           SSH="ssh -i ~/.ssh/sg -p ${SG_PORT:-18765}"
           trim(){ printf '%s' "$1" | tr -d '\r\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'; }
@@ -50,6 +54,18 @@ jobs:
             printf '%s:%s\n' "${SITE_USER:-phos}" "$(openssl passwd -apr1 "$SITE_PASS")" | $SSH "$SG_USER@$SG_HOST" "cat > www/$SG_DOMAIN/.htpasswd && chmod 644 www/$SG_DOMAIN/.htpasswd"
             { printf '# Web privada mientras se prepara\nAuthType Basic\nAuthName "Phos (en preparacion)"\nAuthUserFile "%s"\nRequire valid-user\n<IfModule mod_headers.c>\n  Header set X-Robots-Tag "noindex, nofollow"\n</IfModule>\n\n' "$PW"; cat .htaccess; } > .htaccess.new && mv .htaccess.new .htaccess
             echo "Modo privado: se pide usuario y contraseña."
+          fi
+          # Configuración de las cuentas (fuera de public_html, nunca accesible desde la web)
+          DB_NAME=$(trim "$DB_NAME"); DB_USER=$(trim "$DB_USER"); DB_PASS=$(trim "$DB_PASS"); MAIL_FROM=$(trim "$MAIL_FROM")
+          if [ -n "$DB_NAME" ] && [ -n "$DB_USER" ] && [ -n "$DB_PASS" ]; then
+            b64(){ printf '%s' "$1" | base64 -w0; }
+            DSN="mysql:host=localhost;dbname=$DB_NAME;charset=utf8mb4"
+            printf "<?php\nreturn ['dsn'=>base64_decode('%s'),'user'=>base64_decode('%s'),'pass'=>base64_decode('%s'),'mail_from'=>base64_decode('%s'),'base'=>'https://%s'];\n" \
+              "$(b64 "$DSN")" "$(b64 "$DB_USER")" "$(b64 "$DB_PASS")" "$(b64 "${MAIL_FROM:-hola@$SG_DOMAIN}")" "$SG_DOMAIN" \
+              | $SSH "$SG_USER@$SG_HOST" "umask 077; cat > www/$SG_DOMAIN/phos-config.php"
+            echo "Cuentas: configuración actualizada."
+          else
+            echo "Cuentas: faltan los secretos DB_NAME, DB_USER y DB_PASS (las cuentas quedan desactivadas)."
           fi
           rsync -rltz --exclude '.git*' --exclude 'README.md' \
             -e "ssh -i ~/.ssh/sg -p ${SG_PORT:-18765}" \

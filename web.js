@@ -222,7 +222,10 @@ async function shareImg(text,ref){
 document.querySelectorAll('[data-img]').forEach(b=>b.onclick=()=>{const v=b.dataset.img==='v';shareImg($(v?'vTxt':'gTxt').textContent,(v?$('vRef'):$('gRef')).textContent.replace(/^.*· /,''))});
 
 function all(){const info=renderToday();renderReadings(info);renderPrayer();drawCal();renderFood(info);drawSaints();drawFests();NIDX=null;if($('nameQ'))searchName($('nameQ').value)}
-document.querySelectorAll('[data-cal]').forEach(b=>b.onclick=()=>{store.set('oldCal',b.dataset.cal==='1');all()});
-document.querySelectorAll('[data-br]').forEach(b=>b.onclick=()=>{BR=b.dataset.br;store.set('todayBr',BR);all();renderPrayers()});
+const said=(k,v)=>document.dispatchEvent(new CustomEvent('phos:set',{detail:{k,v}}));
+document.querySelectorAll('[data-cal]').forEach(b=>b.onclick=()=>{store.set('oldCal',b.dataset.cal==='1');said('oldCal',b.dataset.cal==='1');all()});
+document.querySelectorAll('[data-br]').forEach(b=>b.onclick=()=>{BR=b.dataset.br;store.set('todayBr',BR);said('todayBr',BR);all();renderPrayers()});
+document.addEventListener('phos:prefs',()=>{BR=tdBr();all();renderPrayers()});
+window.PHOS={nameIndex:()=>nameIndex(),MES,norm};
 bindSaints();renderGreek();all();renderReflection();bindReflection();renderPsalm();renderPrayers();
 })();
