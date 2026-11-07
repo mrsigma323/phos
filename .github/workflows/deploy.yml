@@ -25,7 +25,10 @@ jobs:
         run: |
           mkdir -p ~/.ssh && chmod 700 ~/.ssh
           printf '%s\n' "$SG_KEY" | tr -d '\r' > ~/.ssh/sg && chmod 600 ~/.ssh/sg
-          if [ -n "$SG_PASS" ]; then ssh-keygen -p -P "$SG_PASS" -N "" -f ~/.ssh/sg >/dev/null; fi
+          if [ -n "$SG_PASS" ]; then
+            P2=$(printf '%s' "$SG_PASS" | tr -d '\r\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+            ssh-keygen -p -P "$P2" -N "" -f ~/.ssh/sg >/dev/null 2>&1 || ssh-keygen -p -P "$SG_PASS" -N "" -f ~/.ssh/sg >/dev/null 2>&1 || { echo "::error::La contraseña de la clave (SG_PASS) no coincide con la clave privada (SG_KEY)."; exit 1; }
+          fi
           ssh-keyscan -p "${SG_PORT:-18765}" "$SG_HOST" >> ~/.ssh/known_hosts 2>/dev/null
       - name: Subir la web
         if: steps.chk.outputs.ok == '1'
