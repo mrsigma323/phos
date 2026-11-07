@@ -132,3 +132,6 @@ h1,h2,h3{font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--wine
  .brand b{font-size:26px}.brand small{display:none}
  .xgrid{grid-template-columns:1fr 1fr;gap:12px}.xcard{padding:16px}.xcard b{font-size:20px}.xcard span:not(.xi){font-size:13px}
 }
+.brsw{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.calsw[hidden],.center>.calsw[hidden]{display:none}
+.fz-c_fastabst{background:#F3D9D4}.fz-c_abst{background:#DCE9F5}.fz-c_fri{background:#F6E7C8}.fz-p_lent{background:#EDE2F3}.fz-p_goodfri{background:#E9C3BB}

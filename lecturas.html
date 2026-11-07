@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <script>(function(){try{var q=location.search,L=localStorage;if(/[?&]desktop=1/.test(q))L.setItem('phos:desk','1');if(L.getItem('phos:desk'))return;var u=navigator.userAgent||'';if(/bot|crawl|spider|lighthouse|slurp|preview/i.test(u))return;var phone=/iPhone|iPod|Windows Phone|BlackBerry|Opera Mini/i.test(u)||(/Android/i.test(u)&&/Mobile/i.test(u))||(window.matchMedia&&matchMedia('(max-width:700px) and (pointer:coarse)').matches);if(phone)location.replace('biblia/')}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lecturas de hoy · Phos</title>
-<meta name="description" content="El versículo del día, el Evangelio de la fiesta y una reflexión diaria según la tradición ortodoxa.">
+<title>Lecturas de hoy: palabras de Jesús y versículo del día · Phos</title>
+<meta name="description" content="Las palabras de Jesús para hoy, el versículo del día, el Evangelio de la fiesta y una reflexión cristiana diaria.">
 <meta name="theme-color" content="#4A1416">
 <link rel="icon" href="biblia/icon-192.png">
 <link rel="apple-touch-icon" href="biblia/apple-touch-icon.png">
-<meta property="og:title" content="Lecturas de hoy · Phos">
+<meta property="og:title" content="Lecturas de hoy: palabras de Jesús y versículo del día · Phos">
 <meta property="og:description" content="Ayuno, fiestas, oraciones y la Biblia completa, cada día.">
 <meta property="og:image" content="biblia/icon-512.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,7 +22,7 @@
  <div class="wrap topin">
   <a href="./" class="brand">
    <svg aria-hidden="true" width="30" height="40" viewBox="0 0 30 40" fill="none" stroke="#E2C27A" stroke-width="2.2" stroke-linecap="round"><path d="M15 3v34M10 8h10M5 16h20M9 29l12-5"/></svg>
-   <span><b>Phos</b><small>Sabiduría de la Iglesia antigua</small></span>
+   <span><b>Phos</b><small>Φῶς Χριστοῦ · La luz de Cristo</small></span>
   </a>
   <nav aria-label="Principal" class="nav">
    <a href="index.html">Inicio</a><a href="lecturas.html" aria-current="page">Lecturas</a><a href="escrituras.html">Biblia</a><a href="salud.html">Salud y bienestar</a><a href="oraciones.html">Oraciones</a><a href="calendario.html">Calendario</a>
@@ -34,15 +34,16 @@
 <section class="hero sub wrap">
  <div class="pills"><span class="kicker" id="hDate">—</span><span class="pill" id="hFast">—</span></div>
  <h1>Lecturas de hoy</h1>
- <p class="lead">La Palabra de Dios para hoy, con una breve reflexión para meditarla.</p>
+ <p class="lead">Las palabras de Jesús, la Palabra de Dios de hoy y una breve reflexión para meditarla.</p>
+ <div class="brsw"><div class="calsw" role="group" aria-label="Rama cristiana"><button data-br="ortodoxa">Ortodoxa</button><button data-br="catolica">Católica</button><button data-br="protestante">Protestante</button></div><div class="calsw" role="group" aria-label="Calendario"><button data-cal="0">Calendario nuevo</button><button data-cal="1">Calendario juliano</button></div></div>
 </section>
 <div class="wrap cols">
  <main class="main">
   <article id="lecturas" class="card pad40">
    <p class="kicker">Palabra de hoy</p>
    <p class="sub" id="lSeason">—</p>
-   <div class="reading"><h2 id="vRef">Versículo del día</h2><p class="scripture" id="vTxt">…</p></div>
    <div class="reading" id="gospelBox" hidden><h2 id="gRef">Evangelio de la fiesta</h2><p class="scripture" id="gTxt">…</p></div>
+   <div class="reading"><h2 id="vRef">Versículo del día</h2><p class="scripture" id="vTxt">…</p></div>
    <p class="small">Texto: Reina-Valera 1909 (dominio público).</p>
   </article>
   <article class="card dark pad40" id="reflexion">

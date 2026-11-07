@@ -1,11 +1,15 @@
 (function(){
 'use strict';
 const $=id=>document.getElementById(id);
-const BR='ortodoxa';
+let BR=tdBr();
+const BRN={ortodoxa:'ortodoxa',catolica:'católica',protestante:'protestante'};
+const MAJ=()=>BR==='ortodoxa'?O_MAJ:BR==='catolica'?C_MAJ:P_MAJ;
+const LEG={ortodoxa:[['o_strict','Ayuno estricto'],['o_wo','Aceite y vino'],['o_fish','Pescado'],['o_dairy','Lácteos'],['o_free','Sin ayuno']],catolica:[['c_fastabst','Ayuno y abstinencia'],['c_abst','Abstinencia'],['c_fri','Viernes penitencial'],['c_none','Día ordinario']],protestante:[['p_lent','Cuaresma'],['p_goodfri','Viernes Santo'],['p_none','Día ordinario']]};
+const JESUS=['JOH 14:6','JOH 8:12','MAT 11:28-30','JOH 3:16','MAT 22:37-39','JOH 15:12','MAT 5:14-16','JOH 10:11','JOH 11:25-26','MAT 6:33','MAT 7:7-8','JOH 6:35','JOH 14:27','MAT 28:20','LUK 6:36-37','MAT 5:43-45','JOH 13:34-35','MAT 18:20','JOH 15:5','MAT 7:12','JOH 16:33','LUK 9:23','JOH 4:13-14','MAT 5:3-9','JOH 10:10','LUK 15:7','MAT 25:40','JOH 14:1-3','MAT 6:25-26','LUK 12:32','JOH 20:29','MAT 9:12-13'];
 const now=new Date();
 const TD=utc(now.getFullYear(),now.getMonth()+1,now.getDate());
 const DOY=Math.floor((TD-utc(now.getFullYear(),1,1))/DAY);
-const FSHORT={o_free:'Sin ayuno',o_strict:'Ayuno estricto',o_wo:'Ayuno con aceite y vino',o_fish:'Se permite pescado',o_dairy:'Semana de los lácteos',o_holyfri:'Viernes Santo'};
+const FSHORT={c_fastabst:'Ayuno y abstinencia',c_abst:'Abstinencia de carne',c_fri:'Viernes penitencial',c_sol:'Solemnidad: sin abstinencia',c_none:'Sin ayuno',p_none:'Día ordinario',p_lent:'Tiempo de Cuaresma',p_goodfri:'Viernes Santo',o_free:'Sin ayuno',o_strict:'Ayuno estricto',o_wo:'Ayuno con aceite y vino',o_fish:'Se permite pescado',o_dairy:'Semana de los lácteos',o_holyfri:'Viernes Santo'};
 const MONTHS=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 
 // ---- Texto bíblico (Reina-Valera 1909) ----
@@ -37,7 +41,11 @@ function renderToday(){
  const cel=info.cel.filter(c=>celName(c));
  if(cel.length){setTxt('sIco',evIco(cel[0]));setTxt('sName',celName(cel[0]));
   setTxt('sMore',cel.length>1?'También: '+cel.slice(1).map(celName).join(' · '):snNote(info.s)||'');}
- else{setTxt('sIco','☦️');setTxt('sName',snName(info.s));setTxt('sMore',tdL().ui[3]+(up?' La próxima: '+celName(up[0])+', '+fmtD(new Date(up[1]))+'.':''));}
+ else{setTxt('sIco',BR==='ortodoxa'?'☦️':'✝️');setTxt('sName',snName(info.s));setTxt('sMore',tdL().ui[3]+(up?' La próxima: '+celName(up[0])+', '+fmtD(new Date(up[1]))+'.':''));}
+ document.querySelectorAll('[data-br]').forEach(b=>{const on=b.dataset.br===BR;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
+ document.querySelectorAll('[data-cal]').forEach(b=>b.parentNode.hidden=BR!=='ortodoxa');
+ const cb=$('calBr');if(cb)cb.textContent='Calendario cristiano · Iglesia '+BRN[BR];
+ if(info.color&&$('cSeason'))setTxt('cSeason',snName(info.s)+' · color '+tdL().ui[['tdViolet','tdWhite','tdGreen','tdRed'].indexOf(info.color)+22]);
  document.querySelectorAll('[data-cal]').forEach(b=>{const on=(b.dataset.cal==='1')===tdOld();b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
  return info;
 }
@@ -47,9 +55,10 @@ async function renderReadings(info){
  if(!$('vRef'))return;
  const ref=parseRef(VOTD[DOY%VOTD.length]);
  if(ref){setTxt('vRef',cite(...ref));try{setTxt('vTxt',await verses(...ref))}catch(e){fail('vTxt')}}
- $('gospelBox').hidden=true;
  const f=FEASTS.find(x=>x[3]&&info.cel.includes(x[0]));
- if(f){const g=f[3];$('gospelBox').hidden=false;setTxt('gRef','Evangelio de la fiesta · '+cite(...g));try{setTxt('gTxt',await verses(...g))}catch(e){fail('gTxt')}}
+ const g=f?f[3]:parseRef(JESUS[DOY%JESUS.length]);
+ $('gospelBox').hidden=false;setTxt('gRef',(f?'Evangelio de la fiesta · ':'Palabras de Jesús · ')+cite(...g));
+ try{setTxt('gTxt',await verses(...g))}catch(e){fail('gTxt')}
 }
 
 // ---- Reflexión ----
@@ -95,10 +104,10 @@ function drawCal(){
  h+='<div class="calgrid wk">'+['lun','mar','mié','jue','vie','sáb','dom'].map(x=>`<span>${x}</span>`).join('')+'</div><div class="calgrid">';
  for(let i=0;i<off;i++)h+='<span class="cd empty"></span>';
  for(let d=1;d<=days;d++){const t=utc(cy,cm+1,d),inf=dayInfo(BR,t),wd=new Date(t).getUTCDay();
-  const maj=inf.cel.some(c=>O_MAJ.has(c)),ico=inf.cel.length?evIco(inf.cel.find(c=>O_MAJ.has(c))||inf.cel[0]):(FASTICO[inf.f]||'');
+  const maj=inf.cel.some(c=>MAJ().has(c)),ico=inf.cel.length?evIco(inf.cel.find(c=>MAJ().has(c))||inf.cel[0]):(FASTICO[inf.f]||'');
   const cls=['cd','fz-'+inf.f,wd===0?'sun':'',maj?'maj':'',t===TD?'today':'',t===sel?'sel':''].join(' ');
   h+=`<button type="button" class="${cls}" data-d="${t}" aria-label="${d} de ${MONTHS[cm]}: ${FSHORT[inf.f]}${inf.cel.length?', '+inf.cel.map(celName).filter(Boolean).join(', '):''}"><b>${d}</b><i>${ico}</i></button>`}
- h+='</div><div class="calleg">'+[['o_strict','Ayuno estricto'],['o_wo','Aceite y vino'],['o_fish','Pescado'],['o_dairy','Lácteos'],['o_free','Sin ayuno']].map(([k,l])=>`<span><i class="fz-${k}">${FASTICO[k]||''}</i>${l}</span>`).join('')+'<span><i style="border:2px solid #E2C27A"></i>Gran fiesta</span></div>';
+ h+='</div><div class="calleg">'+LEG[BR].map(([k,l])=>`<span><i class="fz-${k}">${FASTICO[k]||''}</i>${l}</span>`).join('')+'<span><i style="border:2px solid #E2C27A"></i>Gran fiesta</span></div>';
  const inf=dayInfo(BR,sel);
  h+=`<div class="calday"><h3>${fmtLong(new Date(sel))}</h3>${inf.cel.length?'<ul>'+inf.cel.map(c=>celName(c)?`<li>${evIco(c)} ${celName(c)}</li>`:'').join('')+'</ul>':''}<p class="small" style="margin:0">${snName(inf.s)}</p><p class="fast">${FASTICO[inf.f]?FASTICO[inf.f]+' ':''}${ftText(inf.f)}</p></div>`;
  box.innerHTML=h;
@@ -107,15 +116,18 @@ function drawCal(){
 }
 
 // ---- Oraciones ----
-const PRS=[['jesus','La oración del corazón, para repetir en silencio.'],['trisagion','El himno tres veces santo.'],['heavenly','Invocación al Espíritu Santo, al empezar el día.'],['phos','El himno más antiguo de la tarde.'],['ephrem','La oración de la Gran Cuaresma.'],['ourf','La oración que enseñó el Señor (Mt 6, 9-13).'],['nunc','El cántico de Simeón, para la noche (Lc 2, 29-32).'],['subtuum','La plegaria más antigua a la Madre de Dios.']];
+const PD={jesus:'La oración del corazón, para repetir en silencio.',trisagion:'El himno tres veces santo.',heavenly:'Invocación al Espíritu Santo, al empezar el día.',phos:'El himno cristiano más antiguo de la tarde.',ephrem:'La oración de la Cuaresma.',ourf:'La oración que enseñó el Señor (Mt 6, 9-13).',nunc:'El cántico de Simeón, para la noche (Lc 2, 29-32).',subtuum:'La plegaria más antigua a la Madre de Dios.',ave:'El saludo del ángel a María.',angelus:'La oración del mediodía.',magn:'El cántico de María (Lc 1, 46-55).'};
+const PO={ortodoxa:['ourf','jesus','trisagion','heavenly','phos','ephrem','nunc','subtuum'],catolica:['ourf','ave','angelus','magn','nunc','subtuum','jesus','phos'],protestante:['ourf','magn','nunc','jesus','phos','trisagion']};
+const PRS=()=>PO[BR].map(k=>[k,PD[k]]);
 function renderPrayers(){
  const box=$('prList');if(!box)return;
- box.innerHTML=PRS.map(([k,d])=>`<details class="pr" data-k="${k}"><summary><b>${prName(k)}</b><span>${d}</span></summary><div class="ptx">${PR_BIB[k]?'…':prText(k)}</div></details>`).join('');
+ box.innerHTML=PRS().map(([k,d])=>`<details class="pr" data-k="${k}"><summary><b>${prName(k)}</b><span>${d}</span></summary><div class="ptx">${PR_BIB[k]?'…':prText(k)}</div></details>`).join('');
  box.querySelectorAll('details').forEach(el=>el.addEventListener('toggle',async()=>{const k=el.dataset.k,r=PR_BIB[k];if(!el.open||!r||el.dataset.done)return;
   const tx=el.querySelector('.ptx');try{let v=await verses(...r);if(k==='ourf')v=v.replace(/^.*?(Padre nuestro)/,'$1');tx.textContent=v;const c=document.createElement('cite');c.textContent=cite(...r);tx.append(c);el.dataset.done=1}catch(e){tx.textContent='No se ha podido cargar el texto.'}}));
 }
 
 function all(){const info=renderToday();renderReadings(info);renderPrayer();drawCal()}
 document.querySelectorAll('[data-cal]').forEach(b=>b.onclick=()=>{store.set('oldCal',b.dataset.cal==='1');all()});
+document.querySelectorAll('[data-br]').forEach(b=>b.onclick=()=>{BR=b.dataset.br;store.set('todayBr',BR);all();renderPrayers()});
 all();renderReflection();bindReflection();renderPsalm();renderPrayers();
 })();
