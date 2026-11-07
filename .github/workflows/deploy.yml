@@ -1,0 +1,41 @@
+name: Publicar en SiteGround
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+concurrency: deploy
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Comprobar credenciales
+        id: chk
+        env:
+          K: ${{ secrets.SG_KEY }}
+        run: |
+          if [ -z "$K" ]; then echo "Faltan los secretos de SiteGround: no se publica."; echo "ok=0" >> $GITHUB_OUTPUT; else echo "ok=1" >> $GITHUB_OUTPUT; fi
+      - name: Preparar la clave SSH
+        if: steps.chk.outputs.ok == '1'
+        env:
+          SG_KEY: ${{ secrets.SG_KEY }}
+          SG_PASS: ${{ secrets.SG_PASS }}
+          SG_HOST: ${{ secrets.SG_HOST }}
+          SG_PORT: ${{ secrets.SG_PORT }}
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$SG_KEY" | tr -d '\r' > ~/.ssh/sg && chmod 600 ~/.ssh/sg
+          if [ -n "$SG_PASS" ]; then ssh-keygen -p -P "$SG_PASS" -N "" -f ~/.ssh/sg >/dev/null; fi
+          ssh-keyscan -p "${SG_PORT:-18765}" "$SG_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+      - name: Subir la web
+        if: steps.chk.outputs.ok == '1'
+        env:
+          SG_HOST: ${{ secrets.SG_HOST }}
+          SG_USER: ${{ secrets.SG_USER }}
+          SG_PORT: ${{ secrets.SG_PORT }}
+          SG_DOMAIN: phosbiblias.com
+        run: |
+          rsync -rltz --exclude '.git*' --exclude 'README.md' \
+            -e "ssh -i ~/.ssh/sg -p ${SG_PORT:-18765}" \
+            ./ "$SG_USER@$SG_HOST:www/$SG_DOMAIN/public_html/"
+          echo "Publicado en https://$SG_DOMAIN"
