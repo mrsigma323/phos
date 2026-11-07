@@ -2414,6 +2414,14 @@ renderArticles=async function(sec){if(sec==='sport'&&S.view!=='topic')return ren
  const st=document.createElement('style');
  st.textContent='#appBar{position:sticky;z-index:4;background:#E2C27A;color:#4A1416;padding:8px 16px;display:flex;flex-wrap:wrap;gap:2px 10px;align-items:baseline;font-size:14px;line-height:1.35;box-shadow:0 1px 3px rgba(0,0,0,.12)}#appBar b{font-size:15px}';
  document.head.append(st);
+ // 4) Botón para volver a la web de ordenador, junto al de idiomas
+ const PC={es:'Versión para ordenador',en:'Desktop version',pt:'Versão para computador',fr:'Version ordinateur',it:'Versione per computer',de:'Desktop-Version',el:'Έκδοση για υπολογιστή',ru:'Версия для компьютера',ro:'Versiunea pentru calculator'};
+ const pc=document.createElement('a');pc.className='iconbtn';pc.id='pcBtn';pc.href='../';
+ pc.innerHTML='<svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>';
+ const lb=$('#langBtn');lb.parentNode.insertBefore(pc,lb);
+ const pcl=()=>{const x=PC[LANG]||PC.en;pc.setAttribute('aria-label',x);pc.title=x};pcl();
+ const _al2=applyLang;applyLang=function(){_al2();pcl()};
+ st.textContent+='#pcBtn{display:inline-flex;align-items:center;justify-content:center;color:inherit;text-decoration:none}';
 })();
 
 applyLang();
