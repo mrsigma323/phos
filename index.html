@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Phos · La luz de la fe ortodoxa para cada día</title>
-<meta name="description" content="El ayuno y las fiestas de hoy según el calendario ortodoxo, oraciones, la Palabra de cada día, la Biblia completa y una vida sana de cuerpo y alma.">
+<meta name="description" content="El ayuno y las fiestas de hoy según el calendario ortodoxo, oraciones, la Palabra de cada día y la Biblia completa.">
 <meta name="theme-color" content="#4A1416">
 <link rel="icon" href="biblia/icon-192.png">
 <link rel="apple-touch-icon" href="biblia/apple-touch-icon.png">
@@ -19,51 +19,29 @@
 <a class="skip" href="#inicio">Saltar al contenido</a>
 <header class="top">
  <div class="wrap topin">
-  <a href="#inicio" class="brand">
+  <a href="./" class="brand">
    <svg aria-hidden="true" width="30" height="40" viewBox="0 0 30 40" fill="none" stroke="#E2C27A" stroke-width="2.2" stroke-linecap="round"><path d="M15 3v34M10 8h10M5 16h20M9 29l12-5"/></svg>
    <span><b>Phos</b><small>Sabiduría de la Iglesia antigua</small></span>
   </a>
   <nav aria-label="Principal" class="nav">
-   <a href="#lecturas">Lecturas</a><a href="#biblia">Biblia</a><a href="#bienestar">Salud y bienestar</a><a href="#oraciones">Oraciones</a><a href="#calendario">Calendario</a>
+   <a href="index.html" aria-current="page">Inicio</a><a href="lecturas.html">Lecturas</a><a href="escrituras.html">Biblia</a><a href="salud.html">Salud y bienestar</a><a href="oraciones.html">Oraciones</a><a href="calendario.html">Calendario</a>
   </nav>
   <a href="biblia/" class="cta">📱 Web para móviles</a>
  </div>
 </header>
-
 <div class="wrap"><div class="ad-slot ad-top" aria-hidden="true"></div></div>
-
 <section id="inicio" class="hero wrap">
  <div class="pills"><span class="kicker" id="hDate">—</span><span class="pill" id="hFast">—</span></div>
  <h1>La luz de la fe ortodoxa para cada día</h1>
  <p class="lead">El ayuno y las fiestas de hoy, la Palabra de Dios, las oraciones de la Iglesia y una vida sana de cuerpo y alma según la tradición.</p>
- <div class="btns"><a href="#lecturas" class="btn">Lecturas de hoy</a><a href="#bienestar" class="btn ghost">Salud y bienestar</a></div>
+ <div class="btns"><a href="lecturas.html" class="btn">Lecturas de hoy</a><a href="salud.html" class="btn ghost">Salud y bienestar</a></div>
  <div class="calsw" role="group" aria-label="Calendario"><button data-cal="0">Calendario nuevo</button><button data-cal="1">Calendario juliano</button></div>
 </section>
-
-<div class="wrap cols">
- <main class="main">
-  <article id="lecturas" class="card pad40">
-   <p class="kicker">Palabra de hoy</p>
-   <p class="sub" id="lSeason">—</p>
-   <div class="reading"><h2 id="vRef">Versículo del día</h2><p class="scripture" id="vTxt">…</p></div>
-   <div class="reading" id="gospelBox" hidden><h2 id="gRef">Evangelio de la fiesta</h2><p class="scripture" id="gTxt">…</p></div>
-   <p class="small">Texto: Reina-Valera 1909 (dominio público).</p>
-  </article>
-
-  <article class="card dark pad40" id="reflexion">
-   <p class="kicker gold">Reflexión del día</p>
-   <h2 id="rTitle">—</h2>
-   <p class="rtext" id="rText">—</p>
-   <p class="rref" id="rRef">—</p>
-   <div class="btns left"><button type="button" class="obtn" id="rListen">Escuchar en audio</button><button type="button" class="obtn" id="rShare">Compartir</button></div>
-  </article>
- </main>
-
- <aside class="side">
+<section class="wrap today3">
   <section class="card pad28" id="santoral">
    <p class="kicker">Hoy se celebra</p>
    <div class="saint"><span class="sico" id="sIco" aria-hidden="true">✨</span><div><h3 id="sName">—</h3><p id="sMore">—</p></div></div>
-   <a href="#calendario" class="more">Ver el calendario del mes →</a>
+   <a href="calendario.html" class="more">Ver el calendario del mes →</a>
   </section>
   <section class="card pad28">
    <p class="kicker">Hoy en el calendario</p>
@@ -74,72 +52,13 @@
    </dl>
    <p class="small" id="cHint">—</p>
   </section>
-  <div class="ad-slot ad-side" aria-hidden="true"></div>
   <section class="card pad28">
    <p class="kicker">Oración para este momento</p>
    <h3 id="pName">—</h3>
    <p class="prayer" id="pTxt">…</p>
   </section>
- </aside>
-</div>
-
-<section id="biblia" class="band">
- <div class="wrap">
-  <p class="kicker center">Biblia y Escrituras</p>
-  <h2 class="h2 center">Leer la Palabra con la Iglesia</h2>
-  <p class="lead center">La Septuaginta y los Evangelios en griego original, junto a la traducción en tu idioma, en 9 idiomas.</p>
-  <div class="row">
-   <article class="card dark psalm">
-    <span class="kicker gold" id="psLabel">Salmo del día</span>
-    <h3 id="psTitle">Salmo</h3>
-    <p class="scripture light" id="psTxt">…</p>
-    <a href="biblia/" class="goldlink">Leer el salmo completo →</a>
-   </article>
-   <article class="card plan">
-    <span class="kicker">Lectura continua</span>
-    <h3>La Biblia en un año</h3>
-    <p>Un plan de lectura diario, con tu progreso guardado en el móvil.</p>
-    <a href="biblia/" class="btn full">Empezar el plan</a>
-   </article>
-  </div>
-  <div class="grid4">
-   <a href="biblia/" class="tile"><b>Las Biblias de cada Iglesia</b><span>Ortodoxa, católica, protestante y los textos originales en hebreo y griego.</span></a>
-   <div class="tile soon"><b>Aprende la Biblia jugando</b><span>Cursos con lecciones, repaso y logros.</span><em>📱 Próximamente en la app</em></div>
-   <a href="biblia/" class="tile"><b>Personajes bíblicos</b><span>Patriarcas, profetas y apóstoles: quién es quién.</span></a>
-   <div class="tile soon"><b>Griego, hebreo, latín y eslavo</b><span>El alfabeto y las primeras palabras de las lenguas de la Biblia, con audio.</span><em>📱 Próximamente en la app</em></div>
-  </div>
- </div>
 </section>
-
-<section id="bienestar" class="wrap sect">
- <p class="kicker center">Salud y bienestar</p>
- <h2 class="h2 center">Cuidar el cuerpo, templo del Espíritu</h2>
- <p class="lead center">Hábitos sanos inspirados en la Escritura y en la tradición de la Iglesia (1 Co 6, 19): ayuno, oración serena, descanso y vida sencilla.</p>
- <div class="grid3">
-  <a href="biblia/" class="feat"><span class="fi">🕯️</span><h3>Ayuno y alimentación</h3><p>Qué dice la Biblia del ayuno, capítulo a capítulo, y el ayuno de cada día según el calendario.</p><b>Leer más →</b></a>
-  <a href="biblia/" class="feat"><span class="fi">🙏</span><h3>Oración y meditación</h3><p>De los Salmos a la Oración de Jesús: aprender a orar en silencio.</p><b>Leer más →</b></a>
-  <a href="biblia/" class="feat"><span class="fi">🌙</span><h3>Descanso y sueño</h3><p>El día del Señor y el descanso que Dios regala: dormir en paz.</p><b>Leer más →</b></a>
-  <a href="biblia/" class="feat"><span class="fi">🍞</span><h3>Alimentos en la Biblia</h3><p>Lo que Dios y Jesús dan de comer, con todos sus versículos.</p><b>Leer más →</b></a>
-  <a href="biblia/" class="feat"><span class="fi">🏃</span><h3>Ejercicio y deporte</h3><p>El atleta de la fe: correr con constancia, cuerpo y alma.</p><b>Leer más →</b></a>
-  <a href="biblia/" class="feat"><span class="fi">🌱</span><h3>Hábitos cristianos</h3><p>Trabajo, generosidad, cuidar la palabra y gratitud, con la Biblia en la mano.</p><b>Leer más →</b></a>
- </div>
- <p class="small center">Contenido orientativo y espiritual. No sustituye el consejo de un profesional sanitario; consulta a tu médico antes de ayunar si tienes alguna condición de salud.</p>
-</section>
-
-<section id="calendario" class="band">
- <div class="wrap narrow">
-  <p class="kicker center">Calendario ortodoxo</p>
-  <h2 class="h2 center">Fiestas y ayunos del mes</h2>
-  <div class="card pad28" id="cal"></div>
- </div>
-</section>
-
-<section id="oraciones" class="wrap sect">
- <p class="kicker center">Oraciones</p>
- <h2 class="h2 center">Oraciones de la Iglesia</h2>
- <div class="grid4" id="prList"></div>
-</section>
-
+<section class="wrap explore"><p class="kicker center">Sigue explorando</p><h2 class="h2 center">Descubre más en Phos</h2><div class="xgrid"><a href="lecturas.html" class="xcard"><span class="xi">📜</span><b>Lecturas</b><span>El versículo del día, el Evangelio de la fiesta y la reflexión.</span><em>Entrar →</em></a><a href="escrituras.html" class="xcard"><span class="xi">📖</span><b>Biblia</b><span>El salmo del día y las Biblias de cada Iglesia.</span><em>Entrar →</em></a><a href="salud.html" class="xcard"><span class="xi">🌿</span><b>Salud y bienestar</b><span>Ayuno, descanso, alimentos y hábitos según la Biblia.</span><em>Entrar →</em></a><a href="oraciones.html" class="xcard"><span class="xi">🙏</span><b>Oraciones</b><span>Las oraciones de la Iglesia y la de este momento.</span><em>Entrar →</em></a><a href="calendario.html" class="xcard"><span class="xi">📅</span><b>Calendario</b><span>Fiestas, santos y ayunos de cada día del mes.</span><em>Entrar →</em></a></div></section>
 <section class="dark appband">
  <div class="wrap row center-v">
   <div class="grow">
@@ -150,7 +69,6 @@
   <a href="biblia/" class="btn gold big">Abrir la web para móviles</a>
  </div>
 </section>
-
 <footer class="foot">
  <div class="wrap row">
   <div class="grow"><p class="fbrand">Phos</p><p>Un proyecto independiente para leer la Biblia y vivir la fe cada día. Los textos bíblicos son de dominio público; las fuentes y licencias se detallan dentro de la app.</p></div>

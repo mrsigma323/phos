@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lecturas de hoy · Phos</title>
+<meta name="description" content="El versículo del día, el Evangelio de la fiesta y una reflexión diaria según la tradición ortodoxa.">
+<meta name="theme-color" content="#4A1416">
+<link rel="icon" href="biblia/icon-192.png">
+<link rel="apple-touch-icon" href="biblia/apple-touch-icon.png">
+<meta property="og:title" content="Lecturas de hoy · Phos">
+<meta property="og:description" content="Ayuno, fiestas, oraciones y la Biblia completa, cada día.">
+<meta property="og:image" content="biblia/icon-512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="web.css">
+</head>
+<body>
+<a class="skip" href="#inicio">Saltar al contenido</a>
+<header class="top">
+ <div class="wrap topin">
+  <a href="./" class="brand">
+   <svg aria-hidden="true" width="30" height="40" viewBox="0 0 30 40" fill="none" stroke="#E2C27A" stroke-width="2.2" stroke-linecap="round"><path d="M15 3v34M10 8h10M5 16h20M9 29l12-5"/></svg>
+   <span><b>Phos</b><small>Sabiduría de la Iglesia antigua</small></span>
+  </a>
+  <nav aria-label="Principal" class="nav">
+   <a href="index.html">Inicio</a><a href="lecturas.html" aria-current="page">Lecturas</a><a href="escrituras.html">Biblia</a><a href="salud.html">Salud y bienestar</a><a href="oraciones.html">Oraciones</a><a href="calendario.html">Calendario</a>
+  </nav>
+  <a href="biblia/" class="cta">📱 Web para móviles</a>
+ </div>
+</header>
+<div class="wrap"><div class="ad-slot ad-top" aria-hidden="true"></div></div>
+<section class="hero sub wrap">
+ <div class="pills"><span class="kicker" id="hDate">—</span><span class="pill" id="hFast">—</span></div>
+ <h1>Lecturas de hoy</h1>
+ <p class="lead">La Palabra de Dios para hoy, con una breve reflexión para meditarla.</p>
+</section>
+<div class="wrap cols">
+ <main class="main">
+  <article id="lecturas" class="card pad40">
+   <p class="kicker">Palabra de hoy</p>
+   <p class="sub" id="lSeason">—</p>
+   <div class="reading"><h2 id="vRef">Versículo del día</h2><p class="scripture" id="vTxt">…</p></div>
+   <div class="reading" id="gospelBox" hidden><h2 id="gRef">Evangelio de la fiesta</h2><p class="scripture" id="gTxt">…</p></div>
+   <p class="small">Texto: Reina-Valera 1909 (dominio público).</p>
+  </article>
+  <article class="card dark pad40" id="reflexion">
+   <p class="kicker gold">Reflexión del día</p>
+   <h2 id="rTitle">—</h2>
+   <p class="rtext" id="rText">—</p>
+   <p class="rref" id="rRef">—</p>
+   <div class="btns left"><button type="button" class="obtn" id="rListen">Escuchar en audio</button><button type="button" class="obtn" id="rShare">Compartir</button></div>
+  </article>
+ </main>
+ <aside class="side">
+  <section class="card pad28">
+   <p class="kicker">Oración para este momento</p>
+   <h3 id="pName">—</h3>
+   <p class="prayer" id="pTxt">…</p>
+  </section>
+  <div class="ad-slot ad-side" aria-hidden="true"></div>
+ </aside>
+</div>
+<section class="wrap explore"><p class="kicker center">Sigue explorando</p><h2 class="h2 center">Descubre más en Phos</h2><div class="xgrid"><a href="index.html" class="xcard"><span class="xi">🏠</span><b>Inicio</b><span>Hoy: ayuno, fiesta y oración del momento.</span><em>Entrar →</em></a><a href="escrituras.html" class="xcard"><span class="xi">📖</span><b>Biblia</b><span>El salmo del día y las Biblias de cada Iglesia.</span><em>Entrar →</em></a><a href="salud.html" class="xcard"><span class="xi">🌿</span><b>Salud y bienestar</b><span>Ayuno, descanso, alimentos y hábitos según la Biblia.</span><em>Entrar →</em></a><a href="oraciones.html" class="xcard"><span class="xi">🙏</span><b>Oraciones</b><span>Las oraciones de la Iglesia y la de este momento.</span><em>Entrar →</em></a><a href="calendario.html" class="xcard"><span class="xi">📅</span><b>Calendario</b><span>Fiestas, santos y ayunos de cada día del mes.</span><em>Entrar →</em></a></div></section>
+<footer class="foot">
+ <div class="wrap row">
+  <div class="grow"><p class="fbrand">Phos</p><p>Un proyecto independiente para leer la Biblia y vivir la fe cada día. Los textos bíblicos son de dominio público; las fuentes y licencias se detallan dentro de la app.</p></div>
+  <nav aria-label="Legal" class="legal"><a href="aviso-legal.html">Aviso legal</a><a href="privacidad.html">Privacidad</a><a href="cookies.html">Cookies</a></nav>
+ </div>
+</footer>
+<script src="phos-web-core.js"></script>
+<script src="web.js"></script>
+</body>
+</html>

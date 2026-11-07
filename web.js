@@ -44,6 +44,7 @@ function renderToday(){
 
 // ---- Lecturas ----
 async function renderReadings(info){
+ if(!$('vRef'))return;
  const ref=parseRef(VOTD[DOY%VOTD.length]);
  if(ref){setTxt('vRef',cite(...ref));try{setTxt('vTxt',await verses(...ref))}catch(e){fail('vTxt')}}
  $('gospelBox').hidden=true;
@@ -54,6 +55,7 @@ async function renderReadings(info){
 // ---- Reflexión ----
 let reflText='';
 async function renderReflection(){
+ if(!$('rTitle'))return;
  const all=[];for(const k of Object.keys(REFL.tx))REFL.tx[k].forEach((x,i)=>all.push([k,i]));
  const [k,i]=all[DOY%all.length];const [title,body]=REFL.tx[k][i];const refs=REFL.ref[k][i];
  setTxt('rTitle',title);setTxt('rText',body);
@@ -61,7 +63,7 @@ async function renderReflection(){
  reflText=title+'. '+body;
 }
 function bindReflection(){
- const L=$('rListen'),S=$('rShare');
+ const L=$('rListen'),S=$('rShare');if(!L)return;
  if(!('speechSynthesis' in window))L.hidden=true;
  L.onclick=()=>{const ss=speechSynthesis;if(ss.speaking){ss.cancel();L.textContent='Escuchar en audio';return}
   const u=new SpeechSynthesisUtterance(reflText);u.lang='es-ES';u.rate=.95;u.onend=u.onerror=()=>L.textContent='Escuchar en audio';ss.speak(u);L.textContent='Detener';};
@@ -72,6 +74,7 @@ function bindReflection(){
 
 // ---- Oración para este momento ----
 async function renderPrayer(){
+ if(!$('pTxt'))return;
  const p=prayerFor(BR,now.getHours());
  setTxt('pName',prName(p.k)+' · '+tdL().ui[['tdMorning','tdMidday','tdAfternoon','tdEvening','tdNight'].indexOf(p.per)+12]);
  if(p.ref){try{setTxt('pTxt',await verses(...p.ref))}catch(e){fail('pTxt')}}else setTxt('pTxt',prText(p.k));
@@ -79,6 +82,7 @@ async function renderPrayer(){
 
 // ---- Salmo del día ----
 async function renderPsalm(){
+ if(!$('psTxt'))return;
  const n=DOY%150+1;setTxt('psTitle','Salmo '+n);
  try{const n2=chunkOf('PSA'),d=await loadChunk(n2),ch=d.PSA[n]||[];setTxt('psTxt',ch.slice(0,4).map(x=>x[1]).join(' ')+(ch.length>4?' …':''))}catch(e){fail('psTxt')}
 }
@@ -86,7 +90,7 @@ async function renderPsalm(){
 // ---- Calendario del mes ----
 let cy=now.getFullYear(),cm=now.getMonth(),sel=TD;
 function drawCal(){
- const box=$('cal');const first=utc(cy,cm+1,1),days=new Date(Date.UTC(cy,cm+1,0)).getUTCDate();
+ const box=$('cal');if(!box)return;const first=utc(cy,cm+1,1),days=new Date(Date.UTC(cy,cm+1,0)).getUTCDate();
  const off=(new Date(first).getUTCDay()+6)%7;let h=`<div class="calnav"><button type="button" data-m="-1" aria-label="Mes anterior">‹</button><span class="calm">${capF(MONTHS[cm])} ${cy}</span><button type="button" data-m="1" aria-label="Mes siguiente">›</button></div>`;
  h+='<div class="calgrid wk">'+['lun','mar','mié','jue','vie','sáb','dom'].map(x=>`<span>${x}</span>`).join('')+'</div><div class="calgrid">';
  for(let i=0;i<off;i++)h+='<span class="cd empty"></span>';
@@ -105,7 +109,7 @@ function drawCal(){
 // ---- Oraciones ----
 const PRS=[['jesus','La oración del corazón, para repetir en silencio.'],['trisagion','El himno tres veces santo.'],['heavenly','Invocación al Espíritu Santo, al empezar el día.'],['phos','El himno más antiguo de la tarde.'],['ephrem','La oración de la Gran Cuaresma.'],['ourf','La oración que enseñó el Señor (Mt 6, 9-13).'],['nunc','El cántico de Simeón, para la noche (Lc 2, 29-32).'],['subtuum','La plegaria más antigua a la Madre de Dios.']];
 function renderPrayers(){
- const box=$('prList');
+ const box=$('prList');if(!box)return;
  box.innerHTML=PRS.map(([k,d])=>`<details class="pr" data-k="${k}"><summary><b>${prName(k)}</b><span>${d}</span></summary><div class="ptx">${PR_BIB[k]?'…':prText(k)}</div></details>`).join('');
  box.querySelectorAll('details').forEach(el=>el.addEventListener('toggle',async()=>{const k=el.dataset.k,r=PR_BIB[k];if(!el.open||!r||el.dataset.done)return;
   const tx=el.querySelector('.ptx');try{let v=await verses(...r);if(k==='ourf')v=v.replace(/^.*?(Padre nuestro)/,'$1');tx.textContent=v;const c=document.createElement('cite');c.textContent=cite(...r);tx.append(c);el.dataset.done=1}catch(e){tx.textContent='No se ha podido cargar el texto.'}}));
