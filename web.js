@@ -229,3 +229,4 @@ document.addEventListener('phos:prefs',()=>{BR=tdBr();all();renderPrayers()});
 window.PHOS={nameIndex:()=>nameIndex(),MES,norm};
 bindSaints();renderGreek();all();renderReflection();bindReflection();renderPsalm();renderPrayers();
 })();
+(function(){document.querySelectorAll(".dx").forEach(function(e){try{var v=decodeURIComponent(escape(atob(e.dataset.x)));e.textContent=v;if(e.dataset.mail)e.href="mailto:"+v}catch(_){}})})();

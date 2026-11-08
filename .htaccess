@@ -16,3 +16,8 @@
 </FilesMatch>
 
 ErrorDocument 404 /404.html
+
+# Páginas con datos del titular o de cuenta: que los buscadores no las indexen
+<FilesMatch "^(aviso-legal|privacidad|cookies|mi-phos)\.html$">
+  Header set X-Robots-Tag "noindex, noarchive, nosnippet"
+</FilesMatch>

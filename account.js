@@ -247,7 +247,7 @@ function bindRefund(){
   const j=await call('devolucion.php',data);btn.disabled=false;
   if(j.ok){f.querySelectorAll('input,textarea').forEach(x=>{if(x.type!=='checkbox')x.value='';else x.checked=false});
    m.className='acmsg okk';m.innerHTML='✅ Hemos recibido tu solicitud (nº '+j.id+'). Te hemos enviado un correo de confirmación y te responderemos lo antes posible.'}
-  else err(j.error||'No se ha podido enviar. Escríbenos a bienvenid@phosbiblias.com.');
+  else err(j.error||'No se ha podido enviar. Escríbenos a '+['bienvenid','phosbiblias.com'].join('@')+'.');
  };
 }
 
