@@ -145,7 +145,7 @@ function renderIn(){
  <div class="dongrid">
   <div class="card pad40 don" id="donativo">
    <span class="xi">🌿</span><h2 class="h3">Donativo mensual</h2>
-   <p>La cantidad que tú elijas, cada mes. Puedes cambiarlo o cancelarlo cuando quieras desde aquí.</p>
+   <p>Eliges la cantidad una sola vez y se dona automáticamente cada mes, hasta que la cambies o la canceles desde aquí.</p>
    ${live?`<p class="acok">Activo${ME.monthly.amount?': '+eur(ME.monthly.amount)+' al mes':''}</p>`:''}
    <span class="btn soon" aria-disabled="true">Muy pronto</span>
   </div>
