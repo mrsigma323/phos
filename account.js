@@ -155,6 +155,7 @@ function renderIn(){
    ${stripeURL?`<a class="btn" target="_blank" rel="noopener" href="${esc(stripeURL+(stripeURL.includes('?')?'&':'?')+'prefilled_email='+encodeURIComponent(ME.email)+'&client_reference_id='+encodeURIComponent(ME.ref||''))}">Hacer un donativo</a>`:'<span class="btn soon" aria-disabled="true">Muy pronto</span>'}
   </div>
  </div>
+ <div class="safepay" role="note">   <span class="spi" aria-hidden="true">🔒</span>   <div>    <b>Tu pago, protegido</b>    <p>Phos <b>no ve ni guarda</b> los datos de tu tarjeta ni de tu banco. El pago se hace en la página segura de <b>Stripe</b>, una de las plataformas de pago más utilizadas del mundo, con conexión cifrada y la certificación de seguridad más alta del sector de las tarjetas (PCI DSS nivel 1). Si tu banco te pide confirmarlo en el móvil, es la verificación habitual de cualquier pago por internet.</p>    <ul class="spb"><li>🔒 Conexión cifrada</li><li>✅ PCI DSS nivel 1</li><li>📱 Confirmación de tu banco</li></ul>   </div>  </div>
  <p class="small center" style="margin:-4px 0 0">Los donativos son voluntarios y sin contraprestación: Phos es y seguirá siendo gratuito. <a href="apoya.html">Más información</a></p>
  <div class="card pad40">
   <h2 class="h3">Tu cuenta y tus datos</h2>
