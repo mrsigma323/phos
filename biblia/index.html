@@ -2428,7 +2428,7 @@ renderArticles=async function(sec){if(sec==='sport'&&S.view!=='topic')return ren
   const L=[['../santoral.html','😇','Santoral','Qué santo es hoy y cuándo es tu onomástica.'],['../fiestas.html','⛪','Una fiesta, tres Iglesias','Cómo vive cada Iglesia la Navidad, la Pascua…'],['../recetas.html','🥣','Recetas de ayuno','Qué cocinar según el ayuno de hoy.'],['../mi-phos.html','👤','Mi Phos','Tu cuenta opcional: preferencias, tu santo y tus lecturas.']];
   const d=document.createElement('section');d.className='card wlx';
   d.innerHTML='<h2>✨ Descubre más en Phos</h2>'+L.map(x=>`<a href="${x[0]}" class="wla"><span>${x[1]}</span><div><b>${x[2]}</b><small>${x[3]}</small></div><i>›</i></a>`).join('');
-  const A=[['../apoya.html#puntual','🕯️','Donativo puntual','Una sola vez, la cantidad que elijas.'],['../apoya.html#mensual','🌿','Donativo mensual','Tú decides cuánto, cada mes.']];
+  const A=[['../apoya.html#puntual','🕯️','Donativo puntual','Una sola vez, la cantidad que elijas.'],['../apoya.html#mensual','🌿','Donativo mensual','Eliges la cantidad una vez y se repite cada mes. Solo con cuenta.']];
   const e=document.createElement('section');e.className='card wlx';
   e.innerHTML='<h2>🕯️ Apoya Phos</h2><p class="wlp">Phos es gratuito para todos. Si te ayuda, puedes colaborar con un donativo voluntario.</p>'+A.map(x=>`<a href="${x[0]}" class="wla"><span>${x[1]}</span><div><b>${x[2]}</b><small>${x[3]}</small></div><i>›</i></a>`).join('');
   view.append(d,e)};
