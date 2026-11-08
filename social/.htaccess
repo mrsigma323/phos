@@ -1,0 +1,5 @@
+# Imágenes para redes sociales: públicas aunque la web esté en privado
+Require all granted
+<IfModule mod_headers.c>
+  Header set X-Robots-Tag "noindex"
+</IfModule>
