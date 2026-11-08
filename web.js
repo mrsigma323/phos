@@ -8,7 +8,7 @@ const LEG={ortodoxa:[['o_strict','Ayuno estricto'],['o_wo','Aceite y vino'],['o_
 const JESUS=['JOH 14:6','JOH 8:12','MAT 11:28-30','JOH 3:16','MAT 22:37-39','JOH 15:12','MAT 5:14-16','JOH 10:11','JOH 11:25-26','MAT 6:33','MAT 7:7-8','JOH 6:35','JOH 14:27','MAT 28:20','LUK 6:36-37','MAT 5:43-45','JOH 13:34-35','MAT 18:20','JOH 15:5','MAT 7:12','JOH 16:33','LUK 9:23','JOH 4:13-14','MAT 5:3-9','JOH 10:10','LUK 15:7','MAT 25:40','JOH 14:1-3','MAT 6:25-26','LUK 12:32','JOH 20:29','MAT 9:12-13'];
 const now=new Date();
 const TD=utc(now.getFullYear(),now.getMonth()+1,now.getDate());
-const DOY=Math.floor((TD-utc(now.getFullYear(),1,1))/DAY);
+const DOY=Math.floor((TD-utc(now.getFullYear(),1,1))/DAY)+1; // igual que dayIdx() de la versión móvil
 const FSHORT={c_fastabst:'Ayuno y abstinencia',c_abst:'Abstinencia de carne',c_fri:'Viernes penitencial',c_sol:'Solemnidad: sin abstinencia',c_none:'Sin ayuno',p_none:'Día ordinario',p_lent:'Tiempo de Cuaresma',p_goodfri:'Viernes Santo',o_free:'Sin ayuno',o_strict:'Ayuno estricto',o_wo:'Ayuno con aceite y vino',o_fish:'Se permite pescado',o_dairy:'Semana de los lácteos',o_holyfri:'Viernes Santo'};
 const MONTHS=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 

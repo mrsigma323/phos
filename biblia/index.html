@@ -2205,6 +2205,10 @@ function yearEvents(br,y){
  const out=[],old=tdOld();
  if(br==='ortodoxa'){const P=oPascha(y);O_MOV.forEach(([id,o])=>out.push([id,P+o*DAY]));O_FIX.forEach(([id,m,d])=>out.push([id,utc(y,m,d)+(old?13*DAY:0)]))}
  else{const E=gEaster(y);(br==='catolica'?C_MOV:P_MOV).forEach(([id,o])=>out.push([id,E+o*DAY]));(br==='catolica'?C_FIX:P_FIX).forEach(([id,m,d])=>out.push([id,utc(y,m,d)]));
+  // Traslados litúrgicos (católicos y protestantes): la Anunciación en Semana Santa u Octava de Pascua pasa al lunes tras el 2.º domingo de Pascua; en domingo de Cuaresma, al lunes. San José en Semana Santa pasa al sábado anterior al Domingo de Ramos; en domingo de Cuaresma, al lunes.
+  for(const e of out){const dE=Math.round((e[1]-E)/DAY),sun=new Date(e[1]).getUTCDay()===0;
+   if(e[0]==='annunciation'){if(dE>=-7&&dE<=7)e[1]=E+8*DAY;else if(sun&&dE>=-46&&dE<0)e[1]+=DAY}
+   if(e[0]==='joseph'){if(dE>=-7&&dE<=-1)e[1]=E-8*DAY;else if(sun&&dE>=-46&&dE<0)e[1]+=DAY}}
   const A=advent1(y);out.push(['advent1',A]);if(br==='catolica'){out.push(['christKing',A-7*DAY]);out.push(['holyFamily',holyFamily(y)]);out.push(['baptism',baptismDay(y)])}}
  return out;
 }
