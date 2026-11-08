@@ -47,7 +47,7 @@ jobs:
           SSH="ssh -i ~/.ssh/sg -p ${SG_PORT:-18765}"
           trim(){ printf '%s' "$1" | tr -d '\r\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'; }
           SITE_USER=$(trim "$SITE_USER"); SITE_PASS=$(trim "$SITE_PASS")
-          if [ -n "$SITE_PASS" ]; then
+          if [ -n "$SITE_PASS" ] && [ ! -f .web-publica ]; then
             echo "Usuario: ${#SITE_USER} caracteres. Contraseña: ${#SITE_PASS} caracteres."
             H=$($SSH "$SG_USER@$SG_HOST" 'echo $HOME')
             PW="$H/www/$SG_DOMAIN/.htpasswd"
