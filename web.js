@@ -14,8 +14,11 @@ const MONTHS=['enero','febrero','marzo','abril','mayo','junio','julio','agosto',
 
 // ---- Texto bíblico (Reina-Valera 1909) ----
 const chunkCache={};
-function chunkOf(b){const e=RV.b.find(x=>x[0]===b);return e?e[2]:null}
-function loadChunk(n){if(!chunkCache[n])chunkCache[n]=fetch('biblia/data/reina-valera-1909/'+n+'.json').then(r=>{if(!r.ok)throw 0;return r.json()});return chunkCache[n]}
+// Ortodoxos y católicos leen la Biblia libre adaptada («el Señor»); protestantes, la Reina-Valera 1909 (igual que en la versión móvil)
+const ED=()=>bibleEd(BR),EDM=()=>ED()==='es-blm'?BLM:RV;
+function chunkOf(b){const e=EDM().b.find(x=>x[0]===b);return e?e[2]:null}
+function loadChunk(n){const k=ED()+'/'+n;if(!chunkCache[k])chunkCache[k]=fetch('biblia/data/'+k+'.json').then(r=>{if(!r.ok)throw 0;return r.json()});return chunkCache[k]}
+window.dayIdx=()=>DOY;
 async function verses(b,c,v1,v2){
  const n=chunkOf(b);if(n==null)return '';
  const d=await loadChunk(n);const ch=(d[b]||{})[c]||[];
@@ -37,11 +40,25 @@ function renderToday(){
  const up=upcoming(BR,TD,1)[0];
  if(up){const d=Math.round((up[1]-TD)/DAY);setTxt('cNext',`${evIco(up[0])} ${celName(up[0])} · ${fmtD(new Date(up[1]))} (${d===1?'mañana':'dentro de '+d+' días'})`)}
  setTxt('cHint',snNote(info.s)||tdL().ui[10]);
- // Santoral
- const cel=info.cel.filter(c=>celName(c));
- if(cel.length){setTxt('sIco',evIco(cel[0]));setTxt('sName',celName(cel[0]));
-  setTxt('sMore',cel.length>1?'También: '+cel.slice(1).map(celName).join(' · '):snNote(info.s)||'');}
- else{setTxt('sIco',BR==='ortodoxa'?'☦️':'✝️');setTxt('sName',snName(info.s));setTxt('sMore',tdL().ui[3]+(up?' La próxima: '+celName(up[0])+', '+fmtD(new Date(up[1]))+'.':''));}
+ // Santo del día (ortodoxos y católicos) o personaje bíblico (protestantes)
+ const cel=info.cel.filter(c=>celName(c)),sts=daySaints(BR,TD),fig=figToday();
+ const sk=document.querySelector('#santoral .kicker');
+ if(BR==='protestante'){
+  if(sk)sk.textContent=cel.length?'Hoy se celebra':'Personaje bíblico del día';
+  const [fb,fcv]=fig[2].split(' '),[fc,fv]=fcv.split(':');
+  if(cel.length){setTxt('sIco',evIco(cel[0]));setTxt('sName',celName(cel[0]));setTxt('sMore','Personaje bíblico del día: '+fig[0]+'. '+fig[1]);}
+  else{setTxt('sIco','📜');setTxt('sName',fig[0]);setTxt('sMore',fig[1]+' ('+cite(fb,+fc,+fv)+')');}
+ }else{
+  if(sk)sk.textContent='Hoy se celebra';
+  const names=[...cel.map(celName),...sts];
+  if(names.length){setTxt('sIco',cel.length?evIco(cel[0]):(BR==='ortodoxa'?'☦️':'😇'));setTxt('sName',names[0]);
+   setTxt('sMore',names.length>1?'También: '+names.slice(1).join(' · '):snNote(info.s)||'');}
+  else{setTxt('sIco',BR==='ortodoxa'?'☦️':'✝️');setTxt('sName',snName(info.s));setTxt('sMore',tdL().ui[3]+(up?' La próxima: '+celName(up[0])+', '+fmtD(new Date(up[1]))+'.':''));}
+ }
+ // Textos que cambian según la Iglesia
+ document.querySelectorAll('.bibsrc').forEach(e=>e.textContent='Texto: '+bibleName(BR)+'.');
+ document.querySelectorAll('a.zone[href="recetas.html"] b').forEach(e=>e.textContent=BR==='protestante'?'Recetas sencillas':'Recetas de ayuno');
+ document.querySelectorAll('a.zone[href="santoral.html"] span:not(.zi)').forEach(e=>e.textContent=BR==='protestante'?'Testigos de la fe':'El santo de hoy');
  document.querySelectorAll('[data-br]').forEach(b=>{const on=b.dataset.br===BR;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
  document.querySelectorAll('[data-cal]').forEach(b=>b.parentNode.hidden=BR!=='ortodoxa');
  const cb=$('calBr');if(cb)cb.textContent={ortodoxa:'Calendario ortodoxo',catolica:'Calendario católico',protestante:'Calendario protestante'}[BR];
@@ -133,10 +150,16 @@ const fmtDY=t=>fmtD(new Date(t))+' de '+new Date(t).getUTCFullYear();
 
 // ---- Palabra griega del día ----
 const GK=[['φῶς','phōs','luz','JOH 8:12'],['ἀγάπη','agápē','amor','1CO 13:13'],['χάρις','cháris','gracia','EPH 2:8'],['εἰρήνη','eirḗnē','paz','JOH 14:27'],['πίστις','pístis','fe','HEB 11:1'],['ἐλπίς','elpís','esperanza','ROM 5:5'],['λόγος','lógos','palabra, Verbo','JOH 1:1'],['ζωή','zōḗ','vida','JOH 14:6'],['ἀλήθεια','alḗtheia','verdad','JOH 8:32'],['σωτηρία','sōtēría','salvación','ACT 4:12'],['χαρά','chará','alegría','JOH 15:11'],['ἔλεος','éleos','misericordia','LUK 1:50'],['μετάνοια','metánoia','conversión, cambio de corazón','MAT 3:8'],['εὐχαριστία','eucharistía','acción de gracias','PHP 4:6'],['δόξα','dóxa','gloria','LUK 2:14'],['πνεῦμα','pneûma','espíritu, aliento','JOH 4:24'],['ἐκκλησία','ekklēsía','Iglesia, asamblea','MAT 16:18'],['κύριος','kýrios','Señor','PHP 2:11'],['Χριστός','Christós','Cristo, el Ungido','MAT 16:16'],['Ἰησοῦς','Iēsoûs','Jesús, «Dios salva»','MAT 1:21'],['εὐαγγέλιον','euangélion','evangelio, buena noticia','MAR 1:1'],['ἀνάστασις','anástasis','resurrección','JOH 11:25'],['βασιλεία','basileía','reino','MAT 6:33'],['ἄρτος','ártos','pan','JOH 6:35'],['ποιμήν','poimḗn','pastor','JOH 10:11'],['ἄμπελος','ámpelos','vid','JOH 15:5'],['ὕδωρ','hýdōr','agua','JOH 4:14'],['θεός','theós','Dios','JOH 1:1'],['πατήρ','patḗr','padre','MAT 6:9'],['υἱός','huiós','hijo','JOH 3:16'],['ἅγιος','hágios','santo','REV 4:8'],['προσευχή','proseuchḗ','oración','ACT 2:42'],['νηστεία','nēsteía','ayuno','MAT 17:21'],['ταπεινοφροσύνη','tapeinophrosýnē','humildad','PHP 2:3'],['ὑπομονή','hypomonḗ','paciencia, constancia','ROM 5:3-4'],['κοινωνία','koinōnía','comunión','ACT 2:42'],['μακάριος','makários','bienaventurado, dichoso','MAT 5:3'],['σταυρός','staurós','cruz','LUK 9:23'],['ἀμήν','amḗn','amén, así sea','REV 22:21']];
+const LAT=[['Lux','lux','luz','JOH 8:12'],['Caritas','cáritas','amor, caridad','1CO 13:13'],['Gratia','gratia','gracia','EPH 2:8'],['Pax','pax','paz','JOH 14:27'],['Fides','fides','fe','HEB 11:1'],['Spes','spes','esperanza','ROM 5:5'],['Verbum','verbum','Palabra, Verbo','JOH 1:1'],['Vita','vita','vida','JOH 14:6'],['Veritas','véritas','verdad','JOH 8:32'],['Misericordia','misericordia','misericordia','LUK 6:36'],['Gaudium','gáudium','alegría','PHI 4:4'],['Panis','panis','pan','JOH 6:35'],['Crux','crux','cruz','1CO 1:18'],['Resurrectio','resurréctio','resurrección','JOH 11:25'],['Ecclesia','ecclésia','Iglesia','MAT 16:18'],['Oratio','orátio','oración','PHI 4:6'],['Sanctus','sanctus','santo','ISA 6:3'],['Gloria','glória','gloria','LUK 2:14'],['Alleluia','allelúia','alabad al Señor','PSA 150:6'],['Salus','salus','salvación','ACT 4:12'],['Benedictus','benedíctus','bendito','LUK 1:68'],['Humilitas','humílitas','humildad','PHI 2:3'],['Pastor','pastor','pastor','JOH 10:11'],['Agnus Dei','agnus Dei','Cordero de Dios','JOH 1:29'],['Spiritus','spíritus','espíritu','JOH 4:24'],['Regnum','regnum','reino','MAT 6:33'],['Fiat','fiat','hágase','LUK 1:38'],['Magnificat','magníficat','engrandece','LUK 1:46'],['Amen','amen','así sea','2CO 1:20'],['Communio','commúnio','comunión','1CO 10:16']];
+const HEB=[['שָׁלוֹם','shalom','paz','NUM 6:26'],['חֶסֶד','jésed','misericordia fiel','PSA 136:1'],['אָמֵן','amén','así sea','PSA 41:13'],['הַלְלוּיָהּ','haleluyá','alabad al Señor','PSA 150:6'],['אֱמוּנָה','emuná','fe, fidelidad','HAB 2:4'],['תּוֹרָה','torá','enseñanza, ley','PSA 119:105'],['רוּחַ','rúaj','espíritu, aliento','GEN 1:2'],['אוֹר','or','luz','PSA 27:1'],['בְּרָכָה','berajá','bendición','GEN 12:2'],['קָדוֹשׁ','kadosh','santo','ISA 6:3'],['יְשׁוּעָה','yeshuá','salvación','PSA 62:1'],['לֵב','lev','corazón','PRO 4:23'],['דָּבָר','davar','palabra','ISA 40:8'],['עִמָּנוּאֵל','Immanuel','Dios con nosotros','ISA 7:14'],['מָשִׁיחַ','mashíaj','ungido, Mesías','PSA 2:2']];
+function wordToday(){if(BR==='catolica')return ['latina',LAT[DOY%LAT.length]];if(BR==='protestante'&&DOY%2)return ['hebrea',HEB[DOY%HEB.length]];return ['griega',GK[DOY%GK.length]]}
 async function renderGreek(){
- if(!$('gkW'))return;const [w,t,m,r]=GK[DOY%GK.length];setTxt('gkW',w);setTxt('gkT',t);setTxt('gkM',m);
- if($('gkV')){const ref=parseRef(r);setTxt('gkR',cite(...ref)+' · Reina-Valera 1909');try{setTxt('gkV',await verses(...ref))}catch(e){fail('gkV')}}
+ if(!$('gkW'))return;const [lg,[w,t,m,r]]=wordToday();setTxt('gkW',w);setTxt('gkT',t);setTxt('gkM',m);
+ const lab='Palabra '+lg+' del día';document.querySelectorAll('.gkline').forEach(e=>{if(e.firstChild&&e.firstChild.nodeType===3)e.firstChild.nodeValue=lab+': '});document.querySelectorAll('.greek .kicker').forEach(e=>e.textContent=lab);
+ $('gkW').lang=lg==='latina'?'la':lg==='hebrea'?'he':'grc';
+ if($('gkV')){const ref=parseRef(r);setTxt('gkR',cite(...ref)+' · '+bibleName(BR));try{setTxt('gkV',await verses(...ref))}catch(e){fail('gkV')}}
 }
+
 
 // ---- Hoy en la cocina ----
 const FOOD={o_strict:['Ayuno estricto','Sin carne, lácteos, huevos, pescado ni aceite. Prueba unas lentejas estofadas o una ensalada de garbanzos con limón.','#estricto'],
@@ -221,7 +244,7 @@ async function shareImg(text,ref){
 }
 document.querySelectorAll('[data-img]').forEach(b=>b.onclick=()=>{const v=b.dataset.img==='v';shareImg($(v?'vTxt':'gTxt').textContent,(v?$('vRef'):$('gRef')).textContent.replace(/^.*· /,''))});
 
-function all(){const info=renderToday();renderReadings(info);renderPrayer();drawCal();renderFood(info);drawSaints();drawFests();NIDX=null;if($('nameQ'))searchName($('nameQ').value)}
+function all(){const info=renderToday();renderReadings(info);renderGreek();renderPrayer();drawCal();renderFood(info);drawSaints();drawFests();NIDX=null;if($('nameQ'))searchName($('nameQ').value)}
 const said=(k,v)=>document.dispatchEvent(new CustomEvent('phos:set',{detail:{k,v}}));
 document.querySelectorAll('[data-cal]').forEach(b=>b.onclick=()=>{store.set('oldCal',b.dataset.cal==='1');said('oldCal',b.dataset.cal==='1');all()});
 document.querySelectorAll('[data-br]').forEach(b=>b.onclick=()=>{BR=b.dataset.br;store.set('todayBr',BR);said('todayBr',BR);all();renderPrayers()});
