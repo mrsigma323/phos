@@ -1,6 +1,7 @@
 <?php
 // Phos · núcleo del servidor de cuentas
 declare(strict_types=1);
+ini_set("display_errors", "0");
 
 const PHOS_SESSION_DAYS = 180;
 const PHOS_TOKEN_MINUTES = 30;
