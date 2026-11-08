@@ -21,3 +21,6 @@ ErrorDocument 404 /404.html
 <FilesMatch "^(aviso-legal|privacidad|cookies|mi-phos)\.html$">
   Header set X-Robots-Tag "noindex, noarchive, nosnippet"
 </FilesMatch>
+
+# Enlaces cortos a las redes sociales de Phos
+Redirect 302 /facebook https://www.facebook.com/61596423448217
