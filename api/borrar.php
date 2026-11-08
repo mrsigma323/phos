@@ -10,6 +10,8 @@ if (has_live_monthly($u)) fail('Tienes un donativo mensual activo. Cancélalo pr
 $pdo = db();
 $pdo->prepare('DELETE FROM sessions WHERE user_id = ?')->execute([$u['id']]);
 $pdo->prepare('DELETE FROM login_tokens WHERE email = ?')->execute([$u['email']]);
+// Los donativos quedan registrados en Stripe a efectos fiscales; aquí se desvinculan de la persona
+$pdo->prepare('UPDATE donations SET user_id = NULL WHERE user_id = ?')->execute([$u['id']]);
 $pdo->prepare('DELETE FROM users WHERE id = ?')->execute([$u['id']]);
 cookie_set('phos_s', '', 0, true);
 cookie_set('phos_in', '', 0, false);

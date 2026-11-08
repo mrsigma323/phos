@@ -74,6 +74,16 @@ function migrate(PDO $pdo): void {
         $pdo->exec('ALTER TABLE users ADD COLUMN sub_status VARCHAR(32) NULL');
         $pdo->exec('ALTER TABLE users ADD COLUMN sub_amount INT NULL');
     }
+    // Historial de donativos de cada usuario (lo rellenará Stripe; solo para el gráfico de Mi Phos)
+    $pdo->exec("CREATE TABLE IF NOT EXISTS donations (
+        id $id,
+        user_id BIGINT NULL,
+        kind VARCHAR(10) NOT NULL,
+        amount INT NOT NULL,
+        currency CHAR(3) NOT NULL DEFAULT 'eur',
+        stripe_ref VARCHAR(80) NOT NULL UNIQUE,
+        at DATETIME NOT NULL
+    )$tail");
     $pdo->exec("CREATE TABLE IF NOT EXISTS rate_hits (
         id $id,
         k VARCHAR(200) NOT NULL,
@@ -196,6 +206,7 @@ function public_user(array $u): array {
         'religConsent' => (bool)(int)$u['relig_consent'],
         'prefs' => prefs_of($u),
         'since' => substr((string)$u['created_at'], 0, 10),
+        'ref' => 'u' . $u['id'],
         'monthly' => has_live_monthly($u) ? ['active' => true, 'amount' => isset($u['sub_amount']) ? (int)$u['sub_amount'] : null] : ['active' => false],
     ];
 }

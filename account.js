@@ -3,6 +3,7 @@
 'use strict';
 const $=id=>document.getElementById(id);
 const API='/api/';
+const eur=c=>(c/100).toLocaleString('es-ES',{style:'currency',currency:'EUR'});
 const LS={get(k,d){try{const v=localStorage.getItem('phos:'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('phos:'+k,JSON.stringify(v))}catch(e){}}};
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const loggedHint=()=>/(?:^|;\s*)phos_in=1/.test(document.cookie);
@@ -111,7 +112,7 @@ function renderIn(){
  const box=$('acBox');if(!box||!ME)return;const p=ME.prefs||{};
  const welcome=/bienvenida=1/.test(location.search);
  const br=LS.get('todayBr','ortodoxa'),old=!!LS.get('oldCal',false);
- const food=(p.food||'').split('|');const live=!!(ME.monthly&&ME.monthly.active);
+ const food=(p.food||'').split('|');const stripeURL=(box.dataset.stripe||'').trim();const live=!!(ME.monthly&&ME.monthly.active);
  box.innerHTML=`${welcome?'<p class="acok">✅ Has entrado en tu cuenta.</p>':''}
  <div class="card pad40">
   <p class="kicker">Mi Phos</p><h2 class="h3">Hola${ME.name?', '+esc(ME.name):''}</h2>
@@ -136,11 +137,25 @@ function renderIn(){
   <button class="btn" type="submit">Guardar preferencias</button>
   <p class="acmsg" id="pMsg" role="status"></p>
  </form>
- <div class="card pad40" id="donativo">
-  <h2 class="h3">🌿 Donativo mensual</h2>
-  <p>Muy pronto podrás hacer aquí un donativo mensual de la cantidad que elijas, y cambiarlo o cancelarlo cuando quieras. Es totalmente voluntario: Phos es y seguirá siendo gratuito.</p>
-  <p><a href="apoya.html" class="more">Más sobre los donativos →</a></p>
+ <div class="card pad40 nosel" id="misdon">
+  <h2 class="h3">Tus donativos</h2>
+  <p class="small">Resumen de los últimos 12 meses. Es solo informativo.</p>
+  <div class="dchart" id="dChart"><p class="small center">Cargando…</p></div>
  </div>
+ <div class="dongrid">
+  <div class="card pad40 don" id="donativo">
+   <span class="xi">🌿</span><h2 class="h3">Donativo mensual</h2>
+   <p>La cantidad que tú elijas, cada mes. Puedes cambiarlo o cancelarlo cuando quieras desde aquí.</p>
+   ${live?`<p class="acok">Activo${ME.monthly.amount?': '+eur(ME.monthly.amount)+' al mes':''}</p>`:''}
+   <span class="btn soon" aria-disabled="true">Muy pronto</span>
+  </div>
+  <div class="card pad40 don" id="puntual">
+   <span class="xi">🕯️</span><h2 class="h3">Donativo puntual</h2>
+   <p>Una sola vez, la cantidad que tú elijas. Aparecerá en tu gráfico de donativos.</p>
+   ${stripeURL?`<a class="btn" target="_blank" rel="noopener" href="${esc(stripeURL+(stripeURL.includes('?')?'&':'?')+'prefilled_email='+encodeURIComponent(ME.email)+'&client_reference_id='+encodeURIComponent(ME.ref||''))}">Hacer un donativo</a>`:'<span class="btn soon" aria-disabled="true">Muy pronto</span>'}
+  </div>
+ </div>
+ <p class="small center" style="margin:-4px 0 0">Los donativos son voluntarios y sin contraprestación: Phos es y seguirá siendo gratuito. <a href="apoya.html">Más información</a></p>
  <div class="card pad40">
   <h2 class="h3">Tu cuenta y tus datos</h2>
   <div class="acbtns"><a class="btn ghost" href="${API}exportar.php">Descargar mis datos</a><button class="btn ghost" type="button" id="acOutBtn">Cerrar sesión</button></div>
@@ -148,10 +163,11 @@ function renderIn(){
  <div class="card pad40 acdel" id="eliminar">
   <h2 class="h3">Eliminar mi cuenta</h2>
   <p>Se borrarán para siempre tu cuenta y todo lo que hayas guardado en ella: tu nombre, tu santo, tus preferencias y tu historial de lecturas. Esto no se puede deshacer.</p>
-  ${live?`<p class="acwarn">🔒 Tienes un <b>donativo mensual activo</b>${ME.monthly.amount?` de <b>${(ME.monthly.amount/100).toLocaleString('es-ES',{style:'currency',currency:'EUR'})}</b>`:''}. Para que no quede ningún cobro sin control, primero tienes que <a href="#donativo">cancelarlo</a>. Después podrás eliminar tu cuenta.</p>`:'<p class="small">Si tienes un donativo mensual, cancélalo antes: no se puede eliminar una cuenta con un donativo mensual activo.</p>'}
+  ${live?`<p class="acwarn">🔒 Tienes un <b>donativo mensual activo</b>${ME.monthly.amount?` de <b>${eur(ME.monthly.amount)}</b>`:''}. Para que no quede ningún cobro sin control, primero tienes que <a href="#donativo">cancelarlo</a>. Después podrás eliminar tu cuenta.</p>`:'<p class="small">Si tienes un donativo mensual, cancélalo antes: no se puede eliminar una cuenta con un donativo mensual activo.</p>'}
   <div class="acbtns"><button class="btn danger" type="button" id="acDel" ${live?'disabled aria-disabled="true"':''}>Eliminar mi cuenta</button></div>
   <p class="acmsg" id="dMsg" role="status"></p>
  </div>`;
+ loadChart();
  $('pSanto').addEventListener('input',e=>{$('pSantoR').innerHTML=onomastica(e.target.value)});
  $('acPrefs').onsubmit=async e=>{e.preventDefault();const m=$('pMsg');m.className='acmsg';m.textContent='Guardando…';
   const nb=(document.querySelector('[name=pBr]:checked')||{}).value||'ortodoxa',oc=(document.querySelector('[name=pCal]:checked')||{}).value==='1',consent=$('pConsent').checked;
@@ -168,6 +184,49 @@ function renderIn(){
   $('acDel').disabled=true;const j=await call('borrar.php',{confirmo:'BORRAR'});
   if(j.ok){ME=null;headerLink();renderOut('Tu cuenta y tus datos se han eliminado.')}else{$('acDel').disabled=false;m.className='acmsg err';m.textContent=j.error}
  };
+}
+
+
+// ---- Gráfico informativo de donativos (lienzo: se puede ver y capturar, no copiar ni descargar) ----
+const C_MEN='#9A2F33',C_PUN='#B8842A',MESC=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+async function loadChart(){
+ const box=$('dChart');if(!box)return;
+ const j=await call('donaciones.php');
+ if(!j.ok){box.innerHTML='<p class="small center">No se ha podido cargar el resumen.</p>';return}
+ const M=j.months||[],tot=M.reduce((a,x)=>a+x.mensual+x.puntual,0);
+ const tm=M.reduce((a,x)=>a+x.mensual,0),tp=M.reduce((a,x)=>a+x.puntual,0);
+ if(!tot){box.innerHTML='<div class="dempty"><p><b>Aún no has hecho ningún donativo.</b></p><p class="small">Cuando hagas alguno, aquí verás cada mes tus donativos mensuales y puntuales.</p></div>';return}
+ box.innerHTML=`<div class="dhead"><div class="dhero"><span>Total en 12 meses</span><b>${eur(tot)}</b></div>
+  <ul class="dleg"><li><i style="background:${C_MEN}"></i>Mensual · ${eur(tm)}</li><li><i style="background:${C_PUN}"></i>Puntual · ${eur(tp)}</li></ul></div>
+  <div class="dwrap"><canvas id="dCv" role="img" aria-label="Gráfico de barras de tus donativos de los últimos 12 meses: total ${eur(tot)}"></canvas><div class="dtip" id="dTip" hidden></div></div>`;
+ const cv=$('dCv'),tip=$('dTip');
+ const draw=()=>{
+  const W=cv.parentElement.clientWidth,H=Math.max(200,Math.min(280,W*.45)),dpr=window.devicePixelRatio||1;
+  cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+'px';cv.style.height=H+'px';
+  const g=cv.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);g.clearRect(0,0,W,H);
+  const L=48,R=8,T=10,B=26,pw=W-L-R,ph=H-T-B,max=Math.max(...M.map(x=>x.mensual+x.puntual));
+  const step=niceStep(max/100),top=Math.ceil(max/100/step)*step||step;
+  g.font='12px "Source Sans 3",sans-serif';g.fillStyle='#6B5E57';g.strokeStyle='#ECE4D6';g.lineWidth=1;g.textAlign='right';g.textBaseline='middle';
+  for(let v=0;v<=top+1e-9;v+=step){const y=T+ph-(v/top)*ph;g.beginPath();g.moveTo(L,Math.round(y)+.5);g.lineTo(W-R,Math.round(y)+.5);g.stroke();g.fillText(v.toLocaleString('es-ES')+' €',L-6,y)}
+  const slot=pw/M.length,bw=Math.min(28,slot*.55);cv._bars=[];
+  M.forEach((x,i)=>{const cx=L+slot*i+slot/2,x0=cx-bw/2;let y=T+ph;
+   const segs=[[x.mensual,C_MEN],[x.puntual,C_PUN]].filter(s=>s[0]>0);
+   segs.forEach((sg,k)=>{const h=(sg[0]/100/top)*ph,gap=k>0?2:0,yy=y-h;g.fillStyle=sg[1];
+    roundTop(g,x0,yy+gap,bw,Math.max(h-gap,1),k===segs.length-1?4:0);y=yy});
+   g.fillStyle='#6B5E57';g.textAlign='center';g.textBaseline='top';const mo=+x.m.slice(5)-1;
+   if(M.length<=12&&(W>460||i%2===0))g.fillText(MESC[mo],cx,T+ph+8);
+   cv._bars.push({x0:cx-slot/2,x1:cx+slot/2,d:x,top:y});
+  });
+ };
+ const niceStep=v=>{const c=[1,2,5,10,20,25,50,100,200,250,500,1000,2000,5000];for(const s of c)if(v/s<=4)return s;return 10000};
+ function roundTop(g,x,y,w,h,r){r=Math.min(r,h,w/2);g.beginPath();g.moveTo(x,y+h);g.lineTo(x,y+r);g.quadraticCurveTo(x,y,x+r,y);g.lineTo(x+w-r,y);g.quadraticCurveTo(x+w,y,x+w,y+r);g.lineTo(x+w,y+h);g.closePath();g.fill()}
+ draw();addEventListener('resize',()=>{if($('dCv'))draw()});
+ const show=e=>{const r=cv.getBoundingClientRect(),px=(e.touches?e.touches[0].clientX:e.clientX)-r.left;const b=(cv._bars||[]).find(b=>px>=b.x0&&px<b.x1);
+  if(!b){tip.hidden=true;return}const d=b.d,mo=+d.m.slice(5)-1;
+  tip.innerHTML=`<b>${MESC[mo]} ${d.m.slice(0,4)}</b><span><i style="background:${C_MEN}"></i>Mensual ${eur(d.mensual)}</span><span><i style="background:${C_PUN}"></i>Puntual ${eur(d.puntual)}</span>`;
+  tip.hidden=false;const tw=tip.offsetWidth;tip.style.left=Math.max(0,Math.min(r.width-tw,(b.x0+b.x1)/2-tw/2))+'px';tip.style.top=Math.max(0,b.top-tip.offsetHeight-8)+'px'};
+ cv.addEventListener('mousemove',show);cv.addEventListener('touchstart',show,{passive:true});cv.addEventListener('mouseleave',()=>tip.hidden=true);
+ cv.addEventListener('contextmenu',e=>e.preventDefault());
 }
 
 // Tarjeta «Tu santo» en la portada para quien tiene cuenta
