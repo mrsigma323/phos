@@ -229,6 +229,28 @@ async function loadChart(){
  cv.addEventListener('contextmenu',e=>e.preventDefault());
 }
 
+
+// ---- Formulario de solicitud de devolución ----
+function bindRefund(){
+ const f=$('devolucion');if(!f)return;
+ const d=$('rfDate');if(d){const t=new Date();d.max=t.toISOString().slice(0,10)}
+ if(ME&&$('rfEmail')&&!$('rfEmail').value)$('rfEmail').value=ME.email;
+ f.onsubmit=async e=>{e.preventDefault();const m=$('rfMsg'),btn=f.querySelector('button');
+  const data={email:$('rfEmail').value.trim(),fecha:$('rfDate').value,importe:$('rfAmount').value.trim(),recibo:$('rfReceipt').value.trim(),motivo:$('rfReason').value.trim(),acepto:$('rfOk').checked};
+  const err=t=>{m.className='acmsg err';m.textContent=t};
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.email))return err('Escribe el correo con el que hiciste la aportación.');
+  if(!data.fecha)return err('Indica la fecha de la aportación.');
+  if(!/^\d+([.,]\d{1,2})?$/.test(data.importe))return err('Indica el importe, por ejemplo: 5 o 5,50.');
+  if(data.motivo.length<5)return err('Cuéntanos brevemente el motivo.');
+  if(!data.acepto)return err('Marca la casilla de la política de privacidad para continuar.');
+  btn.disabled=true;m.className='acmsg';m.textContent='Enviando…';
+  const j=await call('devolucion.php',data);btn.disabled=false;
+  if(j.ok){f.querySelectorAll('input,textarea').forEach(x=>{if(x.type!=='checkbox')x.value='';else x.checked=false});
+   m.className='acmsg okk';m.innerHTML='✅ Hemos recibido tu solicitud (nº '+j.id+'). Te hemos enviado un correo de confirmación y te responderemos lo antes posible.'}
+  else err(j.error||'No se ha podido enviar. Escríbenos a bienvenid@phosbiblias.com.');
+ };
+}
+
 // Tarjeta «Tu santo» en la portada para quien tiene cuenta
 function renderSantoCard(){
  const box=$('mySanto');if(!box)return;const s=ME&&ME.prefs&&ME.prefs.santo;
@@ -243,7 +265,7 @@ async function init(){
   if(j.ok&&j.user){ME=j.user;syncFromServer();track()}
   else if(onPage&&j.status&&j.status>=500){headerLink();renderOut(j.error);return}
  }
- headerLink();renderSantoCard();
+ headerLink();renderSantoCard();bindRefund();
  if(onPage){if(ME)renderIn();else renderOut('')}
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();

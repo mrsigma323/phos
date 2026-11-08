@@ -84,6 +84,17 @@ function migrate(PDO $pdo): void {
         stripe_ref VARCHAR(80) NOT NULL UNIQUE,
         at DATETIME NOT NULL
     )$tail");
+    // Solicitudes de devolución de aportaciones
+    $pdo->exec("CREATE TABLE IF NOT EXISTS refund_requests (
+        id $id,
+        email VARCHAR(190) NOT NULL,
+        paid_on DATE NOT NULL,
+        amount INT NOT NULL,
+        receipt VARCHAR(60) NULL,
+        reason TEXT NOT NULL,
+        status VARCHAR(16) NOT NULL DEFAULT 'pendiente',
+        created_at DATETIME NOT NULL
+    )$tail");
     $pdo->exec("CREATE TABLE IF NOT EXISTS rate_hits (
         id $id,
         k VARCHAR(200) NOT NULL,

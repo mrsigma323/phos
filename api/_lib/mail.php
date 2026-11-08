@@ -17,13 +17,26 @@ function send_login_mail(string $to, string $link): bool {
           . '<p style="font-size:14px;color:#6B5E57;line-height:1.5">Si no has pedido entrar en Phos, ignora este correo: no se creará ninguna cuenta.</p>'
           . '</div></body></html>';
 
-    if (!empty($c['mail_log'])) { // pruebas en local: se guarda en un archivo en vez de enviarse
-        return (bool)file_put_contents($c['mail_log'], "TO: $to\n$text\n----\n", FILE_APPEND);
+    return phos_mail($to, $subject, $text, $html);
+}
+
+function phos_from(): string {
+    $c = phos_config() ?? [];
+    return $c['mail_from'] ?? ('hola@' . parse_url(base_url(), PHP_URL_HOST));
+}
+
+// Envío genérico (texto + HTML). En local se guarda en un archivo de pruebas.
+function phos_mail(string $to, string $subject, string $text, string $html = '', string $replyTo = ''): bool {
+    $c = phos_config() ?? [];
+    $from = phos_from();
+    if ($html === '') $html = '<!doctype html><html><body style="font-family:Arial,sans-serif;color:#2B1B17;white-space:pre-wrap">' . htmlspecialchars($text, ENT_QUOTES) . '</body></html>';
+    if (!empty($c['mail_log'])) {
+        return (bool)file_put_contents($c['mail_log'], "TO: $to\nSUBJECT: $subject\n$text\n----\n", FILE_APPEND);
     }
     $b = 'phos' . bin2hex(random_bytes(8));
     $headers = [
         'From' => 'Phos <' . $from . '>',
-        'Reply-To' => $from,
+        'Reply-To' => $replyTo !== '' ? $replyTo : $from,
         'MIME-Version' => '1.0',
         'Content-Type' => 'multipart/alternative; boundary="' . $b . '"',
     ];
