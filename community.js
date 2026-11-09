@@ -118,3 +118,5 @@ function init(){
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
+// ---- Recuento de visitas sin cookies: solo la página y de dónde se llega ----
+try{if(navigator.sendBeacon&&!/bot|crawl|spider/i.test(navigator.userAgent))navigator.sendBeacon('/api/visita.php',new Blob([JSON.stringify({p:location.pathname,r:document.referrer})],{type:'application/json'}))}catch(e){}

@@ -295,3 +295,7 @@ a.zone:hover .zi{transform:scale(1.12) rotate(-6deg)}
 .phx-foot{margin-top:16px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .normas h2{margin-top:34px}.normas li{margin:6px 0}
+.sharerow{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.sharerow .sharebtn{margin:0}
+.shl{margin:8px 0 0;padding-left:20px}.shl li{margin:6px 0;font-size:18px}
+.shnext{list-style:none;padding:0;margin:8px 0 0}.shnext li{display:flex;gap:14px;padding:9px 0;border-top:1px solid var(--line);flex-wrap:wrap}.shnext li b{min-width:150px;color:var(--wine)}
+.phx-share{margin-top:20px}

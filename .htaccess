@@ -31,6 +31,10 @@ Redirect 302 /facebook https://www.facebook.com/61596423448217
   RewriteCond %{HTTPS} !=on
   RewriteCond %{HTTP:X-Forwarded-Proto} !=https
   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+  # «Santo de hoy»: dirección limpia, y la antigua con .php redirige a ella
+  RewriteCond %{THE_REQUEST} \s/santo-de-hoy\.php[\s?]
+  RewriteRule ^santo-de-hoy\.php$ /santo-de-hoy [L,R=301]
+  RewriteRule ^santo-de-hoy/?$ santo-de-hoy.php [L]
 </IfModule>
 <IfModule mod_headers.c>
   Header always set Strict-Transport-Security "max-age=15552000" env=HTTPS

@@ -1,0 +1,56 @@
+<?php require __DIR__.'/api/_lib/santo_hoy.php'; ?><!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<script>(function(){try{var q=location.search,L=localStorage;if(/[?&]desktop=1/.test(q))L.setItem('phos:desk','1');if(L.getItem('phos:desk'))return;if(/(santoral|fiestas|recetas|apoya|mi-phos|condiciones-aportaciones|muro-oracion|normas-comunidad)[.]html|santo-de-hoy/.test(location.pathname))return;var u=navigator.userAgent||'';if(/bot|crawl|spider|lighthouse|slurp|preview/i.test(u))return;var phone=(/iPhone|iPod|Windows Phone|BlackBerry|Opera Mini/i.test(u)||(/Android/i.test(u)&&/Mobile/i.test(u)))&&!/Windows NT|Macintosh|X11|CrOS/i.test(u)&&Math.min(screen.width,screen.height)<820;if(phone)location.replace('biblia/')}catch(e){}})();</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><?= htmlspecialchars($SH_TITLE) ?></title>
+<meta name="description" content="<?= htmlspecialchars($SH_DESC) ?>">
+<meta name="theme-color" content="#4A1416">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/biblia/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="biblia/apple-touch-icon.png">
+<meta property="og:title" content="<?= htmlspecialchars($SH_TITLE) ?>">
+<meta property="og:description" content="<?= htmlspecialchars($SH_DESC) ?>">
+<meta property="og:image" content="https://phosbiblias.com/og.png">
+<meta name="color-scheme" content="light">
+<link rel="preload" href="/fonts/cormorant-lat.woff2" as="font" type="font/woff2" crossorigin> <link rel="preload" href="/fonts/sourcesans3-lat.woff2" as="font" type="font/woff2" crossorigin> <link rel="stylesheet" href="/fonts/fonts.css">
+<link rel="stylesheet" href="web.css?v=cf9bdec6">
+<link rel="canonical" href="https://phosbiblias.com/santo-de-hoy">
+<meta property="og:url" content="https://phosbiblias.com/santo-de-hoy">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Phos">
+<meta property="og:locale" content="es_ES">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<a class="skip" href="#inicio">Saltar al contenido</a>
+<header class="top">
+ <div class="wrap topin">
+  <a href="./" class="brand">
+   <svg aria-hidden="true" width="30" height="40" viewBox="0 0 30 40" fill="none" stroke="#E2C27A" stroke-width="2.2" stroke-linecap="round"><path d="M15 3v34M10 8h10M5 16h20M9 29l12-5"/></svg>
+   <span><b>Phos</b><small>ΦΩΣ ΧΡΙΣΤΟΥ · La luz de Cristo</small></span>
+  </a>
+  <nav aria-label="Principal" class="nav">
+   <a href="index.html">Inicio</a><a href="lecturas.html">Lecturas</a><a href="escrituras.html">Biblia</a><a href="santoral.html">Santoral</a><a href="calendario.html">Calendario</a><a href="salud.html">Salud y bienestar</a><a href="oraciones.html">Oraciones</a><a href="apoya.html" class="navdon">🕯️ Apoyar</a>
+  </nav>
+  <a href="mi-phos.html" class="acct" id="acctLink">👤 Entrar</a>
+  <a href="biblia/" class="cta">📱<span class="ctxt"> Web para móviles</span></a>
+ </div>
+</header>
+<div class="wrap"><div class="ad-slot ad-top" aria-hidden="true"></div></div>
+<?php require __DIR__.'/api/_lib/santo_hoy_body.php'; ?>
+<section class="wrap explore"><p class="kicker center">Sigue explorando</p><h2 class="h2 center">Descubre más en Phos</h2><div class="xgrid"><a href="index.html" class="xcard"><span class="xi">🏠</span><b>Inicio</b><span>Hoy: ayuno, fiesta y oración del momento.</span><em>Entrar →</em></a><a href="lecturas.html" class="xcard"><span class="xi">📜</span><b>Lecturas</b><span>Las palabras de Jesús, el versículo del día y la reflexión.</span><em>Entrar →</em></a><a href="escrituras.html" class="xcard"><span class="xi">📖</span><b>Biblia</b><span>El salmo del día y las Biblias de cada Iglesia.</span><em>Entrar →</em></a><a href="salud.html" class="xcard"><span class="xi">🌿</span><b>Salud y bienestar</b><span>Ayuno, descanso, alimentos y hábitos según la Biblia.</span><em>Entrar →</em></a><a href="oraciones.html" class="xcard"><span class="xi">🙏</span><b>Oraciones</b><span>Las oraciones de la Iglesia y la de este momento.</span><em>Entrar →</em></a><a href="calendario.html" class="xcard"><span class="xi">📅</span><b>Calendario</b><span>Fiestas, santos y ayunos de cada día del mes.</span><em>Entrar →</em></a><a href="santoral.html" class="xcard"><span class="xi">😇</span><b>Santoral</b><span>El santo de hoy y cuándo es tu onomástica.</span><em>Entrar →</em></a><a href="fiestas.html" class="xcard"><span class="xi">⛪</span><b>Una fiesta, tres Iglesias</b><span>Cómo vive cada Iglesia las fiestas de Cristo.</span><em>Entrar →</em></a><a href="recetas.html" class="xcard"><span class="xi">🥣</span><b>Recetas de ayuno</b><span>Qué cocinar según el ayuno de hoy.</span><em>Entrar →</em></a><a href="articulos.html" class="xcard"><span class="xi">📚</span><b>Artículos</b><span>Para leer con calma: fiestas, ayuno y oración.</span><em>Entrar →</em></a><a href="muro-oracion.html" class="xcard"><span class="xi">🕯️</span><b>Muro de oración</b><span>Pide oración y reza por los demás.</span><em>Entrar →</em></a></div></section>
+<footer class="foot">
+ <div class="wrap row">
+  <div class="grow"><p class="fbrand">Phos Biblias</p><p>Phos es un proyecto independiente para leer la Biblia y vivir la fe cada día. Los textos bíblicos son de dominio público; las fuentes y licencias se detallan dentro de la app.</p></div>
+  <div class="fsup"><p class="fbrand">Apoya Phos</p><p>Phos es gratuito para todos. Puedes colaborar con una aportación voluntaria.</p><p class="flinks"><a href="apoya.html#puntual">🕯️ Aportación puntual</a><a href="apoya.html#mensual">🌿 Aportación mensual</a></p></div><nav aria-label="Legal" class="legal"><a href="articulos.html">Artículos</a><a href="apoya.html">Apoya Phos</a><a href="muro-oracion.html">Muro de oración</a><a href="normas-comunidad.html">Normas de la comunidad</a><a href="condiciones-aportaciones.html">Condiciones de las aportaciones</a><a href="aviso-legal.html">Aviso legal</a><a href="privacidad.html">Privacidad</a><a href="cookies.html">Cookies</a></nav>
+ </div>
+</footer>
+<script src="phos-web-core.js?v=cf9bdec6"></script>
+<script src="santos.js?v=cf9bdec6"></script>
+<script src="web.js?v=cf9bdec6"></script>
+<script src="account.js?v=cf9bdec6"></script>
+<script src="community.js?v=cf9bdec6"></script>
+</body>
+</html>

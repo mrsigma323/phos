@@ -7,7 +7,7 @@ header('X-Robots-Tag: noindex, nofollow');
 header("Content-Security-Policy: frame-ancestors 'none'");
 $u = current_user();
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
-$isApi = $method === 'POST' || isset($_GET['d']) || isset($_GET['q']);
+$isApi = $method === 'POST' || isset($_GET['d']) || isset($_GET['q']) || isset($_GET['v']);
 
 if (!is_admin($u)) {
     if ($isApi) fail('Solo para moderadores.', 403);
@@ -114,6 +114,15 @@ if (isset($_GET['q'])) {
     out(['ok' => true, 'users' => $users]);
 }
 
+if (isset($_GET['v'])) {
+    $desde = (new DateTimeImmutable('now', new DateTimeZone('Europe/Madrid')))->modify('-29 days')->format('Y-m-d');
+    $q = fn($sql) => (function () use ($pdo, $sql, $desde) { $st = $pdo->prepare($sql); $st->execute([$desde]); return $st->fetchAll(); })();
+    out(['ok' => true,
+        'dias' => $q("SELECT day, SUM(n) AS n FROM visits WHERE day >= ? AND src <> 'interno' GROUP BY day ORDER BY day"),
+        'dias_todo' => $q('SELECT day, SUM(n) AS n FROM visits WHERE day >= ? GROUP BY day ORDER BY day'),
+        'paginas' => $q('SELECT path, SUM(n) AS n FROM visits WHERE day >= ? GROUP BY path ORDER BY n DESC LIMIT 15'),
+        'fuentes' => $q("SELECT src, SUM(n) AS n FROM visits WHERE day >= ? AND src <> 'interno' GROUP BY src ORDER BY n DESC")]);
+}
 if (isset($_GET['d'])) {
     purge_ips();
     $base = 'SELECT p.*, u.alias, u.email FROM posts p JOIN users u ON u.id = p.user_id';
@@ -143,13 +152,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}td{padding:6px 4px;bord
 </style></head><body><main class="mw">
 <p class="kicker">Phos · solo moderadores</p><h1>Panel de moderación</h1>
 <p class="small">Has entrado como <?= htmlspecialchars($me) ?>. Lo que ves aquí (correos y conexiones) es privado: no lo compartas. Las conexiones se borran solas a los <?= COM_IP_DAYS ?> días.</p>
-<nav class="tabs"><a href="#pend">Pendientes <span class="cnt" id="cP">0</span></a><a href="#rep">Denuncias <span class="cnt" id="cR">0</span></a><a href="#pub">Publicados</a><a href="#buscar">Buscar persona</a><a href="#log">Registro</a><a href="/">Volver a la web</a></nav>
+<nav class="tabs"><a href="#pend">Pendientes <span class="cnt" id="cP">0</span></a><a href="#rep">Denuncias <span class="cnt" id="cR">0</span></a><a href="#pub">Publicados</a><a href="#buscar">Buscar persona</a><a href="#log">Registro</a><a href="#visitas">Visitas</a><a href="/">Volver a la web</a></nav>
 <h2 id="pend">Esperando revisión</h2><div id="lP"></div>
 <h2 id="rep">Denunciados</h2><div id="lR"></div>
 <h2 id="pub">Últimos publicados</h2><div id="lU"></div>
 <h2 id="buscar">Buscar persona (seudónimo o correo)</h2>
 <form class="srch" id="fS"><input id="q" placeholder="Seudónimo o correo"><button class="ok" style="border:0;border-radius:999px;padding:0 18px;font-weight:700">Buscar</button></form><div id="lS"></div>
 <h2 id="log">Registro de decisiones</h2><div id="lL"></div>
+<h2 id="visitas">Visitas de los últimos 30 días</h2><p class="small">Se cuentan sin cookies ni datos personales. Una misma persona que recarga la página no suma de nuevo durante media hora. «Llegadas» son las visitas que entran desde fuera; «páginas vistas» incluye también el paso de una página a otra dentro de Phos.</p><div id="lV"></div>
 </main>
 <script>
 (function(){
@@ -190,7 +200,13 @@ async function search(){const q=$('q').value.trim();if(q.length<2)return;const j
  <div class="mb"><input type="text" placeholder="${u.banned?'Nota (opcional)':'Motivo del bloqueo o nuevo seudónimo'}">${u.banned?'<button class="ok" data-a="desbloquear">Desbloquear</button>':'<button class="no" data-a="bloquear">Bloquear</button>'}<button class="nn" data-a="renombrar">Cambiar seudónimo</button></div>
  ${u.posts.length?'<table style="margin-top:10px">'+u.posts.map(p=>`<tr><td>${fecha(p.at)}</td><td><span class="tag">${esc(p.status)}</span></td><td>${esc(where(p.target))}</td><td>${esc(p.body.slice(0,160))}</td><td class="small">${esc(p.ip||'')}</td></tr>`).join('')+'</table>':'<p class="small">Sin mensajes.</p>'}</div>`).join(''):'<p class="empty">No hay nadie con ese seudónimo o correo.</p>';
 }
+async function visits(){const j=await fetch('moderar.php?v=1',{credentials:'same-origin'}).then(r=>r.json()).catch(()=>({}));if(!j.ok)return;
+ const tot=a=>a.reduce((s,x)=>s+ +x.n,0),mx=Math.max(1,...j.dias_todo.map(x=>+x.n));
+ const bars=j.dias_todo.map(x=>{const l=(j.dias.find(y=>y.day===x.day)||{n:0}).n;return `<tr><td>${esc(new Date(x.day+'T12:00').toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'}))}</td><td style="width:60%"><div style="background:#E9E1D3;border-radius:6px"><div style="background:#4A1416;height:14px;border-radius:6px;width:${Math.round(x.n/mx*100)}%"></div></div></td><td><b>${esc(l)}</b> llegadas · ${esc(x.n)} páginas vistas</td></tr>`}).join('');
+ $('lV').innerHTML=`<div class="mp"><p><b>${tot(j.dias)}</b> llegadas y <b>${tot(j.dias_todo)}</b> páginas vistas en 30 días.</p>${bars?'<table>'+bars+'</table>':'<p class="empty">Todavía no hay visitas contadas.</p>'}</div>
+ <div class="mp"><h3 style="margin:0 0 8px">De dónde llegan</h3>${j.fuentes.length?'<table>'+j.fuentes.map(x=>`<tr><td>${esc(x.src)}</td><td><b>${esc(x.n)}</b></td></tr>`).join('')+'</table>':'<p class="empty">Sin datos.</p>'}</div>
+ <div class="mp"><h3 style="margin:0 0 8px">Páginas más vistas</h3>${j.paginas.length?'<table>'+j.paginas.map(x=>`<tr><td>${esc(x.path)}</td><td><b>${esc(x.n)}</b></td></tr>`).join('')+'</table>':'<p class="empty">Sin datos.</p>'}</div>`}
 $('fS').onsubmit=e=>{e.preventDefault();search()};
-load();setInterval(load,60000);
+load();visits();setInterval(load,60000);
 })();
 </script></body></html>

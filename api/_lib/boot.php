@@ -145,6 +145,15 @@ function migrate(PDO $pdo): void {
         note VARCHAR(300) NULL,
         at DATETIME NOT NULL
     )$tail");
+    // ---- Visitas: solo un recuento por día, página y procedencia (sin cookies ni datos personales) ----
+    $pdo->exec("CREATE TABLE IF NOT EXISTS visits (
+        id $id,
+        day DATE NOT NULL,
+        path VARCHAR(80) NOT NULL,
+        src VARCHAR(20) NOT NULL,
+        n INT NOT NULL DEFAULT 0
+    )$tail");
+    try { $pdo->exec('CREATE UNIQUE INDEX visits_one ON visits (day, path, src)'); } catch (PDOException $e) {}
     $pdo->exec("CREATE TABLE IF NOT EXISTS rate_hits (
         id $id,
         k VARCHAR(200) NOT NULL,

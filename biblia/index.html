@@ -2585,6 +2585,9 @@ renderArticles=async function(sec){if(sec==='sport'&&S.view!=='topic')return ren
  if(WEB_LANGS.length<2){const lb=$('#langBtn');if(lb){lb.hidden=true;lb.style.display='none'}}
 })();
 
+// Recuento de visitas de la versión para móviles (sin cookies ni datos personales)
+try{if(navigator.sendBeacon&&!/bot|crawl|spider/i.test(navigator.userAgent))navigator.sendBeacon('/api/visita.php',new Blob([JSON.stringify({p:'/biblia/',r:document.referrer})],{type:'application/json'}))}catch(e){}
+
 applyLang();
 render();
 try{if('serviceWorker' in navigator&&window.top===window)navigator.serviceWorker.register('sw.js').catch(function(){})}catch(e){}

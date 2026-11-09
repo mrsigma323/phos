@@ -223,7 +223,7 @@ function drawFests(){
 }
 
 // ---- Compartir versículo como imagen ----
-async function shareImg(text,ref){
+async function shareImg(text,ref,noq){
  const c=document.createElement('canvas');c.width=1080;c.height=1080;const x=c.getContext('2d');
  try{await document.fonts.load('600 60px "Cormorant Garamond"');await document.fonts.load('700 30px "Source Sans 3"')}catch(e){}
  const g=x.createLinearGradient(0,0,0,1080);g.addColorStop(0,'#5C1A1B');g.addColorStop(1,'#3A0F11');x.fillStyle=g;x.fillRect(0,0,1080,1080);
@@ -231,7 +231,7 @@ async function shareImg(text,ref){
  x.textAlign='center';x.fillStyle='#E2C27A';x.font='700 30px "Source Sans 3",sans-serif';x.fillText('Φ Ω Σ   Χ Ρ Ι Σ Τ Ο Υ',540,140);
  x.fillRect(500,170,80,2);
  let fs=66,lines;const wrap=(t,w)=>{const ws=t.split(/\s+/),out=[];let l='';for(const w2 of ws){const tr=l?l+' '+w2:w2;if(x.measureText(tr).width>w&&l){out.push(l);l=w2}else l=tr}if(l)out.push(l);return out};
- do{x.font=`600 ${fs}px "Cormorant Garamond",Georgia,serif`;lines=wrap('«'+text.trim()+'»',860);fs-=4}while(lines.length*fs*1.3>620&&fs>30);
+ do{x.font=`600 ${fs}px "Cormorant Garamond",Georgia,serif`;lines=wrap(noq?text.trim():'«'+text.trim()+'»',860);fs-=4}while(lines.length*fs*1.3>620&&fs>30);
  const lh=(fs+4)*1.3,top=540-lines.length*lh/2+lh*.35;x.fillStyle='#FFF8EC';lines.forEach((l,i)=>x.fillText(l,540,top+i*lh));
  x.fillStyle='#E2C27A';x.font='700 38px "Source Sans 3",sans-serif';x.fillText(ref,540,top+lines.length*lh+40);
  x.fillStyle='#EBDCD6';x.font='600 32px "Source Sans 3",sans-serif';x.fillText('phosbiblias.com',540,980);
@@ -248,5 +248,32 @@ document.querySelectorAll('[data-br]').forEach(b=>b.onclick=()=>{BR=b.dataset.br
 document.addEventListener('phos:prefs',()=>{BR=tdBr();all();renderPrayers()});
 window.PHOS={nameIndex:()=>nameIndex(),MES,norm};
 bindSaints();renderGreek();all();renderReflection();bindReflection();renderPsalm();renderPrayers();
+
+// ---- Escuchar en voz alta y compartir por WhatsApp ----
+let speakBtn=null;
+const esVoice=()=>{try{const vs=speechSynthesis.getVoices();return vs.find(v=>v.lang==='es-ES')||vs.find(v=>/^es/i.test(v.lang))||null}catch(e){return null}};
+function speak(btn,text){const ss=window.speechSynthesis;if(!ss)return;
+ if(speakBtn===btn&&ss.speaking){ss.cancel();btn.textContent=btn.dataset.lbl;speakBtn=null;return}
+ ss.cancel();if(speakBtn)speakBtn.textContent=speakBtn.dataset.lbl;
+ const parts=String(text).replace(/\s+/g,' ').match(/[^.!?;:]+[.!?;:]*\s*/g)||[String(text)],chunks=[];let cur='';
+ parts.forEach(p=>{if((cur+p).length>220&&cur){chunks.push(cur);cur=p}else cur+=p});if(cur.trim())chunks.push(cur);
+ speakBtn=btn;btn.textContent='⏹ Detener';
+ chunks.forEach((c,i)=>{const u=new SpeechSynthesisUtterance(c);u.lang='es-ES';u.rate=.95;const v=esVoice();if(v)u.voice=v;
+  if(i===chunks.length-1)u.onend=u.onerror=()=>{if(speakBtn===btn){btn.textContent=btn.dataset.lbl;speakBtn=null}};ss.speak(u)});
+}
+const wa=t=>window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank','noopener');
+function mkBtn(lbl,cls){const b=document.createElement('button');b.type='button';b.className=cls||'sharebtn';b.textContent=lbl;b.dataset.lbl=lbl;return b}
+document.querySelectorAll('[data-listen]').forEach(b=>{if(!window.speechSynthesis){b.hidden=true;return}b.dataset.lbl=b.textContent;b.onclick=()=>{const t=document.querySelector(b.dataset.listen);if(t)speak(b,t.innerText)}});
+document.querySelectorAll('[data-wa]').forEach(b=>b.onclick=()=>{const v=b.dataset.wa==='v',tx=$(v?'vTxt':'gTxt').textContent.trim(),rf=(v?$('vRef'):$('gRef')).textContent.replace(/^.*· /,'');
+ wa('«'+tx+'» ('+rf+')\n\n'+(v?'Versículo del día':'La Palabra de hoy')+' en Phos: https://phosbiblias.com/lecturas.html')});
+{const rs=$('rShare');if(rs){const b=mkBtn('💬 WhatsApp','obtn');b.onclick=()=>wa(reflText+' — '+$('rRef').textContent+'\n\nReflexión del día en Phos: https://phosbiblias.com/lecturas.html');rs.after(b)}}
+if(window.speechSynthesis){
+ const p=$('pTxt');if(p){const b=mkBtn('🔊 Escuchar la oración');b.style.marginTop='10px';b.onclick=()=>speak(b,p.innerText);p.after(b)}
+ const art=document.querySelector('article.art');if(art){const b=mkBtn('🔊 Escuchar el artículo');b.style.margin='4px 0 18px';b.onclick=()=>speak(b,[...art.querySelectorAll('h1,h2,h3,p,li')].filter(e=>!e.closest('.btns')).map(e=>e.innerText).join('\n'));(art.querySelector('.alead')||art.querySelector('h1')).after(b)}
+}
+document.querySelectorAll('.phx-share').forEach(box=>{const ti=box.dataset.title||'',tx=box.dataset.text||'';box.classList.add('sharerow');
+ const w=mkBtn('💬 Compartir por WhatsApp');w.onclick=()=>wa(ti+(tx?': '+tx:'')+'\n\nhttps://phosbiblias.com/santo-de-hoy');
+ const i=mkBtn('🖼️ Compartir como imagen');i.onclick=()=>shareImg(tx||ti,ti,true);box.append(w,i)});
+window.addEventListener('pagehide',()=>{try{speechSynthesis.cancel()}catch(e){}});
 })();
 (function(){document.querySelectorAll(".dx").forEach(function(e){try{var v=decodeURIComponent(escape(atob(e.dataset.x)));e.textContent=v;if(e.dataset.mail)e.href="mailto:"+v}catch(_){}})})();

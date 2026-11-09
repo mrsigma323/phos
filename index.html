@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<script>(function(){try{var q=location.search,L=localStorage;if(/[?&]desktop=1/.test(q))L.setItem('phos:desk','1');if(L.getItem('phos:desk'))return;if(/(santoral|fiestas|recetas|apoya|mi-phos|condiciones-aportaciones|muro-oracion|normas-comunidad)[.]html/.test(location.pathname))return;var u=navigator.userAgent||'';if(/bot|crawl|spider|lighthouse|slurp|preview/i.test(u))return;var phone=(/iPhone|iPod|Windows Phone|BlackBerry|Opera Mini/i.test(u)||(/Android/i.test(u)&&/Mobile/i.test(u)))&&!/Windows NT|Macintosh|X11|CrOS/i.test(u)&&Math.min(screen.width,screen.height)<820;if(phone)location.replace('biblia/')}catch(e){}})();</script>
+<script>(function(){try{var q=location.search,L=localStorage;if(/[?&]desktop=1/.test(q))L.setItem('phos:desk','1');if(L.getItem('phos:desk'))return;if(/(santoral|fiestas|recetas|apoya|mi-phos|condiciones-aportaciones|muro-oracion|normas-comunidad)[.]html|santo-de-hoy/.test(location.pathname))return;var u=navigator.userAgent||'';if(/bot|crawl|spider|lighthouse|slurp|preview/i.test(u))return;var phone=(/iPhone|iPod|Windows Phone|BlackBerry|Opera Mini/i.test(u)||(/Android/i.test(u)&&/Mobile/i.test(u)))&&!/Windows NT|Macintosh|X11|CrOS/i.test(u)&&Math.min(screen.width,screen.height)<820;if(phone)location.replace('biblia/')}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Phos Biblias · La luz de Cristo para cada día</title>
 <meta name="description" content="Phos Biblias: la Palabra de Jesucristo cada día. Biblia gratis, santoral, oraciones, fiestas y ayunos de hoy según tu Iglesia (ortodoxa, católica o protestante).">
@@ -15,7 +15,7 @@
 <meta property="og:image" content="https://phosbiblias.com/og.png">
 <meta name="color-scheme" content="light">
 <link rel="preload" href="/fonts/cormorant-lat.woff2" as="font" type="font/woff2" crossorigin> <link rel="preload" href="/fonts/sourcesans3-lat.woff2" as="font" type="font/woff2" crossorigin> <link rel="stylesheet" href="/fonts/fonts.css">
-<link rel="stylesheet" href="web.css?v=9007cf93">
+<link rel="stylesheet" href="web.css?v=cf9bdec6">
 <link rel="canonical" href="https://phosbiblias.com/">
 <meta property="og:url" content="https://phosbiblias.com/">
 <meta property="og:type" content="website">
@@ -34,7 +34,7 @@
    <span><b>Phos</b><small>ΦΩΣ ΧΡΙΣΤΟΥ · La luz de Cristo</small></span>
   </a>
   <nav aria-label="Principal" class="nav">
-   <a href="index.html" aria-current="page">Inicio</a><a href="lecturas.html">Lecturas</a><a href="escrituras.html">Biblia</a><a href="santoral.html">Santoral</a><a href="calendario.html">Calendario</a><a href="salud.html">Salud y bienestar</a><a href="oraciones.html">Oraciones</a><a href="apoya.html" class="navdon">🕯️ Donar</a>
+   <a href="index.html" aria-current="page">Inicio</a><a href="lecturas.html">Lecturas</a><a href="escrituras.html">Biblia</a><a href="santoral.html">Santoral</a><a href="calendario.html">Calendario</a><a href="salud.html">Salud y bienestar</a><a href="oraciones.html">Oraciones</a><a href="apoya.html" class="navdon">🕯️ Apoyar</a>
   </nav>
   <a href="mi-phos.html" class="acct" id="acctLink">👤 Entrar</a>
   <a href="biblia/" class="cta">📱<span class="ctxt"> Web para móviles</span></a>
@@ -49,8 +49,8 @@
   <article id="lecturas" class="card pad40">
    <p class="kicker">Palabra de hoy</p>
    <p class="sub" id="lSeason">—</p>
-   <div class="reading" id="gospelBox" hidden><h2 id="gRef">Evangelio de la fiesta</h2><p class="scripture" id="gTxt">…</p><button type="button" class="sharebtn" data-img="g">🖼️ Compartir como imagen</button></div>
-   <div class="reading"><h2 id="vRef">Versículo del día</h2><p class="scripture" id="vTxt">…</p><button type="button" class="sharebtn" data-img="v">🖼️ Compartir como imagen</button></div>
+   <div class="reading" id="gospelBox" hidden><h2 id="gRef">Evangelio de la fiesta</h2><p class="scripture" id="gTxt">…</p><div class="sharerow"><button type="button" class="sharebtn" data-listen="#gTxt">🔊 Escuchar</button><button type="button" class="sharebtn" data-wa="g">💬 WhatsApp</button><button type="button" class="sharebtn" data-img="g">🖼️ Imagen</button></div></div>
+   <div class="reading"><h2 id="vRef">Versículo del día</h2><p class="scripture" id="vTxt">…</p><div class="sharerow"><button type="button" class="sharebtn" data-listen="#vTxt">🔊 Escuchar</button><button type="button" class="sharebtn" data-wa="v">💬 WhatsApp</button><button type="button" class="sharebtn" data-img="v">🖼️ Imagen</button></div></div>
    <p class="small bibsrc">Texto: Reina-Valera 1909 (dominio público).</p>
   </article>
   <article class="card dark pad40" id="reflexion">
@@ -104,10 +104,10 @@
   <div class="fsup"><p class="fbrand">Apoya Phos</p><p>Phos es gratuito para todos. Puedes colaborar con una aportación voluntaria.</p><p class="flinks"><a href="apoya.html#puntual">🕯️ Aportación puntual</a><a href="apoya.html#mensual">🌿 Aportación mensual</a></p></div><nav aria-label="Legal" class="legal"><a href="articulos.html">Artículos</a><a href="apoya.html">Apoya Phos</a><a href="muro-oracion.html">Muro de oración</a><a href="normas-comunidad.html">Normas de la comunidad</a><a href="condiciones-aportaciones.html">Condiciones de las aportaciones</a><a href="aviso-legal.html">Aviso legal</a><a href="privacidad.html">Privacidad</a><a href="cookies.html">Cookies</a></nav>
  </div>
 </footer>
-<script src="phos-web-core.js?v=9007cf93"></script>
-<script src="santos.js?v=9007cf93"></script>
-<script src="web.js?v=9007cf93"></script>
-<script src="account.js?v=9007cf93"></script>
-<script src="community.js?v=9007cf93"></script>
+<script src="phos-web-core.js?v=cf9bdec6"></script>
+<script src="santos.js?v=cf9bdec6"></script>
+<script src="web.js?v=cf9bdec6"></script>
+<script src="account.js?v=cf9bdec6"></script>
+<script src="community.js?v=cf9bdec6"></script>
 </body>
 </html>
