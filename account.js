@@ -95,6 +95,7 @@ function renderOut(msg){
   <li>Tus preferencias (Iglesia, calendario) en el ordenador y en el móvil.</li>
   <li>Tu santo: te recordamos cuándo es tu onomástica.</li>
   <li>Continuar donde lo dejaste: tu última página, lectura y recetas.</li>
+  <li>Escribir en la comunidad y pedir oración en el muro, con un seudónimo.</li>
   <li>Hacer y gestionar un donativo mensual, si lo deseas.</li></ul>
   <p class="small">La cuenta es opcional y gratuita. Toda la web se puede usar igual sin registrarse.</p></div>`;
  $('acLogin').onsubmit=async e=>{e.preventDefault();const m=$('acMsg'),btn=e.target.querySelector('button');
@@ -113,13 +114,15 @@ function renderIn(){
  const welcome=/bienvenida=1/.test(location.search);
  const br=LS.get('todayBr','ortodoxa'),old=!!LS.get('oldCal',false);
  const food=(p.food||'').split('|');const stripeURL=(box.dataset.stripe||'').trim();const live=!!(ME.monthly&&ME.monthly.active);
- box.innerHTML=`${welcome?'<p class="acok">✅ Has entrado en tu cuenta.</p>':''}
+ const volver=welcome?LS.get('volver',null):null;if(welcome)LS.set('volver',null);
+ box.innerHTML=`${welcome?'<p class="acok">✅ Has entrado en tu cuenta.'+(volver&&/^\/[a-z0-9\-.\/#:]*$/i.test(volver)?' <a href="'+esc(volver)+'">Volver a donde estabas →</a>':'')+'</p>':''}
  <div class="card pad40">
   <p class="kicker">Mi Phos</p><h2 class="h3">Hola${ME.name?', '+esc(ME.name):''}</h2>
   <p class="small" style="margin-top:4px">${esc(ME.email)} · cuenta desde el ${esc(fmtAgo(ME.since))}</p>
   ${p.lastPage?`<p style="margin-top:20px"><a class="btn" href="${esc(p.lastPage)}">Continuar donde lo dejaste: ${esc(p.lastTitle||'última página')}</a></p>`:''}
   <ul class="acrecent">${p.lastRead?`<li>📜 Última lectura: <a href="lecturas.html">${esc(p.lastRead)}</a></li>`:''}${food[0]?`<li>🥣 Recetas: <a href="recetas.html${esc(food[0])}">${esc(food[1]||'ver recetas')}</a></li>`:''}</ul>
  </div>
+ <div class="card pad40" id="phxMine"><h2 class="h3">Tu seudónimo en la comunidad</h2><p class="small">Cargando…</p></div>
  <form class="card pad40 acprefs" id="acPrefs">
   <h2 class="h3">Tus preferencias</h2>
   <label for="pName">Cómo quieres que te llamemos (opcional)</label>
@@ -163,12 +166,13 @@ function renderIn(){
  </div>
  <div class="card pad40 acdel" id="eliminar">
   <h2 class="h3">Eliminar mi cuenta</h2>
-  <p>Se borrarán para siempre tu cuenta y todo lo que hayas guardado en ella: tu nombre, tu santo, tus preferencias y tu historial de lecturas. Esto no se puede deshacer.</p>
+  <p>Se borrarán para siempre tu cuenta y todo lo que hayas guardado en ella: tu nombre, tu santo, tus preferencias, tu historial de lecturas, tu seudónimo y tus mensajes en la comunidad. Esto no se puede deshacer.</p>
   ${live?`<p class="acwarn">🔒 Tienes un <b>donativo mensual activo</b>${ME.monthly.amount?` de <b>${eur(ME.monthly.amount)}</b>`:''}. Para que no quede ningún cobro sin control, primero tienes que <a href="#donativo">cancelarlo</a>. Después podrás eliminar tu cuenta.</p>`:'<p class="small">Si tienes un donativo mensual, cancélalo antes: no se puede eliminar una cuenta con un donativo mensual activo.</p>'}
   <div class="acbtns"><button class="btn danger" type="button" id="acDel" ${live?'disabled aria-disabled="true"':''}>Eliminar mi cuenta</button></div>
   <p class="acmsg" id="dMsg" role="status"></p>
  </div>`;
  loadChart();
+ document.dispatchEvent(new CustomEvent('phos:acct',{detail:ME}));
  $('pSanto').addEventListener('input',e=>{$('pSantoR').innerHTML=onomastica(e.target.value)});
  $('acPrefs').onsubmit=async e=>{e.preventDefault();const m=$('pMsg');m.className='acmsg';m.textContent='Guardando…';
   const nb=(document.querySelector('[name=pBr]:checked')||{}).value||'ortodoxa',oc=(document.querySelector('[name=pCal]:checked')||{}).value==='1',consent=$('pConsent').checked;

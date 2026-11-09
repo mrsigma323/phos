@@ -96,6 +96,55 @@ function migrate(PDO $pdo): void {
         status VARCHAR(16) NOT NULL DEFAULT 'pendiente',
         created_at DATETIME NOT NULL
     )$tail");
+    // ---- Comunidad: seudónimos, mensajes, reacciones, denuncias y registro de moderación ----
+    try { $pdo->query('SELECT alias FROM users LIMIT 1'); }
+    catch (PDOException $e) {
+        $pdo->exec('ALTER TABLE users ADD COLUMN alias VARCHAR(30) NULL');
+        $pdo->exec('ALTER TABLE users ADD COLUMN alias_lc VARCHAR(30) NULL');
+        $pdo->exec('ALTER TABLE users ADD COLUMN alias_at DATETIME NULL');
+        $pdo->exec('ALTER TABLE users ADD COLUMN com_consent_at DATETIME NULL');
+        $pdo->exec('ALTER TABLE users ADD COLUMN banned_at DATETIME NULL');
+        $pdo->exec('ALTER TABLE users ADD COLUMN ban_reason VARCHAR(300) NULL');
+        try { $pdo->exec('CREATE UNIQUE INDEX users_alias_lc ON users (alias_lc)'); } catch (PDOException $e2) {}
+    }
+    $pdo->exec("CREATE TABLE IF NOT EXISTS posts (
+        id $id,
+        user_id BIGINT NOT NULL,
+        target VARCHAR(120) NOT NULL,
+        kind VARCHAR(12) NOT NULL,
+        body TEXT NOT NULL,
+        status VARCHAR(12) NOT NULL DEFAULT 'pendiente',
+        ip VARCHAR(64) NULL,
+        created_at DATETIME NOT NULL,
+        decided_at DATETIME NULL,
+        decided_note VARCHAR(300) NULL
+    )$tail");
+    $pdo->exec("CREATE TABLE IF NOT EXISTS reactions (
+        id $id,
+        target VARCHAR(120) NOT NULL,
+        kind VARCHAR(8) NOT NULL,
+        who CHAR(64) NOT NULL,
+        created_at DATETIME NOT NULL
+    )$tail");
+    try { $pdo->exec('CREATE UNIQUE INDEX reactions_one ON reactions (target, kind, who)'); } catch (PDOException $e) {}
+    $pdo->exec("CREATE TABLE IF NOT EXISTS reports (
+        id $id,
+        post_id BIGINT NOT NULL,
+        who CHAR(64) NOT NULL,
+        reason VARCHAR(300) NOT NULL,
+        ip VARCHAR(64) NULL,
+        status VARCHAR(12) NOT NULL DEFAULT 'abierta',
+        created_at DATETIME NOT NULL
+    )$tail");
+    $pdo->exec("CREATE TABLE IF NOT EXISTS modlog (
+        id $id,
+        admin VARCHAR(190) NOT NULL,
+        action VARCHAR(30) NOT NULL,
+        post_id BIGINT NULL,
+        user_id BIGINT NULL,
+        note VARCHAR(300) NULL,
+        at DATETIME NOT NULL
+    )$tail");
     $pdo->exec("CREATE TABLE IF NOT EXISTS rate_hits (
         id $id,
         k VARCHAR(200) NOT NULL,
@@ -219,6 +268,18 @@ function public_user(array $u): array {
         'prefs' => prefs_of($u),
         'since' => substr((string)$u['created_at'], 0, 10),
         'ref' => 'u' . $u['id'],
+        'alias' => $u['alias'] ?? null,
+        'admin' => is_admin($u),
         'monthly' => has_live_monthly($u) ? ['active' => true, 'amount' => isset($u['sub_amount']) ? (int)$u['sub_amount'] : null] : ['active' => false],
     ];
+}
+
+// ---- Moderación: quién puede ver el panel ----
+// Correos con permiso de moderación (se pueden ampliar en phos-config.php con la clave 'admins')
+const PHOS_ADMINS = ['bienvenid@phosbiblias.com', 'bibles.phoschristou@gmail.com'];
+function is_admin(?array $u): bool {
+    if (!$u) return false;
+    $c = phos_config() ?? [];
+    $list = array_map('strtolower', array_merge(PHOS_ADMINS, (array)($c['admins'] ?? [])));
+    return in_array(strtolower((string)$u['email']), $list, true);
 }

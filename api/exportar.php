@@ -13,4 +13,11 @@ echo json_encode([
     'consentimiento_tradicion' => (bool)(int)$u['relig_consent'],
     'consentimiento_fecha' => $u['relig_consent_at'],
     'preferencias' => prefs_of($u),
+    'seudonimo' => $u['alias'] ?? null,
+    'consentimiento_comunidad' => $u['com_consent_at'] ?? null,
+    'mensajes_comunidad' => (function () use ($u) {
+        $st = db()->prepare('SELECT target AS tema, kind AS tipo, body AS texto, status AS estado, created_at AS fecha_utc, decided_note AS nota_moderacion FROM posts WHERE user_id = ? ORDER BY id');
+        $st->execute([$u['id']]);
+        return $st->fetchAll();
+    })(),
 ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
