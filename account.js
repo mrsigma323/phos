@@ -96,7 +96,7 @@ function renderOut(msg){
   <li>Tu santo: te recordamos cuándo es tu onomástica.</li>
   <li>Continuar donde lo dejaste: tu última página, lectura y recetas.</li>
   <li>Escribir en la comunidad y pedir oración en el muro, con un seudónimo.</li>
-  <li>Hacer y gestionar un donativo mensual, si lo deseas.</li></ul>
+  <li>Hacer y gestionar una aportación mensual, si lo deseas.</li></ul>
   <p class="small">La cuenta es opcional y gratuita. Toda la web se puede usar igual sin registrarse.</p></div>`;
  $('acLogin').onsubmit=async e=>{e.preventDefault();const m=$('acMsg'),btn=e.target.querySelector('button');
   const email=$('acEmail').value.trim();
@@ -141,25 +141,25 @@ function renderIn(){
   <p class="acmsg" id="pMsg" role="status"></p>
  </form>
  <div class="card pad40 nosel" id="misdon">
-  <h2 class="h3">Tus donativos</h2>
+  <h2 class="h3">Tus aportaciones</h2>
   <p class="small">Resumen de los últimos 12 meses. Es solo informativo.</p>
   <div class="dchart" id="dChart"><p class="small center">Cargando…</p></div>
  </div>
  <div class="dongrid">
   <div class="card pad40 don" id="donativo">
-   <span class="xi">🌿</span><h2 class="h3">Donativo mensual</h2>
-   <p>Eliges la cantidad una sola vez y se dona automáticamente cada mes, hasta que la cambies o la canceles desde aquí.</p>
+   <span class="xi">🌿</span><h2 class="h3">Aportación mensual</h2>
+   <p>Eliges la cantidad una sola vez y se cobra automáticamente cada mes, hasta que la cambies o la canceles desde aquí.</p>
    ${live?`<p class="acok">Activo${ME.monthly.amount?': '+eur(ME.monthly.amount)+' al mes':''}</p>`:''}
    <span class="btn soon" aria-disabled="true">Muy pronto</span>
   </div>
   <div class="card pad40 don" id="puntual">
-   <span class="xi">🕯️</span><h2 class="h3">Donativo puntual</h2>
-   <p>Una sola vez, la cantidad que tú elijas. Aparecerá en tu gráfico de donativos.</p>
-   ${stripeURL?`<a class="btn" target="_blank" rel="noopener" href="${esc(stripeURL+(stripeURL.includes('?')?'&':'?')+'prefilled_email='+encodeURIComponent(ME.email)+'&client_reference_id='+encodeURIComponent(ME.ref||''))}">Hacer un donativo</a>`:'<span class="btn soon" aria-disabled="true">Muy pronto</span>'}
+   <span class="xi">🕯️</span><h2 class="h3">Aportación puntual</h2>
+   <p>Una sola vez, la cantidad que tú elijas. Aparecerá en tu gráfico de aportaciones.</p>
+   ${stripeURL?`<a class="btn" target="_blank" rel="noopener" href="${esc(stripeURL+(stripeURL.includes('?')?'&':'?')+'prefilled_email='+encodeURIComponent(ME.email)+'&client_reference_id='+encodeURIComponent(ME.ref||''))}">Hacer una aportación</a>`:'<span class="btn soon" aria-disabled="true">Muy pronto</span>'}
   </div>
  </div>
  <div class="safepay" role="note">   <span class="spi" aria-hidden="true">🔒</span>   <div>    <b>Tu pago, protegido</b>    <p>Phos <b>no ve ni guarda</b> los datos de tu tarjeta ni de tu banco. El pago se hace en la página segura de <b>Stripe</b>, una de las plataformas de pago más utilizadas del mundo, con conexión cifrada y la certificación de seguridad más alta del sector de las tarjetas (PCI DSS nivel 1). Si tu banco te pide confirmarlo en el móvil, es la verificación habitual de cualquier pago por internet.</p>    <ul class="spb"><li>🔒 Conexión cifrada</li><li>✅ PCI DSS nivel 1</li><li>📱 Confirmación de tu banco</li></ul>   </div>  </div>
- <p class="small center" style="margin:-4px 0 0">Los donativos son voluntarios y sin contraprestación: Phos es y seguirá siendo gratuito. <a href="apoya.html">Más información</a></p>
+ <p class="small center" style="margin:-4px 0 0">Las aportaciones son voluntarias y sin contraprestación: Phos es y seguirá siendo gratuito. <a href="apoya.html">Más información</a></p>
  <div class="card pad40">
   <h2 class="h3">Tu cuenta y tus datos</h2>
   <div class="acbtns"><a class="btn ghost" href="${API}exportar.php">Descargar mis datos</a><button class="btn ghost" type="button" id="acOutBtn">Cerrar sesión</button></div>
@@ -167,7 +167,7 @@ function renderIn(){
  <div class="card pad40 acdel" id="eliminar">
   <h2 class="h3">Eliminar mi cuenta</h2>
   <p>Se borrarán para siempre tu cuenta y todo lo que hayas guardado en ella: tu nombre, tu santo, tus preferencias, tu historial de lecturas, tu seudónimo y tus mensajes en la comunidad. Esto no se puede deshacer.</p>
-  ${live?`<p class="acwarn">🔒 Tienes un <b>donativo mensual activo</b>${ME.monthly.amount?` de <b>${eur(ME.monthly.amount)}</b>`:''}. Para que no quede ningún cobro sin control, primero tienes que <a href="#donativo">cancelarlo</a>. Después podrás eliminar tu cuenta.</p>`:'<p class="small">Si tienes un donativo mensual, cancélalo antes: no se puede eliminar una cuenta con un donativo mensual activo.</p>'}
+  ${live?`<p class="acwarn">🔒 Tienes una <b>aportación mensual activa</b>${ME.monthly.amount?` de <b>${eur(ME.monthly.amount)}</b>`:''}. Para que no quede ningún cobro sin control, primero tienes que <a href="#donativo">cancelarla</a>. Después podrás eliminar tu cuenta.</p>`:'<p class="small">Si tienes una aportación mensual, cancélala antes: no se puede eliminar una cuenta con una aportación mensual activa.</p>'}
   <div class="acbtns"><button class="btn danger" type="button" id="acDel" ${live?'disabled aria-disabled="true"':''}>Eliminar mi cuenta</button></div>
   <p class="acmsg" id="dMsg" role="status"></p>
  </div>`;
@@ -200,10 +200,10 @@ async function loadChart(){
  if(!j.ok){box.innerHTML='<p class="small center">No se ha podido cargar el resumen.</p>';return}
  const M=j.months||[],tot=M.reduce((a,x)=>a+x.mensual+x.puntual,0);
  const tm=M.reduce((a,x)=>a+x.mensual,0),tp=M.reduce((a,x)=>a+x.puntual,0);
- if(!tot){box.innerHTML='<div class="dempty"><p><b>Aún no has hecho ningún donativo.</b></p><p class="small">Cuando hagas alguno, aquí verás cada mes tus donativos mensuales y puntuales.</p></div>';return}
+ if(!tot){box.innerHTML='<div class="dempty"><p><b>Aún no has hecho ninguna aportación.</b></p><p class="small">Cuando hagas alguna, aquí verás cada mes tus aportaciones mensuales y puntuales.</p></div>';return}
  box.innerHTML=`<div class="dhead"><div class="dhero"><span>Total en 12 meses</span><b>${eur(tot)}</b></div>
   <ul class="dleg"><li><i style="background:${C_MEN}"></i>Mensual · ${eur(tm)}</li><li><i style="background:${C_PUN}"></i>Puntual · ${eur(tp)}</li></ul></div>
-  <div class="dwrap"><canvas id="dCv" role="img" aria-label="Gráfico de barras de tus donativos de los últimos 12 meses: total ${eur(tot)}"></canvas><div class="dtip" id="dTip" hidden></div></div>`;
+  <div class="dwrap"><canvas id="dCv" role="img" aria-label="Gráfico de barras de tus aportaciones de los últimos 12 meses: total ${eur(tot)}"></canvas><div class="dtip" id="dTip" hidden></div></div>`;
  const cv=$('dCv'),tip=$('dTip');
  const draw=()=>{
   const W=cv.parentElement.clientWidth,H=Math.max(200,Math.min(280,W*.45)),dpr=window.devicePixelRatio||1;
