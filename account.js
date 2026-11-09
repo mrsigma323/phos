@@ -140,6 +140,7 @@ function renderIn(){
   <button class="btn" type="submit">Guardar preferencias</button>
   <p class="acmsg" id="pMsg" role="status"></p>
  </form>
+ <div class="card pad40 acprefs" id="acVoice"><h2 class="h3">🔊 Voz para escuchar</h2><p class="small">Cargando las voces de este aparato…</p></div>
  <div class="card pad40 nosel" id="misdon">
   <h2 class="h3">Tus aportaciones</h2>
   <p class="small">Resumen de los últimos 12 meses. Es solo informativo.</p>
@@ -173,6 +174,7 @@ function renderIn(){
  </div>`;
  loadChart();
  document.dispatchEvent(new CustomEvent('phos:acct',{detail:ME}));
+ voiceCard();
  $('pSanto').addEventListener('input',e=>{$('pSantoR').innerHTML=onomastica(e.target.value)});
  $('acPrefs').onsubmit=async e=>{e.preventDefault();const m=$('pMsg');m.className='acmsg';m.textContent='Guardando…';
   const nb=(document.querySelector('[name=pBr]:checked')||{}).value||'ortodoxa',oc=(document.querySelector('[name=pCal]:checked')||{}).value==='1',consent=$('pConsent').checked;
@@ -274,4 +276,38 @@ async function init(){
  if(onPage){if(ME)renderIn();else renderOut('')}
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+// ---- Voz para escuchar: se elige entre las voces que tiene este aparato ----
+const NICE=/natural|online|neural|google|premium|enhanced|mejorada|siri/i;
+function voiceList(){try{return speechSynthesis.getVoices().filter(v=>/^es/i.test(v.lang))}catch(e){return[]}}
+function voiceCard(){
+ const box=$('acVoice');if(!box)return;
+ if(!('speechSynthesis' in window)){box.innerHTML='<h2 class="h3">🔊 Voz para escuchar</h2><p>Este navegador no puede leer en voz alta.</p>';return}
+ const draw=()=>{
+  const vs=voiceList().sort((a,b)=>(NICE.test(b.name)-NICE.test(a.name))||a.lang.localeCompare(b.lang)||a.name.localeCompare(b.name));
+  const cur=LS.get('voice',''),rate=+LS.get('rate',0.95)||0.95,off=!!LS.get('listenOff',false);
+  const pais=l=>({'es-ES':'España','es-MX':'México','es-US':'Estados Unidos','es-AR':'Argentina','es-CO':'Colombia','es-CL':'Chile','es-PE':'Perú','es-VE':'Venezuela'}[l.replace('_','-')]||l);
+  box.innerHTML=`<h2 class="h3">🔊 Voz para escuchar</h2>
+   <p>Phos puede leerte en voz alta <b>las lecturas del día, la reflexión, la oración del día y los artículos</b>: busca los botones «🔊 Escuchar». La voz es la que tiene instalada <b>este aparato</b>, así que en otro móvil u ordenador tendrás que elegirla de nuevo.</p>
+   <label class="chk"><input type="checkbox" id="vOff" ${off?'checked':''}> <span>No quiero escuchar: ocultar los botones de «Escuchar» en este aparato</span></label>
+   <div id="vOpts" ${off?'hidden':''}>
+    <label for="vSel">Voz</label>
+    <select id="vSel"><option value="">Automática (la más natural que haya)</option>${vs.map(v=>`<option value="${esc(v.name)}" ${v.name===cur?'selected':''}>${esc(v.name.replace(/^(Microsoft|Google)\s+/,'').replace(/\s*-\s*Spanish.*$/i,''))} · ${esc(pais(v.lang))}${NICE.test(v.name)?' ★':''}</option>`).join('')}</select>
+    ${vs.length?'<p class="small">Las marcadas con ★ suelen sonar más naturales.</p>':'<p class="small">Este aparato no tiene voces en español instaladas. Puedes añadirlas en los ajustes de voz de tu móvil u ordenador.</p>'}
+    <label for="vRate">Velocidad: <b id="vRateT">${Math.round(rate*100)}%</b></label>
+    <input type="range" id="vRate" min="0.7" max="1.3" step="0.05" value="${rate}">
+    <button type="button" class="btn ghost" id="vTry">▶ Probar la voz</button>
+    <p class="small">¿Quieres más voces? En Android: Ajustes › Accesibilidad › Texto a voz. En iPhone: Ajustes › Accesibilidad › Contenido leído › Voces. En Windows, el navegador Edge trae voces muy naturales.</p>
+   </div>
+   <p class="acmsg" id="vMsg" role="status"></p>`;
+  const msg=t=>{const m=$('vMsg');m.className='acmsg okk';m.textContent=t;clearTimeout(m._t);m._t=setTimeout(()=>m.textContent='',2500)};
+  $('vOff').onchange=e=>{LS.set('listenOff',e.target.checked);$('vOpts').hidden=e.target.checked;msg(e.target.checked?'✅ Botones de escuchar ocultos en este aparato.':'✅ Botones de escuchar activados.')};
+  $('vSel').onchange=e=>{LS.set('voice',e.target.value);msg('✅ Voz guardada en este aparato.')};
+  $('vRate').oninput=e=>{$('vRateT').textContent=Math.round(e.target.value*100)+'%'};
+  $('vRate').onchange=e=>{LS.set('rate',+e.target.value);msg('✅ Velocidad guardada.')};
+  $('vTry').onclick=()=>{try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance('El Señor es mi pastor, nada me falta. Así sonarán las lecturas de Phos.');u.lang='es-ES';u.rate=+$('vRate').value;const n=$('vSel').value;const all=voiceList();const v=n?all.find(x=>x.name===n):(all.find(x=>NICE.test(x.name)&&x.lang==='es-ES')||all.find(x=>NICE.test(x.name))||all.find(x=>x.lang==='es-ES')||all[0]);if(v)u.voice=v;speechSynthesis.speak(u)}catch(e){}};
+ };
+ draw();
+ try{if(!voiceList().length)speechSynthesis.addEventListener('voiceschanged',function h(){speechSynthesis.removeEventListener('voiceschanged',h);if($('acVoice'))draw()})}catch(e){}
+}
+
 })();
