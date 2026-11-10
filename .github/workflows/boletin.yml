@@ -9,6 +9,10 @@ on:
         description: 'Prueba: enviar solo a los correos de moderación'
         type: boolean
         default: true
+      para:
+        description: 'Prueba para un solo correo (tiene que tener cuenta en Mi Phos)'
+        type: string
+        default: ''
 concurrency: boletin
 jobs:
   enviar:
@@ -29,6 +33,7 @@ jobs:
           SG_USER: ${{ secrets.SG_USER }}
           SG_DOMAIN: phosbiblias.com
           PRUEBA: ${{ github.event_name == 'workflow_dispatch' && inputs.prueba && '--prueba' || '' }}
+          PARA: ${{ github.event_name == 'workflow_dispatch' && inputs.para || '' }}
         run: |
           if [ -z "$SG_KEY" ]; then echo "Faltan los secretos de SiteGround."; exit 1; fi
           mkdir -p ~/.ssh && chmod 700 ~/.ssh
@@ -41,4 +46,5 @@ jobs:
           SSH="ssh -i ~/.ssh/sg -p ${SG_PORT:-18765} $SG_USER@$SG_HOST"
           # El contenido se guarda fuera de la web pública, se envía y se borra
           $SSH "umask 077; cat > www/$SG_DOMAIN/semana.json" < semana.json
-          $SSH "cd www/$SG_DOMAIN/public_html && PHOS_CONFIG=../phos-config.php php api/_lib/boletin_cli.php ../semana.json $PRUEBA; rm -f ../semana.json"
+          EXTRA=""; if [ -n "$PARA" ]; then EXTRA="--para=$(printf '%s' "$PARA" | tr -cd 'A-Za-z0-9@._+-')"; fi
+          $SSH "cd www/$SG_DOMAIN/public_html && PHOS_CONFIG=../phos-config.php php api/_lib/boletin_cli.php ../semana.json $PRUEBA $EXTRA; rm -f ../semana.json"

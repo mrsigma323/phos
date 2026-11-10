@@ -9,6 +9,9 @@ require __DIR__ . '/mail.php';
 
 $file = $argv[1] ?? '';
 $prueba = in_array('--prueba', $argv, true);
+// --para=correo: prueba solo para esa cuenta (tiene que existir en Mi Phos)
+$para = '';
+foreach ($argv as $x) if (str_starts_with($x, '--para=')) { $para = strtolower(trim(substr($x, 7))); $prueba = true; }
 $W = json_decode((string)@file_get_contents($file), true);
 if (!$W || empty($W['dias'])) { fwrite(STDERR, "No se ha podido leer el contenido de la semana.\n"); exit(1); }
 
@@ -49,7 +52,10 @@ function semana_html(array $W, ?string $br, callable $e, array $BR): array {
 }
 
 $pdo = db();
-if ($prueba) {
+if ($para !== '') {
+    $st = $pdo->prepare('SELECT * FROM users WHERE LOWER(email) = ?');
+    $st->execute([$para]);
+} elseif ($prueba) {
     $in = implode(',', array_fill(0, count(PHOS_ADMINS), '?'));
     $st = $pdo->prepare("SELECT * FROM users WHERE LOWER(email) IN ($in)");
     $st->execute(array_map('strtolower', PHOS_ADMINS));
@@ -104,4 +110,5 @@ foreach ($users as $u) {
     }
     usleep(300000); // sin prisas, para no parecer correo masivo
 }
+if ($para !== '' && !$users) echo "No hay ninguna cuenta de Mi Phos con ese correo.\n";
 echo "Correo semanal ($week): enviados $sent" . ($skip ? ", ya enviados antes $skip" : '') . ($prueba ? ' (prueba)' : '') . ".\n";
