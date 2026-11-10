@@ -13,6 +13,7 @@ echo json_encode([
     'consentimiento_tradicion' => (bool)(int)$u['relig_consent'],
     'consentimiento_fecha' => $u['relig_consent_at'],
     'preferencias' => prefs_of($u),
+    'correo_semanal_desde' => $u['news_at'] ?? null,
     'seudonimo' => $u['alias'] ?? null,
     'consentimiento_comunidad' => $u['com_consent_at'] ?? null,
     'mensajes_comunidad' => (function () use ($u) {

@@ -96,6 +96,7 @@ function renderOut(msg){
   <li>Tu santo: te recordamos cuándo es tu onomástica.</li>
   <li>Continuar donde lo dejaste: tu última página, lectura y recetas.</li>
   <li>Escribir en la comunidad y pedir oración en el muro, con un seudónimo.</li>
+  <li>Recibir, si quieres, un correo cada domingo con el versículo, los santos y los ayunos de la semana.</li>
   <li>Hacer y gestionar una aportación mensual, si lo deseas.</li></ul>
   <p class="small">La cuenta es opcional y gratuita. Toda la web se puede usar igual sin registrarse.</p></div>`;
  $('acLogin').onsubmit=async e=>{e.preventDefault();const m=$('acMsg'),btn=e.target.querySelector('button');
@@ -140,6 +141,11 @@ function renderIn(){
   <button class="btn" type="submit">Guardar preferencias</button>
   <p class="acmsg" id="pMsg" role="status"></p>
  </form>
+ <div class="card pad40 acprefs" id="acNews"><h2 class="h3">📬 Correo semanal</h2>
+  <p>Cada domingo por la tarde, un correo breve con <b>el versículo de la semana</b>, <b>las fiestas y los santos</b> de cada día y <b>los días de ayuno</b>${ME.religConsent?' de tu Iglesia':' de las tres tradiciones (si guardas tu Iglesia en tus preferencias, solo verás la tuya)'}.</p>
+  <label class="chk"><input type="checkbox" id="nOn" ${ME.boletin?'checked':''}> <span>Quiero recibir el correo semanal de Phos en <b>${esc(ME.email)}</b></span></label>
+  <p class="small">Es gratis y voluntario. Puedes darte de baja aquí mismo o con el enlace que viene al final de cada correo. No lo usamos para nada más.</p>
+  <p class="acmsg" id="nMsg" role="status"></p></div>
  <div class="card pad40 acprefs" id="acVoice"><h2 class="h3">🔊 Voz para escuchar</h2><p class="small">Cargando las voces de este aparato…</p></div>
  <div class="card pad40 nosel" id="misdon">
   <h2 class="h3">Tus aportaciones</h2>
@@ -175,6 +181,11 @@ function renderIn(){
  loadChart();
  document.dispatchEvent(new CustomEvent('phos:acct',{detail:ME}));
  voiceCard();
+ $('nOn').onchange=async e=>{const m=$('nMsg'),on=e.target.checked;e.target.disabled=true;m.className='acmsg';m.textContent='Guardando…';
+  try{const r=await fetch(API+'boletin.php',{method:'POST',credentials:'same-origin',headers:{'X-Phos':'1','Content-Type':'application/json'},body:JSON.stringify({on})});const j=await r.json();
+   if(!j.ok)throw j;ME.boletin=j.boletin;m.className='acmsg okk';m.textContent=j.boletin?'✅ Apuntado. Recibirás el primero el domingo.':'✅ Te has dado de baja del correo semanal.'}
+  catch(err){e.target.checked=!on;m.className='acmsg err';m.textContent=(err&&err.error)||'No se ha podido guardar. Inténtalo de nuevo.'}
+  e.target.disabled=false};
  $('pSanto').addEventListener('input',e=>{$('pSantoR').innerHTML=onomastica(e.target.value)});
  $('acPrefs').onsubmit=async e=>{e.preventDefault();const m=$('pMsg');m.className='acmsg';m.textContent='Guardando…';
   const nb=(document.querySelector('[name=pBr]:checked')||{}).value||'ortodoxa',oc=(document.querySelector('[name=pCal]:checked')||{}).value==='1',consent=$('pConsent').checked;

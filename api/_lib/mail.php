@@ -26,7 +26,7 @@ function phos_from(): string {
 }
 
 // Envío genérico (texto + HTML). En local se guarda en un archivo de pruebas.
-function phos_mail(string $to, string $subject, string $text, string $html = '', string $replyTo = ''): bool {
+function phos_mail(string $to, string $subject, string $text, string $html = '', string $replyTo = '', array $extra = []): bool {
     $c = phos_config() ?? [];
     $from = phos_from();
     if ($html === '') $html = '<!doctype html><html><body style="font-family:Arial,sans-serif;color:#2B1B17;white-space:pre-wrap">' . htmlspecialchars($text, ENT_QUOTES) . '</body></html>';
@@ -39,7 +39,7 @@ function phos_mail(string $to, string $subject, string $text, string $html = '',
         'Reply-To' => $replyTo !== '' ? $replyTo : $from,
         'MIME-Version' => '1.0',
         'Content-Type' => 'multipart/alternative; boundary="' . $b . '"',
-    ];
+    ] + $extra;
     $body = "--$b\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n$text\r\n"
           . "--$b\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n$html\r\n--$b--\r\n";
     $enc = '=?UTF-8?B?' . base64_encode($subject) . '?=';

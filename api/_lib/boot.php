@@ -154,6 +154,19 @@ function migrate(PDO $pdo): void {
         n INT NOT NULL DEFAULT 0
     )$tail");
     try { $pdo->exec('CREATE UNIQUE INDEX visits_one ON visits (day, path, src)'); } catch (PDOException $e) {}
+    // ---- Correo semanal: suscripción voluntaria y registro de envíos ----
+    try { $pdo->query('SELECT news_at FROM users LIMIT 1'); }
+    catch (PDOException $e) {
+        $pdo->exec('ALTER TABLE users ADD COLUMN news_at DATETIME NULL');
+        $pdo->exec('ALTER TABLE users ADD COLUMN news_token CHAR(32) NULL');
+    }
+    $pdo->exec("CREATE TABLE IF NOT EXISTS news_log (
+        id $id,
+        week CHAR(10) NOT NULL,
+        user_id BIGINT NOT NULL,
+        sent_at DATETIME NOT NULL
+    )$tail");
+    try { $pdo->exec('CREATE UNIQUE INDEX news_log_one ON news_log (week, user_id)'); } catch (PDOException $e) {}
     $pdo->exec("CREATE TABLE IF NOT EXISTS rate_hits (
         id $id,
         k VARCHAR(200) NOT NULL,
@@ -278,6 +291,7 @@ function public_user(array $u): array {
         'since' => substr((string)$u['created_at'], 0, 10),
         'ref' => 'u' . $u['id'],
         'alias' => $u['alias'] ?? null,
+        'boletin' => !empty($u['news_at']),
         'admin' => is_admin($u),
         'monthly' => has_live_monthly($u) ? ['active' => true, 'amount' => isset($u['sub_amount']) ? (int)$u['sub_amount'] : null] : ['active' => false],
     ];

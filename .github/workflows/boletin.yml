@@ -1,0 +1,44 @@
+name: Correo semanal de Phos
+on:
+  schedule:
+    # Domingos a las 17:23 UTC (18:23 en invierno y 19:23 en verano, hora de Madrid)
+    - cron: '23 17 * * 0'
+  workflow_dispatch:
+    inputs:
+      prueba:
+        description: 'Prueba: enviar solo a los correos de moderación'
+        type: boolean
+        default: true
+concurrency: boletin
+jobs:
+  enviar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Preparar el contenido de la semana
+        run: node .github/boletin/gen.js > semana.json && head -c 400 semana.json
+      - name: Enviar desde el servidor
+        env:
+          SG_KEY: ${{ secrets.SG_KEY }}
+          SG_PASS: ${{ secrets.SG_PASS }}
+          SG_HOST: ${{ secrets.SG_HOST }}
+          SG_PORT: ${{ secrets.SG_PORT }}
+          SG_USER: ${{ secrets.SG_USER }}
+          SG_DOMAIN: phosbiblias.com
+          PRUEBA: ${{ github.event_name == 'workflow_dispatch' && inputs.prueba && '--prueba' || '' }}
+        run: |
+          if [ -z "$SG_KEY" ]; then echo "Faltan los secretos de SiteGround."; exit 1; fi
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$SG_KEY" | tr -d '\r' > ~/.ssh/sg && chmod 600 ~/.ssh/sg
+          if [ -n "$SG_PASS" ]; then
+            P2=$(printf '%s' "$SG_PASS" | tr -d '\r\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+            ssh-keygen -p -P "$P2" -N "" -f ~/.ssh/sg >/dev/null 2>&1 || ssh-keygen -p -P "$SG_PASS" -N "" -f ~/.ssh/sg >/dev/null 2>&1
+          fi
+          ssh-keyscan -p "${SG_PORT:-18765}" "$SG_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          SSH="ssh -i ~/.ssh/sg -p ${SG_PORT:-18765} $SG_USER@$SG_HOST"
+          # El contenido se guarda fuera de la web pública, se envía y se borra
+          $SSH "umask 077; cat > www/$SG_DOMAIN/semana.json" < semana.json
+          $SSH "cd www/$SG_DOMAIN/public_html && PHOS_CONFIG=../phos-config.php php api/_lib/boletin_cli.php ../semana.json $PRUEBA; rm -f ../semana.json"
