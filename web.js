@@ -281,3 +281,16 @@ if(listenOff&&$('rListen'))$('rListen').hidden=true;
 window.addEventListener('pagehide',()=>{try{speechSynthesis.cancel()}catch(e){}});
 })();
 (function(){document.querySelectorAll(".dx").forEach(function(e){try{var v=decodeURIComponent(escape(atob(e.dataset.x)));e.textContent=v;if(e.dataset.mail)e.href="mailto:"+v}catch(_){}})})();
+
+/* Cantos: el reproductor de YouTube solo se carga cuando el visitante lo pide */
+document.addEventListener('click',function(e){
+ var b=e.target.closest&&e.target.closest('.ytfacade');if(!b)return;
+ var box=b.closest('.ytbox'),id=box&&box.dataset.yt;if(!id)return;
+ var f=document.createElement('iframe');
+ f.src='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0';
+ f.title=box.dataset.title||'Canto';
+ f.allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture';
+ f.referrerPolicy='strict-origin-when-cross-origin';
+ f.setAttribute('allowfullscreen','');
+ box.innerHTML='';box.appendChild(f);
+});
