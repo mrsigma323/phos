@@ -319,6 +319,8 @@ dialog::backdrop{background:rgba(35,28,26,.45)}
 [data-theme=dark] .calleg .sw.fz-c_abst{background:#1F3346}
 .fb .why{display:block;margin-top:8px;font-size:15px;line-height:1.45;opacity:.95}.bcard .bic{font-size:56px;line-height:1;margin:14px 0 4px}.bcard h1{margin-top:6px}
 
+.nlabel .stars{color:var(--gold);letter-spacing:1px;font-size:11px}
+
 </style>
 </head>
 <body>
@@ -1079,6 +1081,18 @@ function renderSearch(){
 // ---------- Utilidades ----------
 const CL=()=>(LANG==='es'||LANG==='en'||CX[LANG])?LANG:'en';
 const ct=k=>CX[CL()]?CX[CL()].ct[k]:CT[CL()][k];
+// ---------- Examen de unidad y estrellas ----------
+const TUX={
+es:["Examen de la unidad","10 preguntas de esta unidad. Necesitas un 80 % para aprobar.","¡Unidad superada!","Casi. Necesitas un 80 %.","Examen"],
+en:["Unit test","10 questions from this unit. You need 80% to pass.","Unit passed!","Almost. You need 80%.","Test"],
+pt:["Exame da unidade","10 perguntas desta unidade. Precisa de 80% para passar.","Unidade concluída!","Quase. Precisa de 80%.","Exame"],
+fr:["Examen de l’unité","10 questions de cette unité. Il faut 80 % pour réussir.","Unité réussie !","Presque. Il faut 80 %.","Examen"],
+it:["Esame dell’unità","10 domande di questa unità. Serve l’80% per superarlo.","Unità superata!","Quasi. Serve l’80%.","Esame"],
+de:["Einheitstest","10 Fragen aus dieser Einheit. 80 % zum Bestehen.","Einheit bestanden!","Knapp. Du brauchst 80 %.","Test"],
+el:["Εξέταση ενότητας","10 ερωτήσεις από αυτή την ενότητα. Χρειάζεσαι 80% για να περάσεις.","Η ενότητα ολοκληρώθηκε!","Παραλίγο. Χρειάζεσαι 80%.","Εξέταση"],
+ru:["Экзамен по разделу","10 вопросов из этого раздела. Для сдачи нужно 80 %.","Раздел пройден!","Почти. Нужно 80 %.","Экзамен"],
+ro:["Examenul unității","10 întrebări din această unitate. Ai nevoie de 80% ca să treci.","Unitate promovată!","Aproape. Ai nevoie de 80%.","Examen"]};
+for(const l in TUX){const o=(l==="es"||l==="en")?CT[l]:(CX[l]&&CX[l].ct);if(o)[o.uExam,o.uExamNote,o.uPass,o.uFail,o.uExamShort]=TUX[l]}
 const SUMI={};
 function sumOf(c){const L=CL();if(CX[L]){if(!SUMI[L])SUMI[L]=CX[L].sum.split('|');return SUMI[L][CODES.indexOf(c)]}return SUM[c][L==='es'?0:1]}
 const fmt=(s,o)=>s.replace(/\{(\w)\}/g,(_,k)=>o[k]);
@@ -1105,7 +1119,7 @@ function courseUnits(br){
   if(!cur||cur.g!==g||cur.books.length>=6){cur={g,books:[]};units.push(cur)}
   cur.books.push(c);
  });
- units.forEach((u,i)=>{if(i===0)return;u.id='u'+i;u.title=ct('g_'+u.g);u.lessons=u.books.concat(['rev:'+i])});
+ units.forEach((u,i)=>{if(i===0)return;u.id='u'+i;u.title=ct('g_'+u.g);u.lessons=u.books.concat(['rev:'+i,'ex:'+i])});
  return units;
 }
 const allLessons=br=>courseUnits(br).flatMap(u=>u.lessons);
@@ -1161,14 +1175,27 @@ function qGen(br,c){
  }
  return gens.map(g=>()=>{const q=g();if(q){q.wk=c;q.wbr=br}return q});
 }
+// ---------- Variedad: no repetir las mismas preguntas ----------
+const qSig=q=>((q.prompt||'')+'|'+(q.answer||(q.items?q.items.join('\u00b7'):''))).slice(0,140);
+function genPool(br,c,rounds){const out=[];for(let r=0;r<(rounds||3);r++)qGen(br,c).forEach(g=>{try{const q=g();if(q)out.push(q)}catch(e){}});return out}
+function pickFresh(br,id,pool,n){
+ const seen=store.get('seen:'+br,{}),prev=seen[id]||[];
+ const sig=new Set(),uniq=[];
+ shuffle(pool).forEach(q=>{const s=qSig(q);if(!sig.has(s)){sig.add(s);uniq.push(q)}});
+ const fresh=uniq.filter(q=>prev.indexOf(qSig(q))<0),rest=uniq.filter(q=>prev.indexOf(qSig(q))>=0);
+ const out=shuffle(fresh).concat(shuffle(rest)).slice(0,n);
+ seen[id]=out.map(qSig).concat(prev).slice(0,30);store.set('seen:'+br,seen);
+ return out;
+}
 function buildLesson(br,id){
  if(id.startsWith('intro')&&CL()==='es'&&typeof BASIC!=='undefined')return basicLesson(br,id);
  if(id==='intro'){const L=CX[CL()]?CX[CL()].intro[br]:INTRO[br][CL()];return shuffle(L).map(q=>mcq(q[0],q[1],q.slice(2)))}
- if(id.startsWith('rev:')){const u=courseUnits(br)[+id.slice(4)];return shuffle(u.books).flatMap(c=>shuffle(qGen(br,c)).slice(0,2).map(g=>g())).filter(Boolean).slice(0,8)}
+ if(id.startsWith('rev:')){const u=courseUnits(br)[+id.slice(4)];return pickFresh(br,id,u.books.flatMap(c=>genPool(br,c,2)),8)}
+ if(id.startsWith('ex:')){const u=courseUnits(br)[+id.slice(3)];return pickFresh(br,id,u.books.flatMap(c=>genPool(br,c,3)),10)}
  if(id==='exam'){const books=COURSE_META[br].books.map(b=>b[0]).filter(x=>SUM[x]);const out=[];for(let k=0;k<60&&out.length<20;k++){const c=books[rnd(books.length)];const g=qGen(br,c);const q=g[rnd(g.length)]();if(q)out.push(q)}return out}
- let qs=shuffle(qGen(br,id)).map(g=>g()).filter(Boolean).slice(0,6);
- if(CL()==='es'&&typeof BASIC!=='undefined'&&BASIC.books[id])qs=shuffle(qs.slice(0,4).concat(shuffle(BASIC.books[id]).slice(0,3).map(q=>mcq(q[0],q[1],q.slice(2,5),undefined,q[5]))));
- return [{type:'card',book:id}].concat(qs);
+ let pool=genPool(br,id,3);
+ if(CL()==='es'&&typeof BASIC!=='undefined'&&BASIC.books[id])pool=pool.concat(BASIC.books[id].map(q=>mcq(q[0],q[1],q.slice(2,5),undefined,q[5])));
+ return [{type:'card',book:id}].concat(pickFresh(br,id,pool,6));
 }
 
 // ---------- Pantalla del curso ----------
@@ -1188,9 +1215,10 @@ function renderLearn(){
   h+=`<h2>${esc(u.title)}</h2><div class="path">`;
   u.lessons.forEach((l,k)=>{
    const i=idx++;const done=!!p.done[l],cur=i===nextIdx,locked=!done&&!cur;
-   const label=(CL()==='es'&&typeof BASIC!=='undefined'&&BASIC.labels[l])?BASIC.labels[l]:l==='intro'?ct('intro'):l.startsWith('rev:')?ct('review'):bname(l);
+   const label=(CL()==='es'&&typeof BASIC!=='undefined'&&BASIC.labels[l])?BASIC.labels[l]:l==='intro'?ct('intro'):l.startsWith('rev:')?ct('review'):l.startsWith('ex:')?ct('uExamShort'):bname(l);
+   const stars=(p.stars&&p.stars[l])||0;
    const off=[0,40,70,40,0,-40,-70,-40][k%8];
-   h+=`<div class="node-wrap" style="transform:translateX(${off}px)"><button class="node ${done?'done':cur?'cur':'locked'} ${l.startsWith('rev:')?'rev':''}" data-l="${l}" ${locked?'disabled':''} aria-label="${esc(label)}${locked?' · '+esc(ct('locked')):''}">${done?'✓':l.startsWith('rev:')?'★':(CL()==='es'&&typeof BASIC!=='undefined'&&BASIC.icons[l])?BASIC.icons[l]:l==='intro'?'i':esc(bname(l).replace(/^(\d) /,'$1').slice(0,3))}</button><span class="nlabel">${esc(label)}</span></div>`;
+   h+=`<div class="node-wrap" style="transform:translateX(${off}px)"><button class="node ${done?'done':cur?'cur':'locked'} ${(l.startsWith('rev:')||l.startsWith('ex:'))?'rev':''}" data-l="${l}" ${locked?'disabled':''} aria-label="${esc(label)}${locked?' · '+esc(ct('locked')):''}">${done?'✓':l.startsWith('ex:')?'✪':l.startsWith('rev:')?'★':(CL()==='es'&&typeof BASIC!=='undefined'&&BASIC.icons[l])?BASIC.icons[l]:l==='intro'?'i':esc(bname(l).replace(/^(\d) /,'$1').slice(0,3))}</button><span class="nlabel">${esc(label)}${stars?'<br><span class="stars">'+'★'.repeat(stars)+'</span>':''}</span></div>`;
   });
   h+=`</div>`;
  });
@@ -1207,10 +1235,10 @@ let LS=null;
 async function startLesson(br,id){
  view.innerHTML=`<div class="loading">${esc(t('loading'))}</div>`;
  const books=COURSE_META[br].books.map(b=>b[0]).filter(x=>SUM[x]);
- const need=id.startsWith('intro')?[]:id==='exam'?books:id.startsWith('rev:')?courseUnits(br)[+id.slice(4)].books:[id];
+ const need=id.startsWith('intro')?[]:id==='exam'?books:id.startsWith('rev:')?courseUnits(br)[+id.slice(4)].books:id.startsWith('ex:')?courseUnits(br)[+id.slice(3)].books:[id];
  try{await needVerses(br,need)}catch(e){}
  const items=buildLesson(br,id);
- LS={br,id,items,i:0,hearts:id==='exam'?Infinity:3,right:0,total:items.filter(x=>x.type!=='card').length,sel:null,checked:false};
+ LS={br,id,items,i:0,hearts:(id==='exam'||id.startsWith('ex:'))?Infinity:3,right:0,total:items.filter(x=>x.type!=='card'&&x.type!=='lcard').length,sel:null,checked:false};
  S.view='lesson';setHeader();drawLesson();
 }
 function drawLesson(){
@@ -1263,12 +1291,22 @@ function endLesson(ok){
  if(id==='exam'){
   const sc=Math.round(LS.right/LS.total*100);const p=prog(br);p.exam=Math.max(p.exam||0,sc);saveProg(br,p);const pass=sc>=85;if(pass)addXP(50);
   h=`<div class="endc"><div class="big">${sc}%</div><h1>${esc(pass?ct('pass'):ct('fail'))}</h1><p class="lead">${esc(ct('score'))}: ${LS.right}/${LS.total}</p></div>`;
+ }else if(id.startsWith('ex:')){
+  const sc=LS.total?Math.round(LS.right/LS.total*100):0;const p=prog(br);
+  p.ux=p.ux||{};p.ux[id]=Math.max(p.ux[id]||0,sc);
+  const pass=sc>=80;if(pass){p.done[id]=true;addXP(25)}
+  saveProg(br,p);
+  h=`<div class="endc"><div class="big">${sc}%</div><h1>${esc(pass?ct('uPass'):ct('uFail'))}</h1><p class="lead">${esc(ct('score'))}: ${LS.right}/${LS.total}${pass?' · +25 '+esc(ct('xp')):''}</p></div>`;
+  if(!pass)h+=`<button class="btn ghost" id="again" style="width:100%;margin-bottom:10px">${esc(ct('retry'))}</button>`;
  }else if(id.startsWith('prac')){
   addXP(5);const sc=LS.total?Math.round(LS.right/LS.total*100):0;
   h=`<div class="endc"><div class="big">${sc}%</div><h1>${esc(ct('done'))}</h1><p class="lead">${esc(ct('score'))}: ${LS.right}/${LS.total} · +5 ${esc(ct('xp'))}</p></div>`;
  }else if(ok){
-  const p=prog(br);p.done[id]=true;saveProg(br,p);addXP(10);
-  h=`<div class="endc"><div class="big">+10 ${esc(ct('xp'))}</div><h1>${esc(ct('done'))}</h1><p class="lead">${Math.round(anyPct(br)*100)}% ${esc(ct('progress'))}</p></div>`;
+  const p=prog(br);p.done[id]=true;
+  const hl=LS.hearts===Infinity?3:LS.hearts;const st3=Math.max(1,Math.min(3,hl));
+  p.stars=p.stars||{};p.stars[id]=Math.max(p.stars[id]||0,st3);
+  saveProg(br,p);addXP(10);
+  h=`<div class="endc"><div class="big" style="color:var(--gold);letter-spacing:4px">${'★'.repeat(st3)}${'☆'.repeat(3-st3)}</div><h1>${esc(ct('done'))}</h1><p class="lead">+10 ${esc(ct('xp'))} · ${Math.round(anyPct(br)*100)}% ${esc(ct('progress'))}</p></div>`;
  }else{
   h=`<div class="endc"><div class="big" style="color:#C0392B">0 ♥</div><h1>${esc(ct('out'))}</h1><p class="lead">${esc(ct('outNote'))}</p><button class="btn ghost" id="again" style="width:100%;margin-bottom:10px">${esc(ct('retry'))}</button></div>`;
  }
