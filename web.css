@@ -303,3 +303,6 @@ a.zone:hover .zi{transform:scale(1.12) rotate(-6deg)}
 .beta p{margin:0;max-width:1100px}.beta a{color:#5C1A1B;font-weight:700}
 .betax{background:none;border:0;font-size:24px;line-height:1;cursor:pointer;color:#5C1A1B;padding:4px 8px;flex:none}
 .acprefs select{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font:inherit;font-size:16px;background:#fff;margin-top:6px}.acprefs input[type=range]{width:100%;margin:8px 0 14px;accent-color:var(--wine)}#acVoice .btn{margin:4px 0 10px}
+.foot .social{align-items:baseline}
+.foot .social a{font-weight:700}
+.foot .sgt{color:var(--gold);font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:13px;margin-right:4px}
