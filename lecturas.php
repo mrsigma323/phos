@@ -1,0 +1,91 @@
+<?php require __DIR__.'/api/_lib/dia.php'; ?><!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<script>(function(){try{var q=location.search,L=localStorage;if(/[?&]desktop=1/.test(q))L.setItem('phos:desk','1');if(L.getItem('phos:desk'))return;if(/(santoral|fiestas|recetas|apoya|mi-phos|condiciones-aportaciones|muro-oracion|normas-comunidad|lecturas|oraciones|art-[a-z0-9-]+)[.]html|santo-de-hoy/.test(location.pathname))return;var u=navigator.userAgent||'';if(/bot|crawl|spider|lighthouse|slurp|preview/i.test(u))return;var phone=(/iPhone|iPod|Windows Phone|BlackBerry|Opera Mini/i.test(u)||(/Android/i.test(u)&&/Mobile/i.test(u)))&&!/Windows NT|Macintosh|X11|CrOS/i.test(u)&&Math.min(screen.width,screen.height)<820;if(phone)location.replace('biblia/')}catch(e){}})();</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lecturas de hoy: palabras de Jesús y versículo del día · Phos</title>
+<meta name="description" content="Las palabras de Jesús para hoy, el versículo del día, el Evangelio de la fiesta y una reflexión cristiana diaria.">
+<meta name="theme-color" content="#4A1416">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon-48.png" type="image/png" sizes="48x48">
+<link rel="icon" href="/favicon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="biblia/apple-touch-icon.png">
+<meta property="og:title" content="Lecturas de hoy: palabras de Jesús y versículo del día · Phos">
+<meta property="og:description" content="Las palabras de Jesús para hoy, el versículo del día, el Evangelio de la fiesta y una reflexión cristiana diaria.">
+<meta property="og:image" content="https://phosbiblias.com/og.png">
+<meta name="color-scheme" content="light">
+<link rel="preload" href="/fonts/cormorant-lat.woff2" as="font" type="font/woff2" crossorigin> <link rel="preload" href="/fonts/sourcesans3-lat.woff2" as="font" type="font/woff2" crossorigin> <link rel="stylesheet" href="/fonts/fonts.css">
+<link rel="stylesheet" href="web.css?v=b54b0006">
+<link rel="canonical" href="https://phosbiblias.com/lecturas.html">
+<meta property="og:url" content="https://phosbiblias.com/lecturas.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Phos">
+<meta property="og:locale" content="es_ES">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<a class="skip" href="#inicio">Saltar al contenido</a>
+<header class="top">
+ <div class="wrap topin">
+  <a href="./" class="brand">
+   <svg aria-hidden="true" width="30" height="40" viewBox="0 0 30 40" fill="none" stroke="#E2C27A" stroke-width="2.2" stroke-linecap="round"><path d="M15 3v34M10 8h10M5 16h20M9 29l12-5"/></svg>
+   <span><b>Phos</b><small>ΦΩΣ ΧΡΙΣΤΟΥ · La luz de Cristo</small></span>
+  </a>
+  <nav aria-label="Principal" class="nav">
+   <a href="index.html">Inicio</a><a href="lecturas.html" aria-current="page">Lecturas</a><a href="escrituras.html">Biblia</a><a href="santoral.html">Santoral</a><a href="calendario.html">Calendario</a><a href="salud.html">Salud y bienestar</a><a href="oraciones.html">Oraciones</a><a href="apoya.html" class="navdon">🕯️ Apoyar</a>
+  </nav>
+  <a href="mi-phos.html" class="acct" id="acctLink">👤 Entrar</a>
+  <a href="biblia/" class="cta">📱<span class="ctxt"> Web para móviles</span></a>
+ </div>
+</header>
+<div class="wrap"><div class="ad-slot ad-top" aria-hidden="true"></div></div>
+<section class="hero sub wrap">
+ <div class="pills"><span class="kicker" id="hDate">—</span><span class="pill" id="hFast">—</span></div>
+ <h1>Lecturas de hoy</h1>
+ <p class="lead">Las palabras de Jesús, la Palabra de Dios de hoy y una breve reflexión para meditarla.</p>
+ <div class="brsw"><div class="calsw" role="group" aria-label="Rama cristiana"><button data-br="ortodoxa">Ortodoxa</button><button data-br="catolica">Católica</button><button data-br="protestante">Protestante</button></div><div class="calsw" role="group" aria-label="Calendario"><button data-cal="0">Calendario nuevo</button><button data-cal="1">Calendario juliano</button></div></div>
+</section>
+<div class="wrap cols">
+ <main class="main">
+  <article id="lecturas" class="card pad40">
+   <p class="kicker">Palabra de hoy</p>
+   <p class="sub" id="lSeason"><?= dia_txt($DIA_HOY,'tiempo','') ?></p>
+   <div class="reading" id="gospelBox"><h2 id="gRef"><?= dia_txt($DIA_HOY,'g','ref','Palabras de Jesús') ?></h2><p class="scripture" id="gTxt"><?= dia_txt($DIA_HOY,'g','txt') ?></p><div class="sharerow"><button type="button" class="sharebtn" data-listen="#gTxt">🔊 Escuchar</button><button type="button" class="sharebtn" data-wa="g">💬 WhatsApp</button><button type="button" class="sharebtn" data-img="g">🖼️ Imagen</button></div></div>
+   <div class="reading"><h2 id="vRef"><?= dia_txt($DIA_HOY,'v','ref','Versículo del día') ?></h2><p class="scripture" id="vTxt"><?= dia_txt($DIA_HOY,'v','txt') ?></p><div class="sharerow"><button type="button" class="sharebtn" data-listen="#vTxt">🔊 Escuchar</button><button type="button" class="sharebtn" data-wa="v">💬 WhatsApp</button><button type="button" class="sharebtn" data-img="v">🖼️ Imagen</button></div></div>
+   <p class="small bibsrc"><?= htmlspecialchars($DIA_ALL['fuente']) ?></p>
+  </article>
+  <article class="card dark pad40" id="reflexion">
+   <p class="kicker gold">Reflexión del día</p>
+   <h2 id="rTitle"><?= dia_txt($DIA_HOY,'r','titulo') ?></h2>
+   <p class="rtext" id="rText"><?= dia_txt($DIA_HOY,'r','texto') ?></p>
+   <p class="rref" id="rRef"><?= dia_txt($DIA_HOY,'r','ref') ?></p>
+   <div class="btns left"><button type="button" class="obtn" id="rListen">Escuchar en audio</button><button type="button" class="obtn" id="rShare">Compartir</button></div>
+  <div class="phx-amen" data-t="lect"></div>
+  </article>
+<section class="card pad40 phx-com" data-t="lect" data-kind="comentario" data-title="Comentarios sobre la Palabra de hoy" data-lead="¿Qué te ha dicho hoy la Palabra? Compártelo con respeto. Cada día empieza una conversación nueva."></section>
+ </main>
+ <aside class="side">
+<section class="card pad28 greek"><p class="kicker">Palabra griega del día</p><p class="gk"><span id="gkW">φῶς</span> <i id="gkT">phōs</i></p><h3 id="gkM">luz</h3><p class="prayer" id="gkV">…</p><p class="small" id="gkR"></p></section>
+  <section class="card pad28">
+   <p class="kicker">Oración para este momento</p>
+   <h3 id="pName">—</h3>
+   <p class="prayer" id="pTxt">…</p>
+  </section>
+  <div class="ad-slot ad-side" aria-hidden="true"></div>
+ </aside>
+</div>
+<section class="wrap explore"><p class="kicker center">Sigue explorando</p><h2 class="h2 center">Descubre más en Phos</h2><div class="xgrid"><a href="index.html" class="xcard"><span class="xi">🏠</span><b>Inicio</b><span>Hoy: ayuno, fiesta y oración del momento.</span><em>Entrar →</em></a><a href="escrituras.html" class="xcard"><span class="xi">📖</span><b>Biblia</b><span>El salmo del día y las Biblias de cada Iglesia.</span><em>Entrar →</em></a><a href="salud.html" class="xcard"><span class="xi">🌿</span><b>Salud y bienestar</b><span>Ayuno, descanso, alimentos y hábitos según la Biblia.</span><em>Entrar →</em></a><a href="oraciones.html" class="xcard"><span class="xi">🙏</span><b>Oraciones</b><span>Las oraciones de la Iglesia y la de este momento.</span><em>Entrar →</em></a><a href="calendario.html" class="xcard"><span class="xi">📅</span><b>Calendario</b><span>Fiestas, santos y ayunos de cada día del mes.</span><em>Entrar →</em></a><a href="santoral.html" class="xcard"><span class="xi">😇</span><b>Santoral</b><span>El santo de hoy y cuándo es tu onomástica.</span><em>Entrar →</em></a><a href="fiestas.html" class="xcard"><span class="xi">⛪</span><b>Una fiesta, tres Iglesias</b><span>Cómo vive cada Iglesia las fiestas de Cristo.</span><em>Entrar →</em></a><a href="recetas.html" class="xcard"><span class="xi">🥣</span><b>Recetas de ayuno</b><span>Qué cocinar según el ayuno de hoy.</span><em>Entrar →</em></a><a href="articulos.html" class="xcard"><span class="xi">📚</span><b>Artículos</b><span>Para leer con calma: fiestas, ayuno y oración.</span><em>Entrar →</em></a><a href="santo-de-hoy" class="xcard"><span class="xi">😇</span><b>Santo de hoy</b><span>Los santos que recuerda hoy cada Iglesia.</span><em>Entrar →</em></a><a href="muro-oracion.html" class="xcard"><span class="xi">🕯️</span><b>Muro de oración</b><span>Pide oración y reza por los demás.</span><em>Entrar →</em></a></div></section>
+<footer class="foot">
+ <div class="wrap row">
+  <div class="grow"><p class="fbrand">Phos Biblias</p><p>Phos es un proyecto independiente para leer la Biblia y vivir la fe cada día. Los textos bíblicos son de dominio público; las fuentes y licencias se detallan dentro de la app.</p></div>
+  <div class="fsup"><p class="fbrand">Apoya Phos</p><p>Phos es gratuito para todos. Puedes colaborar con una aportación voluntaria.</p><p class="flinks"><a href="apoya.html#puntual">🕯️ Aportación puntual</a><a href="apoya.html#mensual">🌿 Aportación mensual</a></p></div><nav aria-label="Legal" class="legal"><a href="articulos.html">Artículos</a><a href="apoya.html">Apoya Phos</a><a href="muro-oracion.html">Muro de oración</a><a href="normas-comunidad.html">Normas de la comunidad</a><a href="condiciones-aportaciones.html">Condiciones de las aportaciones</a><a href="aviso-legal.html">Aviso legal</a><a href="privacidad.html">Privacidad</a><a href="cookies.html">Cookies</a></nav>
+ </div>
+</footer>
+<script src="phos-web-core.js?v=b54b0006"></script>
+<script src="santos.js?v=b54b0006"></script>
+<script src="web.js?v=b54b0006"></script>
+<script src="account.js?v=b54b0006"></script>
+<script src="community.js?v=b54b0006"></script>
+</body>
+</html>

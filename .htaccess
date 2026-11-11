@@ -35,6 +35,8 @@ Redirect 302 /facebook https://www.facebook.com/61596423448217
   RewriteCond %{THE_REQUEST} \s/santo-de-hoy\.php[\s?]
   RewriteRule ^santo-de-hoy\.php$ /santo-de-hoy [L,R=301]
   RewriteRule ^santo-de-hoy/?$ santo-de-hoy.php [L]
+  # Las lecturas se sirven ya escritas desde el servidor, sin cambiar la dirección
+  RewriteRule ^lecturas\.html$ lecturas.php [L]
 </IfModule>
 <IfModule mod_headers.c>
   Header always set Strict-Transport-Security "max-age=15552000" env=HTTPS
