@@ -75,6 +75,8 @@ jobs:
           echo "=== SOBRANTES EN EL SERVIDOR ==="
           rsync -rlni --delete --exclude '.git*' --exclude 'README.md' -e "ssh -i ~/.ssh/sg -p ${SG_PORT:-18765}" ./ "$SG_USER@$SG_HOST:www/$SG_DOMAIN/public_html/" 2>&1 | grep '^\*deleting' | head -200 || true
           echo "=== FIN DE LA LISTA ==="
+          # Restos que no son de Phos: maqueta antigua y página «Under construction» del alojamiento
+          $SSH "$SG_USER@$SG_HOST" "rm -f www/$SG_DOMAIN/public_html/portada-nueva.html www/$SG_DOMAIN/public_html/Default.html" || true
           # La antigua /biblia/ se borró: fuera del servidor todo lo que quede de ella salvo sw.js (que desinscribe la app instalada)
           $SSH "$SG_USER@$SG_HOST" "find www/$SG_DOMAIN/public_html/biblia -mindepth 1 ! -name sw.js -delete 2>/dev/null; rmdir www/$SG_DOMAIN/public_html/biblia/data 2>/dev/null" || true
           if [ -n "$DB_NAME" ] && [ -n "$DB_USER" ] && [ -n "$DB_PASS" ]; then
