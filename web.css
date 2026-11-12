@@ -351,10 +351,6 @@ a.zone:hover .zi{transform:scale(1.12) rotate(-6deg)}
 .cmp td:first-child{font-weight:600}
 .cmpwrap{overflow-x:auto}
 @media(max-width:560px){.orcat > summary{padding:20px 18px}.orcat > summary > b{font-size:23px}.orcat .ori{font-size:28px}.ordest{padding:22px}}
-/* casillas que, en el teléfono, llevan a la versión para móviles */
-.xcard.xapp em{opacity:.95}
-.xcard.xapp em::before{content:"📱 ";font-style:normal}
-.nav a.napp::before{content:"📱";font-size:11px;margin-right:4px;opacity:.9}
 /* campo trampa del formulario de entrada: invisible para las personas,
    visible para los programas que rellenan formularios automáticamente */
 .achp{position:absolute!important;left:-9999px!important;top:auto!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none}
