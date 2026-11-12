@@ -355,3 +355,6 @@ a.zone:hover .zi{transform:scale(1.12) rotate(-6deg)}
 .xcard.xapp em{opacity:.95}
 .xcard.xapp em::before{content:"📱 ";font-style:normal}
 .nav a.napp::before{content:"📱";font-size:11px;margin-right:4px;opacity:.9}
+/* campo trampa del formulario de entrada: invisible para las personas,
+   visible para los programas que rellenan formularios automáticamente */
+.achp{position:absolute!important;left:-9999px!important;top:auto!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none}

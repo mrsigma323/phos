@@ -86,6 +86,7 @@ function renderOut(msg){
   <form id="acLogin" novalidate>
    <label for="acEmail">Tu correo electrónico</label>
    <input type="email" id="acEmail" autocomplete="email" required placeholder="nombre@correo.com">
+   <input type="text" id="acHp" class="achp" tabindex="-1" autocomplete="off" aria-hidden="true" placeholder="No rellenar">
    <label class="chk"><input type="checkbox" id="acOk"> <span>He leído y acepto la <a href="privacidad.html" target="_blank">política de privacidad</a>.</span></label>
    <button class="btn" type="submit">Enviarme el enlace</button>
    <p class="acmsg" id="acMsg" role="status">${msg?esc(msg):''}</p>
@@ -99,12 +100,13 @@ function renderOut(msg){
   <li>Recibir, si quieres, un correo cada domingo con el versículo, los santos y los ayunos de la semana.</li>
   <li>Hacer y gestionar una aportación mensual, si lo deseas.</li></ul>
   <p class="small">La cuenta es opcional y gratuita. Toda la web se puede usar igual sin registrarse.</p></div>`;
+ const acT0=Date.now();
  $('acLogin').onsubmit=async e=>{e.preventDefault();const m=$('acMsg'),btn=e.target.querySelector('button');
   const email=$('acEmail').value.trim();
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){m.textContent='Escribe un correo electrónico válido.';m.className='acmsg err';return}
   if(!$('acOk').checked){m.textContent='Marca la casilla de la política de privacidad para continuar.';m.className='acmsg err';return}
   btn.disabled=true;m.className='acmsg';m.textContent='Enviando…';
-  const j=await call('login.php',{email,acepto:true});btn.disabled=false;
+  const j=await call('login.php',{email,acepto:true,hp:($('acHp')||{}).value||'',dt:Date.now()-acT0});btn.disabled=false;
   if(j.ok){m.className='acmsg okk';m.innerHTML='📬 Te hemos enviado un enlace a <b>'+esc(email)+'</b>. Ábrelo desde este mismo dispositivo o desde cualquier otro. Si no lo ves, mira en la carpeta de spam.'}
   else{m.className='acmsg err';m.textContent=j.error||'No se ha podido enviar.'}
  };
