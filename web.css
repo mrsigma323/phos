@@ -325,14 +325,14 @@ a.zone:hover .zi{transform:scale(1.12) rotate(-6deg)}
 .orgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr));gap:18px;align-items:start}
 .orcat{background:#fff;border-radius:16px;border:1px solid rgba(74,20,22,.08);box-shadow:0 1px 3px rgba(74,20,22,.08);overflow:hidden}
 .orcat[open]{grid-column:1/-1;box-shadow:0 6px 24px rgba(74,20,22,.13)}
-.orcat summary{list-style:none;cursor:pointer;padding:26px 24px;display:grid;grid-template-columns:auto 1fr;gap:4px 16px;align-items:center}
-.orcat summary::-webkit-details-marker{display:none}
-.orcat summary:focus-visible{outline:3px solid var(--gold);outline-offset:-3px}
+.orcat > summary{list-style:none;cursor:pointer;padding:26px 24px;display:grid;grid-template-columns:auto 1fr;gap:4px 16px;align-items:center}
+.orcat > summary::-webkit-details-marker{display:none}
+.orcat > summary:focus-visible{outline:3px solid var(--gold);outline-offset:-3px}
 .orcat .ori{grid-row:1/4;font-size:34px;line-height:1}
-.orcat summary b{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--wine);line-height:1.15}
+.orcat > summary > b{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--wine);line-height:1.15}
 .orcat .ord{color:var(--muted);font-size:15px;line-height:1.45}
 .orbadge{grid-column:2;justify-self:start;margin-top:8px;background:var(--gold);color:#4A1416;font-size:12px;font-weight:700;padding:3px 11px;border-radius:999px;letter-spacing:.3px}
-.orcat[open] summary{border-bottom:1px solid rgba(74,20,22,.08)}
+.orcat[open] > summary{border-bottom:1px solid rgba(74,20,22,.08)}
 .orhoy{border-color:var(--gold)}
 .orbody{padding:20px 24px 24px}
 .ornote{background:#FBF7F0;border-left:3px solid var(--gold);padding:14px 16px;margin:0 0 18px;font-size:15px;line-height:1.55;color:#4A4038;border-radius:0 8px 8px 0}
@@ -350,4 +350,4 @@ a.zone:hover .zi{transform:scale(1.12) rotate(-6deg)}
 .cmp th{font-weight:700;color:var(--wine);background:#FBF7F0}
 .cmp td:first-child{font-weight:600}
 .cmpwrap{overflow-x:auto}
-@media(max-width:560px){.orcat summary{padding:20px 18px}.orcat summary b{font-size:23px}.orcat .ori{font-size:28px}.ordest{padding:22px}}
+@media(max-width:560px){.orcat > summary{padding:20px 18px}.orcat > summary > b{font-size:23px}.orcat .ori{font-size:28px}.ordest{padding:22px}}
