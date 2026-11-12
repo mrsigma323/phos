@@ -432,3 +432,17 @@ a.zone:hover .zi{transform:scale(1.12) rotate(-6deg)}
 .lx.night .lx-ed b,.lx.night .lx-hit b{color:var(--gold)}.lx.night .lx-v:hover{background:rgba(226,194,122,.1)}
 @media(max-width:560px){.lx{padding:16px}.lx-text{font-size:20px}.lx-bar h3{font-size:24px}}
 .topr{display:flex;align-items:center;gap:4px}
+/* Menú del móvil: aviso de que se puede desplazar */
+.navwrap{display:contents}.navarr{display:none}
+@media (max-width:640px){
+ .navwrap{display:block;position:relative;order:3;width:100%;min-width:0}
+ .navwrap .nav{width:100%;scroll-behavior:smooth;scroll-padding:0 44px}
+ .navarr{position:absolute;top:0;bottom:12px;width:44px;border:0;padding:0;color:var(--gold);font-size:26px;font-weight:700;line-height:1;cursor:pointer;display:flex;align-items:center;opacity:0;pointer-events:none;transition:opacity .2s}
+ .navarr.r{right:-2px;justify-content:flex-end;background:linear-gradient(90deg,rgba(74,20,22,0),#4A1416 60%)}
+ .navarr.l{left:-2px;justify-content:flex-start;background:linear-gradient(270deg,rgba(74,20,22,0),#4A1416 60%)}
+ .navwrap.more-r .navarr.r,.navwrap.more-l .navarr.l{opacity:1;pointer-events:auto}
+ .navwrap.more-r .navarr.r span{animation:navnudge 1.6s ease-in-out 3}
+ .navdots{display:flex;justify-content:center;gap:5px;margin-top:4px}.navdots i{width:5px;height:5px;border-radius:50%;background:rgba(226,194,122,.35)}.navdots i.on{background:var(--gold)}
+}
+@keyframes navnudge{0%,100%{transform:translateX(0)}50%{transform:translateX(5px)}}
+@media (prefers-reduced-motion:reduce){.navwrap .nav{scroll-behavior:auto}.navarr span{animation:none!important}}
