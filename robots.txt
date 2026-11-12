@@ -1,9 +1,15 @@
 User-agent: *
 Allow: /
 Disallow: /api/
-Disallow: /mi-phos.html
-Disallow: /aviso-legal.html
-Disallow: /privacidad.html
-Disallow: /cookies.html
+
+# Las páginas legales y «Mi Phos» ya no se bloquean aquí: sus datos personales
+# no están escritos en el HTML, sino que se piden al servidor solo cuando una
+# persona pulsa el botón, y quien rastrea no pulsa botones.
+#
+# Bloquearlas era peor: el buscador no podía entrar, nunca leía el «noindex»
+# que llevan dentro y acababa indexando la dirección igual, mientras que quien
+# venía a recoger datos personales entraba de todos modos sin hacer caso de
+# este archivo. Ahora el «noindex» sí surte efecto y no quedan en los
+# resultados de búsqueda.
 
 Sitemap: https://phosbiblias.com/sitemap.xml
