@@ -1,9 +1,11 @@
 User-agent: *
 Allow: /
 Disallow: /api/
-Disallow: /mi-phos.html
-Disallow: /aviso-legal.html
-Disallow: /privacidad.html
-Disallow: /cookies.html
+
+# Las páginas legales y la de cuenta llevan noindex en su propio HTML.
+# No se bloquean aquí a propósito: si se bloquean, el buscador no puede
+# leerlas, nunca ve ese noindex y acaba indexando la dirección igual,
+# sin descripción. Además, quien revisa pagos o publicidad necesita
+# poder abrir el aviso legal, la privacidad y las cookies.
 
 Sitemap: https://phosbiblias.com/sitemap.xml
