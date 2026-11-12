@@ -1608,6 +1608,8 @@ renderArticles=async function(sec){if(sec==='sport'&&S.view!=='topic')return ren
  st.textContent+='.wlx{padding:16px 18px;margin-top:16px}.wlx h2{font-size:22px;margin:0 0 6px}.wla{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid rgba(0,0,0,.08);text-decoration:none;color:inherit}.wla:first-of-type{border-top:0}.wla span{font-size:28px}.wla div{flex:1;display:flex;flex-direction:column}.wla b{font-size:17px}.wla small{opacity:.75;font-size:14px}.wla i{font-style:normal;font-size:24px;opacity:.5}.wlp{margin:0 0 4px;opacity:.8;font-size:15px}';
  // 5b) Botón «Donar» en el menú desplegable, debajo de «Más»
  const addDon=()=>{const l=$('#menuList');if(!l||l.querySelector('.mdon'))return;
+  const c=document.createElement('a');c.className='mitem mdon';c.setAttribute('role','menuitem');c.href='../cantos.html';
+  c.innerHTML='<span class="mico" aria-hidden="true">\ud83c\udfb5</span><span>Cantos</span>';l.appendChild(c);
   const a=document.createElement('a');a.className='mitem mdon';a.setAttribute('role','menuitem');a.href='../apoya.html';
   a.innerHTML='<span class="mico" aria-hidden="true">🕯️</span><span>Apoyar</span>';const m=document.createElement('a');m.className='mitem mdon';m.setAttribute('role','menuitem');m.href='../muro-oracion.html';m.innerHTML='<span class="mico" aria-hidden="true">🙏</span><span>Muro de oración</span>';l.append(m,a)};
  const _dtD=drawTabs;drawTabs=function(){_dtD();addDon()};addDon();

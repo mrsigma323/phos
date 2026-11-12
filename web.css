@@ -316,3 +316,8 @@ a.zone:hover .zi{transform:scale(1.12) rotate(-6deg)}
 .ytfacade .ytlab{font-size:14px;letter-spacing:.06em;color:#EBDDC4}
 .ytfacade:hover .ytplay,.ytfacade:focus-visible .ytplay{transform:scale(1.12)}
 .ytfacade .ytplay{transition:transform .18s ease}
+.cchips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:18px}
+.cchip{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border:1px solid var(--line);border-radius:999px;font-size:14px;text-decoration:none;color:var(--ink);background:#fff}
+.cchip:hover{border-color:var(--gold);color:var(--wine)}
+.cansec{margin:38px 0 16px;scroll-margin-top:84px}
+.ctrad{color:var(--muted);font-weight:400}
