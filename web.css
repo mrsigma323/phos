@@ -372,3 +372,62 @@ a.zone:hover .zi{transform:scale(1.12) rotate(-6deg)}
 .vmore h3{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--wine);margin:0 0 10px}
 .vmore p{line-height:1.6}.vmore .vs{font-family:'Cormorant Garamond',serif;font-size:19px}
 .vh2{margin-top:46px}
+/* Botón «i» de la barra superior: fuentes, derechos de autor y aviso legal */
+.infobtn{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--gold);background:transparent;color:var(--gold);font:700 italic 17px/1 Georgia,serif;cursor:pointer;flex:0 0 auto;margin-left:8px}
+.infobtn:hover,.infobtn:focus-visible{background:var(--gold);color:var(--wine);outline:none}
+.infodlg{max-width:640px;width:calc(100% - 28px);border:0;border-radius:18px;padding:26px 26px 20px;color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.35);max-height:86vh;overflow:auto}
+.infodlg::backdrop{background:rgba(35,28,26,.55)}
+.infodlg h2{font-family:'Cormorant Garamond',serif;color:var(--wine);font-size:28px;margin:0 0 12px;line-height:1.15}
+.infodlg p{font-size:15.5px;line-height:1.55}.infoeds{color:var(--muted);font-size:14px!important}
+.infodlg .vivlos{white-space:pre-line;background:var(--paper);border-radius:12px;padding:14px;font-size:13px;color:var(--muted);line-height:1.5}
+.infodlg form{text-align:right;margin-top:10px}
+/* Lector de la Biblia */
+.lx{margin-top:28px;padding:22px;text-align:left}
+.lx-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:14px}
+.lx-bar h3{font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--wine);margin:0;flex:1 1 200px}
+.lx-tools{display:flex;flex-wrap:wrap;gap:6px}
+.lx button{font:inherit;cursor:pointer}
+.lx-tools button,.lx-back,.lx-sw button,.lx-nav button,.lx-tabs button,.lx-link{background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 13px;font-size:15px;color:var(--wine2)}
+.lx .pri{background:var(--wine);color:#fff;border-color:var(--wine)}
+.lx-lead{color:var(--muted);margin:0 0 14px}.lx-small{color:var(--muted);font-size:14px}
+.lx-g{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--wine);margin:20px 0 8px}
+.lx-eds{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+.lx-ed{text-align:left;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.lx-ed b{color:var(--wine);font-size:17px}.lx-ed span{color:var(--muted);font-size:14px;line-height:1.4}
+.lx-ed:hover,.lx-hit:hover{border-color:var(--gold)}
+.lx-cont{display:block;width:100%;text-align:left;background:var(--paper);border:1px solid var(--gold);border-radius:14px;padding:14px 16px;margin:0 0 6px;font-size:16px}
+.lx-tabs{display:flex;gap:8px;margin-bottom:14px}.lx-tabs [aria-pressed=true]{background:var(--wine);color:#fff;border-color:var(--wine)}
+.lx-books{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.lx-books button{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;text-align:left;color:var(--ink)}
+.lx-books .deut{border-color:var(--gold);background:#FBF5E6}
+.lx-chs{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(52px,1fr))}
+.lx-chs button{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 0;color:var(--wine2);font-weight:600}
+.lx-cmp{display:flex;flex-wrap:wrap;gap:10px 18px;margin-bottom:14px;font-size:14px;color:var(--muted)}
+.lx-sel{display:block;margin-top:4px;font:inherit;font-size:15px;padding:7px 10px;border-radius:10px;border:1px solid var(--line);background:#fff;max-width:100%}
+.lx-text{font-family:'Cormorant Garamond',serif;font-size:22px;line-height:1.65;color:#2E2724}
+.lx-v{margin:0 0 6px;padding:3px 6px;border-radius:6px;cursor:pointer}
+.lx-v sup{font-family:'Source Sans 3',sans-serif;font-size:12px;color:var(--goldtx);font-weight:700;margin-right:4px}
+.lx-v:hover{background:rgba(226,194,122,.12)}.lx-v.flash{outline:2px solid var(--gold)}
+.lx-par{display:block;font-family:'Source Sans 3',sans-serif;font-size:16px;color:var(--muted);border-left:3px solid var(--line);padding-left:10px;margin:4px 0 6px}
+.hl-gold{background:rgba(226,194,122,.38)}.hl-blue{background:rgba(120,170,230,.3)}.hl-green{background:rgba(130,200,140,.3)}
+.lx-ico{font-size:14px}
+.lx-sheet{background:#fff;border:1px solid var(--gold);border-radius:14px;padding:14px;margin:8px 0 14px;display:grid;gap:10px;font-family:'Source Sans 3',sans-serif;font-size:15px}
+.lx-sw{display:flex;flex-wrap:wrap;gap:8px}
+.lx-sw .sw-gold,.lx-sw .sw-blue,.lx-sw .sw-green{width:34px;height:34px;padding:0;border-radius:50%}
+.sw-gold{background:#E9D49E!important}.sw-blue{background:#AFCBEF!important}.sw-green{background:#B5DDBB!important}
+.lx-sw [aria-pressed=true]{outline:3px solid var(--wine)}
+.lx-sheet textarea{font:inherit;padding:8px;border-radius:10px;border:1px solid var(--line);width:100%}
+.lx-nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px}
+.lx-srch{display:flex;gap:8px;margin-bottom:12px}.lx-srch input{flex:1;font:inherit;padding:9px 12px;border-radius:999px;border:1px solid var(--line);min-width:0}
+.lx-srch button{border-radius:999px;padding:8px 16px;border:0}
+.lx-hit{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:8px;line-height:1.5;color:var(--ink)}
+.lx-hit b{color:var(--wine)}.lx-note{display:block;color:var(--muted);font-size:14px;margin-top:4px}
+.lx-prog{height:10px;background:var(--sand);border-radius:999px;overflow:hidden;margin-bottom:14px}.lx-prog i{display:block;height:100%;background:var(--gold)}
+.lx-today{background:var(--paper);border-radius:14px;padding:16px;display:grid;gap:12px}
+.lx-all{margin-top:14px}.lx-all ol{columns:2 260px;font-size:14px}.lx-all li.done button{color:var(--goldtx);text-decoration:line-through}
+.lx-all li button{background:none;border:0;color:var(--wine2);padding:2px 0;text-align:left}
+.lx-link{margin-top:12px}
+.lx.night{background:#1E1A19;color:#E9E2D6}.lx.night .lx-text{color:#E9E2D6}.lx.night h3,.lx.night .lx-g{color:var(--gold)}
+.lx.night .lx-ed,.lx.night .lx-books button,.lx.night .lx-chs button,.lx.night .lx-hit,.lx.night .lx-tools button,.lx.night .lx-back,.lx.night .lx-nav button,.lx.night .lx-tabs button,.lx.night .lx-sel,.lx.night .lx-cont,.lx.night .lx-sheet,.lx.night .lx-today{background:#2A2423;color:#E9E2D6;border-color:#4A403C}
+.lx.night .lx-ed b,.lx.night .lx-hit b{color:var(--gold)}.lx.night .lx-v:hover{background:rgba(226,194,122,.1)}
+@media(max-width:560px){.lx{padding:16px}.lx-text{font-size:20px}.lx-bar h3{font-size:24px}}
