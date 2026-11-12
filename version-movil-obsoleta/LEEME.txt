@@ -1,0 +1,3 @@
+Archivo de la antigua "versión móvil" de Phos (antes en /biblia).
+No se publica: el despliegue la excluye. Las Biblias están ahora en /data/biblia.
+La copia completa anterior está en la rama copia-biblia-12nov.

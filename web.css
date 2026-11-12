@@ -354,3 +354,21 @@ a.zone:hover .zi{transform:scale(1.12) rotate(-6deg)}
 /* campo trampa del formulario de entrada: invisible para las personas,
    visible para los programas que rellenan formularios automáticamente */
 .achp{position:absolute!important;left:-9999px!important;top:auto!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none}
+/* Salud y hábitos (páginas recuperadas) */
+.vida .vintro p,.vintro1{font-size:18px;line-height:1.65;margin:0 0 14px}
+.vida .vcount{color:var(--muted);text-align:center;margin:22px 0 14px}
+.vlist{display:grid;gap:12px}
+.vida .pr .refl{font-family:'Source Sans 3',sans-serif;font-size:17px;line-height:1.6;color:#4A4038;margin:0 0 14px}
+.vida .pr .vs{margin:0 0 6px}.vida .pr .vs sup{font-size:.55em;color:var(--goldtx);font-weight:700;margin-right:2px}
+.vida .pr+.pr{margin-top:0}.vida .pr .ptx cite+p.vs{margin-top:16px}
+.vida .pr{box-shadow:none;border:1px solid rgba(74,20,22,.1)}
+.vcare{margin:0 0 22px;background:#FBF7F0}.vnote,.vback{margin:26px 0 0}
+.vidx{display:flex;flex-wrap:wrap;gap:8px;margin:24px 0}
+.vidx a{background:#fff;border:1px solid rgba(74,20,22,.12);border-radius:999px;padding:6px 14px;font-size:15px;color:var(--wine);text-decoration:none}
+.vidx small,.vfood h2 small{color:var(--muted);font-weight:400}
+.vfood{margin:34px 0 0;scroll-margin-top:90px}.vfood .pr{margin-top:10px}
+.vbody{padding:20px 24px 24px;display:grid;gap:12px}
+.vmoregrid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin-top:20px}
+.vmore h3{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--wine);margin:0 0 10px}
+.vmore p{line-height:1.6}.vmore .vs{font-family:'Cormorant Garamond',serif;font-size:19px}
+.vh2{margin-top:46px}
