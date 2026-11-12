@@ -298,8 +298,16 @@ function public_user(array $u): array {
 }
 
 // ---- Moderación: quién puede ver el panel ----
-// Correos con permiso de moderación (se pueden ampliar en phos-config.php con la clave 'admins')
-const PHOS_ADMINS = ['bienvenid@phosbiblias.com', 'bibles.phoschristou@gmail.com'];
+// Correos con permiso de moderación.
+//
+// Solo la dirección del dominio. La de gmail se quitó a propósito: es pública
+// por las redes sociales, y como se entra con un enlace enviado al correo,
+// quien controlase ese buzón entraría aquí con permisos de moderación.
+//
+// Para volver a dar permiso a alguien no hace falta tocar este archivo ni
+// publicar nada: basta con añadir su correo a la clave 'admins' de
+// phos-config.php, en el servidor.
+const PHOS_ADMINS = ['bienvenid@phosbiblias.com'];
 function is_admin(?array $u): bool {
     if (!$u) return false;
     $c = phos_config() ?? [];
