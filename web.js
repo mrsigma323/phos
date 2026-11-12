@@ -345,3 +345,25 @@ document.addEventListener('click',function(e){
  f.setAttribute('allowfullscreen','');
  box.innerHTML='';box.appendChild(f);
 });
+
+// En un teléfono, cinco de las casillas de «Descubre más» no siguen en esta web:
+// llevan a la versión para móviles, que es otra interfaz. Decirlo antes de pulsar,
+// para que el salto no pille por sorpresa. Mismo criterio que el reenvío de arriba.
+(function(){try{
+ if(localStorage.getItem('phos:desk'))return;
+ var u=navigator.userAgent||'';
+ var phone=(/iPhone|iPod|Windows Phone|BlackBerry|Opera Mini/i.test(u)||(/Android/i.test(u)&&/Mobile/i.test(u)))
+   &&!/Windows NT|Macintosh|X11|CrOS/i.test(u)&&Math.min(screen.width,screen.height)<820;
+ if(!phone)return;
+ var APP=/^(index|escrituras|salud|calendario|articulos)\.html$/;
+ document.querySelectorAll('a.xcard').forEach(function(a){
+  if(!APP.test((a.getAttribute('href')||'').split('/').pop()))return;
+  a.classList.add('xapp');
+  var e=a.querySelector('em');
+  if(e)e.textContent='Ver en la versión móvil →';
+ });
+ // la barra de arriba tiene las mismas cinco: marcarlas igual
+ document.querySelectorAll('nav.nav a').forEach(function(a){
+  if(APP.test((a.getAttribute('href')||'').split('/').pop()))a.classList.add('napp');
+ });
+}catch(e){}})();
