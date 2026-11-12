@@ -431,3 +431,4 @@ a.zone:hover .zi{transform:scale(1.12) rotate(-6deg)}
 .lx.night .lx-ed,.lx.night .lx-books button,.lx.night .lx-chs button,.lx.night .lx-hit,.lx.night .lx-tools button,.lx.night .lx-back,.lx.night .lx-nav button,.lx.night .lx-tabs button,.lx.night .lx-sel,.lx.night .lx-cont,.lx.night .lx-sheet,.lx.night .lx-today{background:#2A2423;color:#E9E2D6;border-color:#4A403C}
 .lx.night .lx-ed b,.lx.night .lx-hit b{color:var(--gold)}.lx.night .lx-v:hover{background:rgba(226,194,122,.1)}
 @media(max-width:560px){.lx{padding:16px}.lx-text{font-size:20px}.lx-bar h3{font-size:24px}}
+.topr{display:flex;align-items:center;gap:4px}
