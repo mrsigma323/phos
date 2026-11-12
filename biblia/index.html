@@ -631,7 +631,7 @@ async function idbPut(k,v){const db=await idb();if(!db)return;try{db.transaction
 async function getChunk(id,n){
  const k=id+'/'+n;if(MEM[k])return MEM[k];
  let d=await idbGet(k);
- if(!d){const r=await fetch('data/'+k+'.json');if(!r.ok)throw new Error('load');d=await r.json();idbPut(k,d)}
+ if(!d){const r=await fetch('../data/biblia/'+k+'.json');if(!r.ok)throw new Error('load');d=await r.json();idbPut(k,d)}
  return MEM[k]=d;
 }
 const metaCache={};

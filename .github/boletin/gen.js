@@ -18,7 +18,7 @@ const fmt=t=>{const d=new Date(t);return d.getUTCDate()+' de '+MES[d.getUTCMonth
 const doy=t=>{const d=new Date(t);return Math.round((t-Date.UTC(d.getUTCFullYear(),0,1))/DAY)+1};
 const [b,c,v]=(()=>{const m=/^(\w+) (\d+):(\d+)/.exec(X.VOTD[doy(mon)%X.VOTD.length]);return [m[1],m[2],+m[3]]})();
 const ent=X.BLM.b.find(x=>x[0]===b);
-const chunk=JSON.parse(fs.readFileSync(path.join(ROOT,'biblia/data/es-blm/'+ent[2]+'.json'),'utf8'));
+const chunk=JSON.parse(fs.readFileSync(path.join(ROOT,'data/biblia/es-blm/'+ent[2]+'.json'),'utf8'));
 const vt=(chunk[b][c]||[]).find(x=>x[0]===v);
 const out={semana:fmt(mon)+' al '+fmt(mon+6*DAY),lunes:new Date(mon).toISOString().slice(0,10),
  versiculo:{ref:X.BN[b]+' '+c+', '+v,texto:vt?vt[1]:''},dias:[]};

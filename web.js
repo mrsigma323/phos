@@ -17,7 +17,7 @@ const chunkCache={};
 // Ortodoxos y católicos leen la Biblia libre adaptada («el Señor»); protestantes, la Reina-Valera 1909 (igual que en la versión móvil)
 const ED=()=>bibleEd(BR),EDM=()=>ED()==='es-blm'?BLM:RV;
 function chunkOf(b){const e=EDM().b.find(x=>x[0]===b);return e?e[2]:null}
-function loadChunk(n){const k=ED()+'/'+n;if(!chunkCache[k])chunkCache[k]=fetch('biblia/data/'+k+'.json').then(r=>{if(!r.ok)throw 0;return r.json()});return chunkCache[k]}
+function loadChunk(n){const k=ED()+'/'+n;if(!chunkCache[k])chunkCache[k]=fetch('data/biblia/'+k+'.json').then(r=>{if(!r.ok)throw 0;return r.json()});return chunkCache[k]}
 window.dayIdx=()=>DOY;
 async function verses(b,c,v1,v2){
  const n=chunkOf(b);if(n==null)return '';
