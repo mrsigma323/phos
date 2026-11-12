@@ -1,9 +1,16 @@
 User-agent: *
 Allow: /
 Disallow: /api/
-Disallow: /mi-phos.html
+
+# Estas dos llevan los datos personales del titular escritos en la página.
+# Se bloquean hasta que esos datos salgan del HTML y se pidan al servidor.
 Disallow: /aviso-legal.html
 Disallow: /privacidad.html
-Disallow: /cookies.html
+
+# Zona de cuenta del usuario: no aporta nada en los buscadores.
+Disallow: /mi-phos.html
+
+# cookies.html estaba bloqueada sin motivo: no contiene ningún dato personal.
+# Se deja abierta para que cualquiera pueda comprobar la política.
 
 Sitemap: https://phosbiblias.com/sitemap.xml
