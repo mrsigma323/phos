@@ -38,6 +38,8 @@ Redirect 302 /facebook https://www.facebook.com/61596423448217
   RewriteCond %{THE_REQUEST} \s/santo-de-hoy\.php[\s?]
   RewriteRule ^santo-de-hoy\.php$ /santo-de-hoy [L,R=301]
   RewriteRule ^santo-de-hoy/?$ santo-de-hoy.php [L]
+  # «Biblia»: la dirección antigua /escrituras redirige a /biblias
+  RewriteRule ^escrituras(\.html)?/?$ /biblias.html [L,R=301]
   # Las lecturas se sirven ya escritas desde el servidor, sin cambiar la dirección
   RewriteRule ^lecturas\.html$ lecturas.php [L]
 </IfModule>
