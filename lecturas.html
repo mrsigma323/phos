@@ -10,7 +10,7 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/favicon-48.png" type="image/png" sizes="48x48">
 <link rel="icon" href="/favicon-192.png" type="image/png" sizes="192x192">
-<link rel="apple-touch-icon" href="biblia/apple-touch-icon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta property="og:title" content="Lecturas de hoy: palabras de Jesús y versículo del día · Phos">
 <meta property="og:description" content="Las palabras de Jesús para hoy, el versículo del día, el Evangelio de la fiesta y una reflexión cristiana diaria.">
 <meta property="og:image" content="https://phosbiblias.com/og.png">
