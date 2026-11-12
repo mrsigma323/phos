@@ -17,6 +17,9 @@
 
 ErrorDocument 404 /404.html
 
+# La antigua Biblia electrónica (/biblia/) ya no existe: quien llegue con un enlace viejo va al inicio
+RedirectMatch 301 ^/biblia(?!/sw\.js)(/.*)?$ /
+
 # Páginas con datos del titular o de cuenta: que los buscadores no las indexen
 <FilesMatch "^(aviso-legal|privacidad|cookies|mi-phos)\.html$">
   Header set X-Robots-Tag "noindex, noarchive, nosnippet"
