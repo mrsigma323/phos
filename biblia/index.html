@@ -320,6 +320,12 @@ dialog::backdrop{background:rgba(35,28,26,.45)}
 .fb .why{display:block;margin-top:8px;font-size:15px;line-height:1.45;opacity:.95}.bcard .bic{font-size:56px;line-height:1;margin:14px 0 4px}.bcard h1{margin-top:6px}
 
 .nlabel .stars{color:var(--gold);letter-spacing:1px;font-size:11px}
+.planops{display:grid;gap:8px;margin-top:12px}
+.planop{display:block;width:100%;text-align:left;padding:12px 14px;border-radius:12px;border:1px solid rgba(226,194,122,.35);background:rgba(255,255,255,.04);color:inherit;cursor:pointer;font:inherit}
+.planop b{display:block;font-size:16px;margin-bottom:3px}
+.planop span{display:block;font-size:13px;opacity:.75;line-height:1.4}
+.planop.on{border-color:#E2C27A;background:rgba(226,194,122,.14)}
+.planchg{display:block;width:100%;margin-top:10px;background:none;border:0;color:#E2C27A;font:inherit;font-size:14px;text-decoration:underline;cursor:pointer;padding:4px}
 
 </style>
 </head>
@@ -1005,11 +1011,38 @@ const VOTD="JOH 3:16|PSA 23:1|PHI 4:13|ROM 8:28|PRO 3:5|ISA 41:10|MAT 11:28|JER 
 const dayIdx=()=>Math.floor((Date.now()-new Date(new Date().getFullYear(),0,0))/864e5);
 function planChunks(ed){const out=[];bookMeta(ed).books.forEach(b=>b.chs.forEach(c=>out.push([b.c,c])));const per=Math.ceil(out.length/365);const days=[];for(let i=0;i<365;i++)days.push(out.slice(i*per,(i+1)*per));return days.filter(d=>d.length)}
 function planRange(d){if(!d.length)return '';const a=d[0],z=d[d.length-1];return a[0]===z[0]?`${bname(a[0])} ${a[1]}–${z[1]}`:`${bname(a[0])} ${a[1]} – ${bname(z[0])} ${z[1]}`}
+// ---------- Elegir la Biblia del plan de lectura ----------
+// Antes "Empezar el plan" arrancaba solo, con la ultima Biblia abierta o, si no
+// habia ninguna, con la ortodoxa griega. El usuario no elegia nada y acababa
+// leyendo en un idioma que no habia pedido.
+const PLANX={
+ es:["Elige la Biblia para el plan","Cambiar Biblia","Cada Biblia tiene libros distintos, así que las lecturas de cada día cambiarán. Seguirás en el día {n}.","Cancelar"],
+ en:["Choose the Bible for the plan","Change Bible","Each Bible has different books, so the daily readings will change. You will stay on day {n}.","Cancel"],
+ pt:["Escolha a Bíblia do plano","Trocar de Bíblia","Cada Bíblia tem livros diferentes, por isso as leituras diárias vão mudar. Você continuará no dia {n}.","Cancelar"],
+ fr:["Choisissez la Bible du plan","Changer de Bible","Chaque Bible a des livres différents, les lectures quotidiennes vont donc changer. Vous resterez au jour {n}.","Annuler"],
+ it:["Scegli la Bibbia del piano","Cambia Bibbia","Ogni Bibbia ha libri diversi, quindi le letture quotidiane cambieranno. Resterai al giorno {n}.","Annulla"],
+ de:["Wähle die Bibel für den Plan","Bibel wechseln","Jede Bibel hat andere Bücher, daher ändern sich die Tageslesungen. Du bleibst bei Tag {n}.","Abbrechen"],
+ el:["Επίλεξε τη Βίβλο για το πρόγραμμα","Αλλαγή Βίβλου","Κάθε Βίβλος έχει διαφορετικά βιβλία, γι΄αυτό τα καθημερινά αναγνώσματα θα αλλάξουν. Θα παραμείνεις στην ημέρα {n}.","Άκυρο"],
+ ru:["Выберите Библию для плана","Сменить Библию","В каждой Библии разный состав книг, поэтому ежедневные чтения изменятся. Вы останетесь на дне {n}.","Отмена"],
+ ro:["Alege Biblia pentru plan","Schimbă Biblia","Fiecare Biblie are cărți diferite, așa că lecturile zilnice se vor schimba. Vei rămâne în ziua {n}.","Anulează"]};
+const px=i=>(PLANX[LANG]||PLANX.en)[i];
+let planPick=false;
+function planOptions(){const out=[];BRANCHES.forEach(b=>b.eds.forEach(e=>{if(MANIFEST[e.id])out.push([b,e])}));return out}
+function planChooser(){
+ const p=store.get('plan',null),n=p?Math.min(p.done||0,364)+1:1;
+ return `<div class="card"><div class="t">${esc(px(0))}</div>`
+  +(p?`<p class="note" style="margin:10px 0 0">${esc(px(2).replace('{n}',n))}</p>`:'')
+  +`<div class="planops">`+planOptions().map(([b,e])=>
+    `<button type="button" class="planop${p&&p.ed===e.id?' on':''}" data-ped="${e.id}">`
+    +`<b>${esc(edName(e.id))}</b><span>${esc(brName(b))} · ${esc(edInfo(e.id))}</span></button>`).join('')
+  +`</div><button class="btn ghost" id="plCancel" style="width:100%;margin-top:12px">${esc(px(3))}</button></div>`;
+}
 function homeExtras(){
  const ref=VOTD[dayIdx()%VOTD.length];const [b,cv]=ref.split(' ');const [c,v]=cv.split(':');
  const p=store.get('plan',null);let plan='';
- if(p&&MANIFEST[p.ed]){const days=planChunks(p.ed);const n=Math.min(p.done||0,days.length-1);
-  plan=`<div class="card"><div class="t">${esc(t('plan'))}<span class="pill soft">${esc(t('planDay').replace('{n}',n+1))}</span></div><div class="s">${esc(planRange(days[n]))} · ${esc(edName(p.ed))}</div><div class="pbar small" style="height:8px;margin-top:10px"><i style="width:${Math.round(n/days.length*100)}%"></i></div><div class="nav" style="margin-top:12px"><button id="plR">${esc(t('readBtn'))}</button><button id="plD" class="btn ghost">${esc(t('planDone'))}</button></div></div>`}
+ if(planPick){plan=planChooser()}
+ else if(p&&MANIFEST[p.ed]){const days=planChunks(p.ed);const n=Math.min(p.done||0,days.length-1);
+  plan=`<div class="card"><div class="t">${esc(t('plan'))}<span class="pill soft">${esc(t('planDay').replace('{n}',n+1))}</span></div><div class="s">${esc(planRange(days[n]))} · ${esc(edName(p.ed))}</div><div class="pbar small" style="height:8px;margin-top:10px"><i style="width:${Math.round(n/days.length*100)}%"></i></div><div class="nav" style="margin-top:12px"><button id="plR">${esc(t('readBtn'))}</button><button id="plD" class="btn ghost">${esc(t('planDone'))}</button></div><button type="button" class="planchg" id="plC">${esc(px(1))}</button></div>`}
  else plan=`<div class="card"><div class="t">${esc(t('plan'))}</div><button class="btn" id="plS" style="width:100%;margin-top:10px">${esc(t('planStart'))}</button></div>`;
  return `<div class="card main" id="votd"><div class="t">${esc(t('votd'))}</div><div class="s" id="votdTxt" style="font-family:'Noto Serif',serif;font-size:18px;line-height:1.6;color:#F6F1E7;margin-top:8px">…</div><div class="s" style="margin-top:6px;color:#E2C27A;font-weight:700">${esc(bname(b))} ${c}, ${v}</div></div>`+plan;
 }
@@ -1018,7 +1051,13 @@ async function bindHomeExtras(){
  const src=TRMAP.protestante[LANG]||'en-kjv';
  try{const bk=await getBook(src,b);const [mc,mv]=mapRef('reina-valera-1909',src,b,c,+v);const row=bk&&bk.ch[mc]&&bk.ch[mc].find(r=>r[0]===mv);const el=$('#votdTxt');if(el&&row){el.textContent=row[1];el.lang=TRLANG[src]}}catch(e){}
  const vd=$('#votd');if(vd){vd.style.cursor='pointer';vd.onclick=()=>{const [oc,ov]=mapRef('reina-valera-1909','ortodoxa-griega',b,c,+v);const ed=bookMeta('ortodoxa-griega').map[b]?'ortodoxa-griega':'reina-valera-1909';go('read',{ed,book:b,ch:ed==='ortodoxa-griega'?oc:c,hl:ed==='ortodoxa-griega'?ov:+v})}}
- const ps=$('#plS');if(ps)ps.onclick=()=>{const last=store.get('last',null);store.set('plan',{ed:last&&MANIFEST[last.ed]&&ED[last.ed]?last.ed:'ortodoxa-griega',done:0,start:today()});renderHome()};
+ const ps=$('#plS');if(ps)ps.onclick=()=>{planPick=true;renderHome()};
+ const pcg=$('#plC');if(pcg)pcg.onclick=()=>{planPick=true;renderHome()};
+ const pcl=$('#plCancel');if(pcl)pcl.onclick=()=>{planPick=false;renderHome()};
+ document.querySelectorAll('[data-ped]').forEach(bt=>bt.onclick=()=>{
+  const ed=bt.dataset.ped,pp=store.get('plan',null);
+  store.set('plan',{ed,done:pp?(pp.done||0):0,start:pp?pp.start:today()});
+  planPick=false;renderHome()});
  const p=store.get('plan',null);
  const pr=$('#plR');if(pr)pr.onclick=()=>{const d=planChunks(p.ed)[Math.min(p.done||0,364)];go('read',{ed:p.ed,book:d[0][0],ch:d[0][1],hl:null})};
  const pd=$('#plD');if(pd)pd.onclick=()=>{p.done=(p.done||0)+1;store.set('plan',p);addXP(5);renderHome()};
