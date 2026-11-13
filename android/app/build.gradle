@@ -1,0 +1,38 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'com.phos.biblia'
+    compileSdk 36
+    defaultConfig {
+        applicationId 'com.phos.biblia'
+        minSdk 24
+        targetSdk 36
+        versionCode 10
+        versionName '2.0'
+    }
+    signingConfigs {
+        upload {
+            def ks = System.getenv('PHOS_UPLOAD_KEYSTORE')
+            if (ks) {
+                storeFile file(ks)
+                storePassword System.getenv('PHOS_UPLOAD_STORE_PASS')
+                keyAlias System.getenv('PHOS_UPLOAD_KEY_ALIAS')
+                keyPassword System.getenv('PHOS_UPLOAD_KEY_PASS')
+            }
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            if (System.getenv('PHOS_UPLOAD_KEYSTORE')) signingConfig signingConfigs.upload
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation 'com.android.billingclient:billing:8.3.0'
+}
