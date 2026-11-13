@@ -4,6 +4,8 @@ on:
     branches: [main, app-google-play]
     paths: ['android/**', 'data/biblia/**', '.github/workflows/android.yml']
   workflow_dispatch:
+permissions:
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -31,3 +33,10 @@ jobs:
         with: { name: phos-apk-prueba, path: android/app/build/outputs/apk/debug/*.apk }
       - uses: actions/upload-artifact@v4
         with: { name: phos-aab-google-play, path: android/app/build/outputs/bundle/release/*.aab }
+      - name: Guardar la APK de prueba en la rama «apk-prueba» (para poder pasarla por el chat)
+        run: |
+          APK=$(ls android/app/build/outputs/apk/debug/*.apk | head -1)
+          mkdir /tmp/apkbranch && cp "$APK" /tmp/apkbranch/phos-prueba.apk && cd /tmp/apkbranch
+          git init -q -b apk-prueba && git config user.name "github-actions" && git config user.email "actions@github.com"
+          git add phos-prueba.apk && git commit -qm "APK de prueba ${GITHUB_SHA::7}"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" apk-prueba
