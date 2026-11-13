@@ -17,5 +17,7 @@ function borrar_usuario(PDO $pdo, array $u): void {
     $pdo->prepare('DELETE FROM news_log WHERE user_id = ?')->execute([$u['id']]);
     // Datos sincronizados desde la app (subrayados, notas, progreso, diario)
     try { $pdo->prepare('DELETE FROM app_sync WHERE user_id = ?')->execute([$u['id']]); } catch (PDOException $e) {}
+    // Fichas de Regla de vida vinculadas a la cuenta (las aceptaciones de compra se desvinculan, como los donativos)
+    try { $pdo->prepare('UPDATE app_records SET ficha = NULL, user_id = NULL WHERE user_id = ?')->execute([$u['id']]); } catch (PDOException $e) {}
     $pdo->prepare('DELETE FROM users WHERE id = ?')->execute([$u['id']]);
 }
