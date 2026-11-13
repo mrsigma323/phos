@@ -45,7 +45,7 @@ public class MainActivity extends Activity {
         s.setDomStorageEnabled(true);
         s.setMediaPlaybackRequiresUserGesture(false);
         s.setTextZoom(100);
-        tts = new TextToSpeech(this, status -> ttsReady = (status == TextToSpeech.SUCCESS));
+        tts = new TextToSpeech(this, status -> { ttsReady = (status == TextToSpeech.SUCCESS); if (ttsReady) Extras.listen(tts, this::toJs); });
         billing = new Billing(this, this::toJs);
         web.addJavascriptInterface(new Bridge(), "PhosApp");
         web.setWebViewClient(new WebViewClient() {
@@ -160,6 +160,14 @@ public class MainActivity extends Activity {
             if (Build.VERSION.SDK_INT >= 33) runOnUiThread(() -> requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 7));
         }
         @JavascriptInterface public String appVersion() { return BuildConfigLite.VERSION; }
+
+        // ---------- Voz continua, compartir, fondo, widget y cuenta ----------
+        @JavascriptInterface public void speakSeq(String json, String lang) { if (ttsReady) Extras.speakSeq(tts, json, lang); }
+        @JavascriptInterface public void shareText(String txt) { runOnUiThread(() -> Extras.shareText(MainActivity.this, txt)); }
+        @JavascriptInterface public void shareImage(String b64, String txt) { Extras.shareImage(MainActivity.this, b64, txt); }
+        @JavascriptInterface public void setWallpaper(String b64) { Extras.setWallpaper(MainActivity.this, b64); }
+        @JavascriptInterface public void widgetSet(String json) { Extras.widgetSet(MainActivity.this, json); }
+        @JavascriptInterface public void googleSignIn() { runOnUiThread(() -> Extras.googleSignIn(MainActivity.this, MainActivity.this::toJs)); }
     }
 
     @Override

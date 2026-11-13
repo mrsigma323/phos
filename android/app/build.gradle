@@ -7,8 +7,8 @@ android {
         applicationId 'com.phos.biblia'
         minSdk 24
         targetSdk 36
-        versionCode 10
-        versionName '2.0'
+        versionCode 11
+        versionName '2.1'
     }
     signingConfigs {
         upload {
@@ -35,4 +35,8 @@ android {
 
 dependencies {
     implementation 'com.android.billingclient:billing:8.3.0'
+    implementation 'androidx.core:core:1.13.1'
+    implementation 'androidx.credentials:credentials:1.5.0'
+    implementation 'androidx.credentials:credentials-play-services-auth:1.5.0'
+    implementation 'com.google.android.libraries.identity.googleid:googleid:1.1.1'
 }

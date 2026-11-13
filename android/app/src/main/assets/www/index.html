@@ -2710,7 +2710,7 @@ function scheduleReminders(){
   if(info&&FASTDAYS.has(info.f))try{add('fast',pt('nFast'),ftText(info.f),'hoy')}catch(e){}
   try{const c=(typeof celebsOn==='function'?celebsOn(br,td).map(celName).filter(Boolean):[]).concat(daySaints(br,td));
    if(c.length)add('saint',pt('nSaint'),c.slice(0,2).join(' · '),'hoy')}catch(e){}
-  add('plan',pt('rPlan'),pt('nPlan'),'biblia');
+  add('plan',pt('rPlan'),(typeof planTodayText==='function'&&planTodayText())||pt('nPlan'),'plan');
  }
  try{PhosApp.remindersSet(JSON.stringify(out.slice(0,60)))}catch(e){}
 }
@@ -2749,7 +2749,10 @@ const _back=$('#back').onclick;
 $('#back').onclick=()=>{if(PVIEWS[S.view]||S.view==='paywall')return closeP();return _back()};
 window.phosBack=()=>{if(PVIEWS[S.view]||S.view==='paywall'){closeP();return true}return false};
 window.phosOpen=k=>{P_BACK=null;if(k==='premium'||k==='apoyo'||k==='notif')return openP(k);
- if(k==='biblia'||k==='hoy'){S.sec='bible';go('home',{ed:null,book:null,ch:null})}};
+ if(k==='plan'&&SECS.includes('mine'))return go('m_plan',{sec:'mine'});
+ if(k==='retos'&&SECS.includes('retos'))return go('retos',{sec:'retos'});
+ if(k==='biblia'){S.sec='bible';return go('home',{ed:null,book:null,ch:null})}
+ go('today',{sec:'today'})};
 
 // Botón con corona en la cabecera (a la izquierda del idioma)
 (function(){const lb=$('#langBtn');if(!lb)return;const b=document.createElement('button');b.className='iconbtn';b.id='premBtn';
@@ -2765,10 +2768,597 @@ header.top{gap:4px;padding-left:8px;padding-right:8px}header.top .iconbtn{width:
 .card.main .pprice b{color:var(--gold)}.card.main .pprice{color:var(--ground)}.card.main .btn.ghost{border-color:var(--gold);color:var(--gold)}
 #premBtn{color:var(--gold)}
 .card.pbanner{width:100%;text-align:left;border-color:var(--gold)}
-.ptoast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,40px);opacity:0;transition:.25s;background:var(--wine);color:var(--ground);padding:12px 18px;border-radius:999px;z-index:50;max-width:90vw;text-align:center}
+.ptoast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,40px);opacity:0;transition:.25s;background:var(--wine);color:var(--ground);padding:12px 18px;border-radius:18px;z-index:50;max-width:90vw;text-align:center}
 .ptoast.on{opacity:1;transform:translate(-50%,0)}`;document.head.appendChild(st)})();
 if(IN_APP){try{PhosApp.billingRefresh()}catch(e){}setTimeout(scheduleReminders,1500)}
-if(location.hash&&/^#(premium|apoyo|notif)$/.test(location.hash))setTimeout(()=>phosOpen(location.hash.slice(1)),0);
+if(location.hash&&/^#(premium|apoyo|notif|plan|retos|hoy)$/.test(location.hash))setTimeout(()=>phosOpen(location.hash.slice(1)),0);
+
+// ---------- Textos de: portada Hoy, Mi Phos, Retos bíblicos (9 idiomas) ----------
+const QX={
+es:{streak:"Llevas {n} días seguidos con Phos",best:"Tu mejor racha: {n} días",mile:"¡{n} días seguidos con Phos! Gracias por volver cada día 🙏",share:"Compartir",shareText:"Versículo del día en Phos",
+mine:"Mi Phos",mineLead:"Tu espacio personal: cuenta, planes de lectura, oración y diario.",account:"Tu cuenta",google:"Entrar con Google",googleLead:"Guarda tus subrayados, notas, progreso y Phos Premium en tu cuenta de Phos, y recupéralos en cualquier móvil o en la web.",signed:"Has entrado como {e}",out:"Salir",syncNow:"Sincronizar ahora",synced:"Sincronizado",consent:"Acepto que Phos guarde en mi cuenta mis subrayados, notas y progreso. Pueden revelar mis creencias religiosas. Puedo retirarlo cuando quiera.",consentNeed:"Para sincronizar, marca antes la casilla de consentimiento.",delAcc:"Borrar mi cuenta",delSure:"¿Seguro? Se borrarán tu cuenta y todo lo guardado en ella. No se puede deshacer.",deleted:"Cuenta borrada",googleSoon:"Entrar con Google está disponible en la app de Phos de Google Play.",authErr:"No se pudo entrar. Inténtalo de nuevo.",
+plans:"Planes de lectura",plansLead:"Lee la Biblia con un plan guiado y un aviso cada día.",pYear:"La Biblia en un año",pGospels:"Los Evangelios en 40 días",pPsalms:"Los Salmos en 30 días",pAdvent:"Adviento: 24 días hacia la Navidad",pLent:"Cuaresma: 40 días hacia la Pascua",day:"Día {n} de {t}",done:"Hecho",start:"Empezar",restart:"Empezar de nuevo",todayRead:"Lectura de hoy",finished:"¡Plan completado! 🎉",
+rule:"Regla de oración",ruleLead:"Tus oraciones de la mañana y de la noche, una tras otra, según tu Iglesia.",morning:"Mañana",evening:"Noche",next:"Siguiente",amen:"Amén",
+diary:"Diario espiritual",diaryLead:"Intenciones, gracias recibidas y lo que te dice la lectura. Se guarda en tu móvil (y en tu cuenta si sincronizas).",kIntent:"Intención",kGrace:"Gracia recibida",kNote:"Nota",write:"Escribe aquí…",add:"Añadir",empty:"Todavía no has escrito nada.",del:"Borrar",
+listen:"Escuchar el capítulo",stop:"Parar",sleep:"Apagar en",noSleep:"Sin temporizador",min:"{n} min",
+walls:"Fondos de pantalla",wallsLead:"El versículo del día con los colores del tiempo litúrgico, listo para tu pantalla.",widget:"Widget de Phos",widgetLead:"En la pantalla de inicio de tu móvil: mantén pulsado › Widgets › Phos. Muestra el santo y el versículo del día.",
+retos:"Retos bíblicos",retosLead:"Pon a prueba lo que sabes de la Biblia y de las fiestas, y aprende algo nuevo cada día.",daily:"Reto del día",dailyLead:"Cinco preguntas, las mismas para todos hoy.",who:"¿Quién soy?",whoLead:"Adivina el personaje bíblico con el menor número de pistas.",scr:"Versículo desordenado",scrLead:"Ordena las palabras de un versículo conocido.",tl:"Línea del tiempo",tlLead:"Coloca en orden la historia de la salvación.",map:"Los viajes de la Biblia",mapLead:"Sigue sobre el mapa los caminos de Abraham, Moisés y san Pablo.",group:"Retos en grupo",groupLead:"Para la parroquia, la catequesis o la familia, con un código de grupo.",soon:"Próximamente",
+qn:"Pregunta {n} de {t}",right:"¡Correcto!",wrong:"No es correcto. La respuesta era: {a}",result:"Has acertado {n} de {t}",doneToday:"Ya has hecho el reto de hoy. ¡Vuelve mañana!",shareRes:"Compartir resultado",again:"Otra vez",clue:"Pista {n}",moreClue:"Otra pista",qBook:"¿De qué libro de la Biblia es este resumen?",qFeast:"¿Qué día se celebra esta fiesta? (calendario nuevo)",qWord:"¿Qué palabra falta en el versículo?",tapOrder:"Toca las palabras en orden",tapCity:"Toca las ciudades en el orden del viaje",oldFirst:"Toca los hechos del más antiguo al más reciente",undo:"Deshacer",cont:"Continuar",points:"{n} puntos",onlyEsEn:"Este reto está en español y en inglés."},
+en:{streak:"{n} days in a row with Phos",best:"Your best streak: {n} days",mile:"{n} days in a row with Phos! Thank you for coming back every day 🙏",share:"Share",shareText:"Verse of the day on Phos",
+mine:"My Phos",mineLead:"Your personal space: account, reading plans, prayer and journal.",account:"Your account",google:"Sign in with Google",googleLead:"Keep your highlights, notes, progress and Phos Premium in your Phos account, and get them back on any phone or on the web.",signed:"Signed in as {e}",out:"Sign out",syncNow:"Sync now",synced:"Synced",consent:"I agree that Phos stores my highlights, notes and progress in my account. They may reveal my religious beliefs. I can withdraw this at any time.",consentNeed:"To sync, first tick the consent box.",delAcc:"Delete my account",delSure:"Are you sure? Your account and everything saved in it will be deleted. This cannot be undone.",deleted:"Account deleted",googleSoon:"Sign in with Google is available in the Phos app on Google Play.",authErr:"Could not sign in. Please try again.",
+plans:"Reading plans",plansLead:"Read the Bible with a guided plan and a daily reminder.",pYear:"The Bible in a year",pGospels:"The Gospels in 40 days",pPsalms:"The Psalms in 30 days",pAdvent:"Advent: 24 days to Christmas",pLent:"Lent: 40 days to Easter",day:"Day {n} of {t}",done:"Done",start:"Start",restart:"Start again",todayRead:"Today's reading",finished:"Plan completed! 🎉",
+rule:"Prayer rule",ruleLead:"Your morning and evening prayers, one after another, according to your Church.",morning:"Morning",evening:"Evening",next:"Next",amen:"Amen",
+diary:"Spiritual journal",diaryLead:"Intentions, graces received and what the reading says to you. Saved on your phone (and in your account if you sync).",kIntent:"Intention",kGrace:"Grace received",kNote:"Note",write:"Write here…",add:"Add",empty:"You haven't written anything yet.",del:"Delete",
+listen:"Listen to the chapter",stop:"Stop",sleep:"Stop after",noSleep:"No timer",min:"{n} min",
+walls:"Wallpapers",wallsLead:"The verse of the day in the colours of the liturgical season, ready for your screen.",widget:"Phos widget",widgetLead:"On your home screen: press and hold › Widgets › Phos. It shows the saint and verse of the day.",
+retos:"Bible challenges",retosLead:"Test what you know about the Bible and the feasts, and learn something new every day.",daily:"Daily challenge",dailyLead:"Five questions, the same for everyone today.",who:"Who am I?",whoLead:"Guess the Bible figure with as few clues as possible.",scr:"Scrambled verse",scrLead:"Put the words of a well-known verse in order.",tl:"Timeline",tlLead:"Put the history of salvation in order.",map:"Bible journeys",mapLead:"Follow the routes of Abraham, Moses and Saint Paul on the map.",group:"Group challenges",groupLead:"For your parish, catechism class or family, with a group code.",soon:"Coming soon",
+qn:"Question {n} of {t}",right:"Correct!",wrong:"Not quite. The answer was: {a}",result:"You got {n} out of {t}",doneToday:"You've already done today's challenge. Come back tomorrow!",shareRes:"Share result",again:"Again",clue:"Clue {n}",moreClue:"Another clue",qBook:"Which book of the Bible does this summary describe?",qFeast:"On what day is this feast celebrated? (new calendar)",qWord:"Which word is missing from the verse?",tapOrder:"Tap the words in order",tapCity:"Tap the cities in the order of the journey",oldFirst:"Tap the events from oldest to most recent",undo:"Undo",cont:"Continue",points:"{n} points",onlyEsEn:"This challenge is available in Spanish and English."},
+pt:{streak:"{n} dias seguidos com o Phos",best:"A sua melhor sequência: {n} dias",mile:"{n} dias seguidos com o Phos! Obrigado por voltar todos os dias 🙏",share:"Partilhar",shareText:"Versículo do dia no Phos",
+mine:"Meu Phos",mineLead:"O seu espaço pessoal: conta, planos de leitura, oração e diário.",account:"A sua conta",google:"Entrar com o Google",googleLead:"Guarde os seus destaques, notas, progresso e o Phos Premium na sua conta Phos e recupere-os em qualquer telemóvel ou na web.",signed:"Entrou como {e}",out:"Sair",syncNow:"Sincronizar agora",synced:"Sincronizado",consent:"Aceito que o Phos guarde na minha conta os meus destaques, notas e progresso. Podem revelar as minhas crenças religiosas. Posso retirar este consentimento quando quiser.",consentNeed:"Para sincronizar, marque primeiro a caixa de consentimento.",delAcc:"Apagar a minha conta",delSure:"Tem a certeza? A sua conta e tudo o que nela está guardado serão apagados. Não se pode desfazer.",deleted:"Conta apagada",googleSoon:"Entrar com o Google está disponível no app do Phos no Google Play.",authErr:"Não foi possível entrar. Tente de novo.",
+plans:"Planos de leitura",plansLead:"Leia a Bíblia com um plano guiado e um lembrete diário.",pYear:"A Bíblia num ano",pGospels:"Os Evangelhos em 40 dias",pPsalms:"Os Salmos em 30 dias",pAdvent:"Advento: 24 dias até ao Natal",pLent:"Quaresma: 40 dias até à Páscoa",day:"Dia {n} de {t}",done:"Feito",start:"Começar",restart:"Recomeçar",todayRead:"Leitura de hoje",finished:"Plano concluído! 🎉",
+rule:"Regra de oração",ruleLead:"As suas orações da manhã e da noite, uma após outra, segundo a sua Igreja.",morning:"Manhã",evening:"Noite",next:"Seguinte",amen:"Ámen",
+diary:"Diário espiritual",diaryLead:"Intenções, graças recebidas e o que a leitura lhe diz. Fica no seu telemóvel (e na sua conta, se sincronizar).",kIntent:"Intenção",kGrace:"Graça recebida",kNote:"Nota",write:"Escreva aqui…",add:"Adicionar",empty:"Ainda não escreveu nada.",del:"Apagar",
+listen:"Ouvir o capítulo",stop:"Parar",sleep:"Desligar em",noSleep:"Sem temporizador",min:"{n} min",
+walls:"Fundos de ecrã",wallsLead:"O versículo do dia com as cores do tempo litúrgico, pronto para o seu ecrã.",widget:"Widget do Phos",widgetLead:"No ecrã inicial: mantenha premido › Widgets › Phos. Mostra o santo e o versículo do dia.",
+retos:"Desafios bíblicos",retosLead:"Teste o que sabe da Bíblia e das festas, e aprenda algo novo todos os dias.",daily:"Desafio do dia",dailyLead:"Cinco perguntas, as mesmas para todos hoje.",who:"Quem sou eu?",whoLead:"Adivinhe a figura bíblica com o menor número de pistas.",scr:"Versículo baralhado",scrLead:"Ordene as palavras de um versículo conhecido.",tl:"Linha do tempo",tlLead:"Coloque por ordem a história da salvação.",map:"As viagens da Bíblia",mapLead:"Siga no mapa os caminhos de Abraão, Moisés e São Paulo.",group:"Desafios em grupo",groupLead:"Para a paróquia, a catequese ou a família, com um código de grupo.",soon:"Em breve",
+qn:"Pergunta {n} de {t}",right:"Correto!",wrong:"Não está certo. A resposta era: {a}",result:"Acertou {n} de {t}",doneToday:"Já fez o desafio de hoje. Volte amanhã!",shareRes:"Partilhar resultado",again:"Outra vez",clue:"Pista {n}",moreClue:"Outra pista",qBook:"De que livro da Bíblia é este resumo?",qFeast:"Em que dia se celebra esta festa? (calendário novo)",qWord:"Que palavra falta no versículo?",tapOrder:"Toque nas palavras por ordem",tapCity:"Toque nas cidades pela ordem da viagem",oldFirst:"Toque nos acontecimentos do mais antigo ao mais recente",undo:"Desfazer",cont:"Continuar",points:"{n} pontos",onlyEsEn:"Este desafio está em espanhol e inglês."},
+fr:{streak:"{n} jours d’affilée avec Phos",best:"Votre meilleure série : {n} jours",mile:"{n} jours d’affilée avec Phos ! Merci de revenir chaque jour 🙏",share:"Partager",shareText:"Verset du jour sur Phos",
+mine:"Mon Phos",mineLead:"Votre espace personnel : compte, plans de lecture, prière et journal.",account:"Votre compte",google:"Se connecter avec Google",googleLead:"Gardez vos surlignages, notes, progrès et Phos Premium dans votre compte Phos, et retrouvez-les sur n’importe quel téléphone ou sur le web.",signed:"Connecté en tant que {e}",out:"Se déconnecter",syncNow:"Synchroniser",synced:"Synchronisé",consent:"J’accepte que Phos conserve dans mon compte mes surlignages, notes et progrès. Ils peuvent révéler mes convictions religieuses. Je peux retirer ce consentement à tout moment.",consentNeed:"Pour synchroniser, cochez d’abord la case de consentement.",delAcc:"Supprimer mon compte",delSure:"Êtes-vous sûr ? Votre compte et tout ce qu’il contient seront supprimés. C’est irréversible.",deleted:"Compte supprimé",googleSoon:"La connexion avec Google est disponible dans l’application Phos sur Google Play.",authErr:"Connexion impossible. Réessayez.",
+plans:"Plans de lecture",plansLead:"Lisez la Bible avec un plan guidé et un rappel quotidien.",pYear:"La Bible en un an",pGospels:"Les Évangiles en 40 jours",pPsalms:"Les Psaumes en 30 jours",pAdvent:"Avent : 24 jours vers Noël",pLent:"Carême : 40 jours vers Pâques",day:"Jour {n} sur {t}",done:"Fait",start:"Commencer",restart:"Recommencer",todayRead:"Lecture du jour",finished:"Plan terminé ! 🎉",
+rule:"Règle de prière",ruleLead:"Vos prières du matin et du soir, l’une après l’autre, selon votre Église.",morning:"Matin",evening:"Soir",next:"Suivant",amen:"Amen",
+diary:"Journal spirituel",diaryLead:"Intentions, grâces reçues et ce que la lecture vous dit. Enregistré sur votre téléphone (et dans votre compte si vous synchronisez).",kIntent:"Intention",kGrace:"Grâce reçue",kNote:"Note",write:"Écrivez ici…",add:"Ajouter",empty:"Vous n’avez encore rien écrit.",del:"Supprimer",
+listen:"Écouter le chapitre",stop:"Arrêter",sleep:"Arrêt dans",noSleep:"Sans minuterie",min:"{n} min",
+walls:"Fonds d’écran",wallsLead:"Le verset du jour aux couleurs du temps liturgique, prêt pour votre écran.",widget:"Widget Phos",widgetLead:"Sur l’écran d’accueil : appui long › Widgets › Phos. Il affiche le saint et le verset du jour.",
+retos:"Défis bibliques",retosLead:"Testez vos connaissances sur la Bible et les fêtes, et apprenez quelque chose de nouveau chaque jour.",daily:"Défi du jour",dailyLead:"Cinq questions, les mêmes pour tous aujourd’hui.",who:"Qui suis-je ?",whoLead:"Devinez le personnage biblique avec le moins d’indices possible.",scr:"Verset en désordre",scrLead:"Remettez en ordre les mots d’un verset connu.",tl:"Frise chronologique",tlLead:"Remettez en ordre l’histoire du salut.",map:"Les voyages de la Bible",mapLead:"Suivez sur la carte les chemins d’Abraham, de Moïse et de saint Paul.",group:"Défis en groupe",groupLead:"Pour la paroisse, le catéchisme ou la famille, avec un code de groupe.",soon:"Bientôt",
+qn:"Question {n} sur {t}",right:"Bonne réponse !",wrong:"Ce n’est pas ça. La réponse était : {a}",result:"Vous avez {n} bonnes réponses sur {t}",doneToday:"Vous avez déjà fait le défi du jour. Revenez demain !",shareRes:"Partager le résultat",again:"Encore",clue:"Indice {n}",moreClue:"Un autre indice",qBook:"De quel livre de la Bible est ce résumé ?",qFeast:"Quel jour célèbre-t-on cette fête ? (nouveau calendrier)",qWord:"Quel mot manque dans le verset ?",tapOrder:"Touchez les mots dans l’ordre",tapCity:"Touchez les villes dans l’ordre du voyage",oldFirst:"Touchez les événements du plus ancien au plus récent",undo:"Annuler",cont:"Continuer",points:"{n} points",onlyEsEn:"Ce défi est disponible en espagnol et en anglais."},
+it:{streak:"{n} giorni di fila con Phos",best:"La tua serie migliore: {n} giorni",mile:"{n} giorni di fila con Phos! Grazie perché torni ogni giorno 🙏",share:"Condividi",shareText:"Versetto del giorno su Phos",
+mine:"Il mio Phos",mineLead:"Il tuo spazio personale: account, piani di lettura, preghiera e diario.",account:"Il tuo account",google:"Accedi con Google",googleLead:"Conserva evidenziazioni, note, progressi e Phos Premium nel tuo account Phos e ritrovali su qualsiasi telefono o sul web.",signed:"Accesso come {e}",out:"Esci",syncNow:"Sincronizza ora",synced:"Sincronizzato",consent:"Accetto che Phos conservi nel mio account evidenziazioni, note e progressi. Possono rivelare le mie convinzioni religiose. Posso revocarlo quando voglio.",consentNeed:"Per sincronizzare, spunta prima la casella del consenso.",delAcc:"Elimina il mio account",delSure:"Sei sicuro? L’account e tutto ciò che contiene verranno eliminati. Non si può annullare.",deleted:"Account eliminato",googleSoon:"L’accesso con Google è disponibile nell’app Phos su Google Play.",authErr:"Accesso non riuscito. Riprova.",
+plans:"Piani di lettura",plansLead:"Leggi la Bibbia con un piano guidato e un promemoria ogni giorno.",pYear:"La Bibbia in un anno",pGospels:"I Vangeli in 40 giorni",pPsalms:"I Salmi in 30 giorni",pAdvent:"Avvento: 24 giorni verso il Natale",pLent:"Quaresima: 40 giorni verso la Pasqua",day:"Giorno {n} di {t}",done:"Fatto",start:"Inizia",restart:"Ricomincia",todayRead:"Lettura di oggi",finished:"Piano completato! 🎉",
+rule:"Regola di preghiera",ruleLead:"Le tue preghiere del mattino e della sera, una dopo l’altra, secondo la tua Chiesa.",morning:"Mattino",evening:"Sera",next:"Avanti",amen:"Amen",
+diary:"Diario spirituale",diaryLead:"Intenzioni, grazie ricevute e ciò che ti dice la lettura. Resta sul tuo telefono (e nel tuo account se sincronizzi).",kIntent:"Intenzione",kGrace:"Grazia ricevuta",kNote:"Nota",write:"Scrivi qui…",add:"Aggiungi",empty:"Non hai ancora scritto nulla.",del:"Elimina",
+listen:"Ascolta il capitolo",stop:"Ferma",sleep:"Spegni tra",noSleep:"Senza timer",min:"{n} min",
+walls:"Sfondi",wallsLead:"Il versetto del giorno con i colori del tempo liturgico, pronto per il tuo schermo.",widget:"Widget di Phos",widgetLead:"Nella schermata Home: tieni premuto › Widget › Phos. Mostra il santo e il versetto del giorno.",
+retos:"Sfide bibliche",retosLead:"Metti alla prova ciò che sai della Bibbia e delle feste, e impara qualcosa di nuovo ogni giorno.",daily:"Sfida del giorno",dailyLead:"Cinque domande, le stesse per tutti oggi.",who:"Chi sono?",whoLead:"Indovina il personaggio biblico con il minor numero di indizi.",scr:"Versetto in disordine",scrLead:"Rimetti in ordine le parole di un versetto famoso.",tl:"Linea del tempo",tlLead:"Metti in ordine la storia della salvezza.",map:"I viaggi della Bibbia",mapLead:"Segui sulla mappa i cammini di Abramo, Mosè e san Paolo.",group:"Sfide di gruppo",groupLead:"Per la parrocchia, il catechismo o la famiglia, con un codice di gruppo.",soon:"Prossimamente",
+qn:"Domanda {n} di {t}",right:"Esatto!",wrong:"Non è corretto. La risposta era: {a}",result:"Hai indovinato {n} su {t}",doneToday:"Hai già fatto la sfida di oggi. Torna domani!",shareRes:"Condividi il risultato",again:"Ancora",clue:"Indizio {n}",moreClue:"Un altro indizio",qBook:"Di quale libro della Bibbia è questo riassunto?",qFeast:"In che giorno si celebra questa festa? (calendario nuovo)",qWord:"Quale parola manca nel versetto?",tapOrder:"Tocca le parole in ordine",tapCity:"Tocca le città nell’ordine del viaggio",oldFirst:"Tocca gli eventi dal più antico al più recente",undo:"Annulla",cont:"Continua",points:"{n} punti",onlyEsEn:"Questa sfida è disponibile in spagnolo e in inglese."},
+de:{streak:"{n} Tage in Folge mit Phos",best:"Deine beste Serie: {n} Tage",mile:"{n} Tage in Folge mit Phos! Danke, dass du jeden Tag wiederkommst 🙏",share:"Teilen",shareText:"Vers des Tages bei Phos",
+mine:"Mein Phos",mineLead:"Dein persönlicher Bereich: Konto, Lesepläne, Gebet und Tagebuch.",account:"Dein Konto",google:"Mit Google anmelden",googleLead:"Speichere Markierungen, Notizen, Fortschritt und Phos Premium in deinem Phos-Konto und hol sie auf jedem Handy oder im Web zurück.",signed:"Angemeldet als {e}",out:"Abmelden",syncNow:"Jetzt synchronisieren",synced:"Synchronisiert",consent:"Ich bin einverstanden, dass Phos meine Markierungen, Notizen und meinen Fortschritt in meinem Konto speichert. Sie können meine religiöse Überzeugung erkennen lassen. Ich kann das jederzeit widerrufen.",consentNeed:"Zum Synchronisieren zuerst das Einverständnis ankreuzen.",delAcc:"Mein Konto löschen",delSure:"Bist du sicher? Dein Konto und alles darin wird gelöscht. Das lässt sich nicht rückgängig machen.",deleted:"Konto gelöscht",googleSoon:"Die Anmeldung mit Google gibt es in der Phos-App bei Google Play.",authErr:"Anmeldung fehlgeschlagen. Bitte erneut versuchen.",
+plans:"Lesepläne",plansLead:"Lies die Bibel mit einem geführten Plan und einer täglichen Erinnerung.",pYear:"Die Bibel in einem Jahr",pGospels:"Die Evangelien in 40 Tagen",pPsalms:"Die Psalmen in 30 Tagen",pAdvent:"Advent: 24 Tage bis Weihnachten",pLent:"Fastenzeit: 40 Tage bis Ostern",day:"Tag {n} von {t}",done:"Erledigt",start:"Beginnen",restart:"Neu beginnen",todayRead:"Heutige Lesung",finished:"Plan abgeschlossen! 🎉",
+rule:"Gebetsregel",ruleLead:"Deine Morgen- und Abendgebete, eines nach dem anderen, nach deiner Kirche.",morning:"Morgen",evening:"Abend",next:"Weiter",amen:"Amen",
+diary:"Geistliches Tagebuch",diaryLead:"Anliegen, empfangene Gnaden und was dir die Lesung sagt. Gespeichert auf deinem Handy (und im Konto, wenn du synchronisierst).",kIntent:"Anliegen",kGrace:"Empfangene Gnade",kNote:"Notiz",write:"Hier schreiben…",add:"Hinzufügen",empty:"Du hast noch nichts geschrieben.",del:"Löschen",
+listen:"Kapitel anhören",stop:"Stopp",sleep:"Aus nach",noSleep:"Kein Timer",min:"{n} Min.",
+walls:"Hintergrundbilder",wallsLead:"Der Vers des Tages in den Farben der Kirchenjahreszeit, fertig für deinen Bildschirm.",widget:"Phos-Widget",widgetLead:"Auf dem Startbildschirm: gedrückt halten › Widgets › Phos. Zeigt den Heiligen und den Vers des Tages.",
+retos:"Bibelrätsel",retosLead:"Prüfe dein Wissen über die Bibel und die Feste und lerne jeden Tag etwas Neues.",daily:"Rätsel des Tages",dailyLead:"Fünf Fragen, heute für alle gleich.",who:"Wer bin ich?",whoLead:"Errate die biblische Gestalt mit möglichst wenigen Hinweisen.",scr:"Vers durcheinander",scrLead:"Bring die Wörter eines bekannten Verses in die richtige Reihenfolge.",tl:"Zeitleiste",tlLead:"Ordne die Heilsgeschichte.",map:"Reisen der Bibel",mapLead:"Folge auf der Karte den Wegen von Abraham, Mose und dem heiligen Paulus.",group:"Rätsel in der Gruppe",groupLead:"Für Gemeinde, Katechese oder Familie, mit einem Gruppencode.",soon:"Demnächst",
+qn:"Frage {n} von {t}",right:"Richtig!",wrong:"Nicht ganz. Die Antwort war: {a}",result:"Du hast {n} von {t} richtig",doneToday:"Du hast das heutige Rätsel schon gemacht. Komm morgen wieder!",shareRes:"Ergebnis teilen",again:"Nochmal",clue:"Hinweis {n}",moreClue:"Noch ein Hinweis",qBook:"Zu welchem Buch der Bibel gehört diese Zusammenfassung?",qFeast:"An welchem Tag wird dieses Fest gefeiert? (neuer Kalender)",qWord:"Welches Wort fehlt im Vers?",tapOrder:"Tippe die Wörter der Reihe nach an",tapCity:"Tippe die Städte in der Reihenfolge der Reise an",oldFirst:"Tippe die Ereignisse vom ältesten zum jüngsten an",undo:"Rückgängig",cont:"Weiter",points:"{n} Punkte",onlyEsEn:"Dieses Rätsel gibt es auf Spanisch und Englisch."},
+el:{streak:"{n} συνεχόμενες ημέρες με το Phos",best:"Το καλύτερό σου σερί: {n} ημέρες",mile:"{n} συνεχόμενες ημέρες με το Phos! Ευχαριστούμε που επιστρέφεις κάθε μέρα 🙏",share:"Κοινοποίηση",shareText:"Στίχος της ημέρας στο Phos",
+mine:"Το Phos μου",mineLead:"Ο προσωπικός σου χώρος: λογαριασμός, προγράμματα ανάγνωσης, προσευχή και ημερολόγιο.",account:"Ο λογαριασμός σου",google:"Σύνδεση με Google",googleLead:"Κράτα τις υπογραμμίσεις, τις σημειώσεις, την πρόοδο και το Phos Premium στον λογαριασμό σου και βρες τα σε κάθε κινητό ή στο διαδίκτυο.",signed:"Συνδέθηκες ως {e}",out:"Αποσύνδεση",syncNow:"Συγχρονισμός τώρα",synced:"Συγχρονίστηκε",consent:"Συμφωνώ να αποθηκεύει το Phos στον λογαριασμό μου τις υπογραμμίσεις, τις σημειώσεις και την πρόοδό μου. Μπορεί να φανερώνουν τις θρησκευτικές μου πεποιθήσεις. Μπορώ να το ανακαλέσω οποτεδήποτε.",consentNeed:"Για συγχρονισμό, τσέκαρε πρώτα τη συγκατάθεση.",delAcc:"Διαγραφή λογαριασμού",delSure:"Είσαι σίγουρος; Ο λογαριασμός και ό,τι περιέχει θα διαγραφούν. Δεν αναιρείται.",deleted:"Ο λογαριασμός διαγράφηκε",googleSoon:"Η σύνδεση με Google διατίθεται στην εφαρμογή Phos στο Google Play.",authErr:"Η σύνδεση απέτυχε. Δοκίμασε ξανά.",
+plans:"Προγράμματα ανάγνωσης",plansLead:"Διάβασε την Αγία Γραφή με καθοδηγούμενο πρόγραμμα και καθημερινή υπενθύμιση.",pYear:"Η Αγία Γραφή σε ένα έτος",pGospels:"Τα Ευαγγέλια σε 40 ημέρες",pPsalms:"Οι Ψαλμοί σε 30 ημέρες",pAdvent:"24 ημέρες προς τα Χριστούγεννα",pLent:"Σαρακοστή: 40 ημέρες προς το Πάσχα",day:"Ημέρα {n} από {t}",done:"Έγινε",start:"Έναρξη",restart:"Από την αρχή",todayRead:"Σημερινή ανάγνωση",finished:"Το πρόγραμμα ολοκληρώθηκε! 🎉",
+rule:"Κανόνας προσευχής",ruleLead:"Οι πρωινές και βραδινές σου προσευχές, η μία μετά την άλλη, κατά την Εκκλησία σου.",morning:"Πρωί",evening:"Βράδυ",next:"Επόμενο",amen:"Αμήν",
+diary:"Πνευματικό ημερολόγιο",diaryLead:"Προθέσεις, χάριτες που έλαβες και ό,τι σου λέει η ανάγνωση. Αποθηκεύεται στο κινητό σου (και στον λογαριασμό αν συγχρονίσεις).",kIntent:"Πρόθεση",kGrace:"Χάρη που έλαβα",kNote:"Σημείωση",write:"Γράψε εδώ…",add:"Προσθήκη",empty:"Δεν έχεις γράψει τίποτα ακόμη.",del:"Διαγραφή",
+listen:"Ακρόαση κεφαλαίου",stop:"Διακοπή",sleep:"Σβήσιμο σε",noSleep:"Χωρίς χρονόμετρο",min:"{n} λεπ.",
+walls:"Ταπετσαρίες",wallsLead:"Ο στίχος της ημέρας στα χρώματα της λειτουργικής περιόδου, έτοιμος για την οθόνη σου.",widget:"Widget του Phos",widgetLead:"Στην αρχική οθόνη: παρατεταμένο πάτημα › Widgets › Phos. Δείχνει τον άγιο και τον στίχο της ημέρας.",
+retos:"Βιβλικές προκλήσεις",retosLead:"Δοκίμασε τι ξέρεις για την Αγία Γραφή και τις εορτές, και μάθε κάτι νέο κάθε μέρα.",daily:"Πρόκληση της ημέρας",dailyLead:"Πέντε ερωτήσεις, ίδιες για όλους σήμερα.",who:"Ποιος είμαι;",whoLead:"Μάντεψε το βιβλικό πρόσωπο με όσο λιγότερες ενδείξεις γίνεται.",scr:"Ανακατεμένος στίχος",scrLead:"Βάλε σε σειρά τις λέξεις ενός γνωστού στίχου.",tl:"Χρονολόγιο",tlLead:"Βάλε σε σειρά την ιστορία της σωτηρίας.",map:"Τα ταξίδια της Βίβλου",mapLead:"Ακολούθησε στον χάρτη τους δρόμους του Αβραάμ, του Μωυσή και του αποστόλου Παύλου.",group:"Ομαδικές προκλήσεις",groupLead:"Για την ενορία, το κατηχητικό ή την οικογένεια, με κωδικό ομάδας.",soon:"Σύντομα",
+qn:"Ερώτηση {n} από {t}",right:"Σωστά!",wrong:"Όχι ακριβώς. Η απάντηση ήταν: {a}",result:"Βρήκες {n} από {t}",doneToday:"Έκανες ήδη τη σημερινή πρόκληση. Έλα ξανά αύριο!",shareRes:"Κοινοποίηση αποτελέσματος",again:"Ξανά",clue:"Ένδειξη {n}",moreClue:"Άλλη ένδειξη",qBook:"Σε ποιο βιβλίο της Αγίας Γραφής αντιστοιχεί αυτή η περίληψη;",qFeast:"Ποια ημέρα εορτάζεται αυτή η εορτή; (νέο ημερολόγιο)",qWord:"Ποια λέξη λείπει από τον στίχο;",tapOrder:"Πάτησε τις λέξεις με τη σειρά",tapCity:"Πάτησε τις πόλεις με τη σειρά του ταξιδιού",oldFirst:"Πάτησε τα γεγονότα από το παλαιότερο στο νεότερο",undo:"Αναίρεση",cont:"Συνέχεια",points:"{n} πόντοι",onlyEsEn:"Αυτή η πρόκληση υπάρχει στα ισπανικά και στα αγγλικά."},
+ru:{streak:"{n} дней подряд с Phos",best:"Ваша лучшая серия: {n} дней",mile:"{n} дней подряд с Phos! Спасибо, что возвращаетесь каждый день 🙏",share:"Поделиться",shareText:"Стих дня в Phos",
+mine:"Мой Phos",mineLead:"Ваше личное пространство: аккаунт, планы чтения, молитва и дневник.",account:"Ваш аккаунт",google:"Войти через Google",googleLead:"Храните выделения, заметки, прогресс и Phos Premium в аккаунте Phos и получайте их на любом телефоне или на сайте.",signed:"Вы вошли как {e}",out:"Выйти",syncNow:"Синхронизировать",synced:"Синхронизировано",consent:"Я согласен, чтобы Phos хранил в моём аккаунте выделения, заметки и прогресс. Они могут раскрывать мои религиозные убеждения. Я могу отозвать согласие в любой момент.",consentNeed:"Чтобы синхронизировать, сначала отметьте согласие.",delAcc:"Удалить аккаунт",delSure:"Вы уверены? Аккаунт и всё, что в нём сохранено, будут удалены. Это нельзя отменить.",deleted:"Аккаунт удалён",googleSoon:"Вход через Google доступен в приложении Phos в Google Play.",authErr:"Не удалось войти. Попробуйте ещё раз.",
+plans:"Планы чтения",plansLead:"Читайте Библию по плану с ежедневным напоминанием.",pYear:"Библия за год",pGospels:"Евангелия за 40 дней",pPsalms:"Псалтирь за 30 дней",pAdvent:"24 дня до Рождества",pLent:"Великий пост: 40 дней до Пасхи",day:"День {n} из {t}",done:"Готово",start:"Начать",restart:"Начать заново",todayRead:"Чтение на сегодня",finished:"План завершён! 🎉",
+rule:"Молитвенное правило",ruleLead:"Утренние и вечерние молитвы, одна за другой, по вашей Церкви.",morning:"Утро",evening:"Вечер",next:"Далее",amen:"Аминь",
+diary:"Духовный дневник",diaryLead:"Намерения, полученные милости и то, что говорит вам чтение. Хранится в телефоне (и в аккаунте, если синхронизируете).",kIntent:"Намерение",kGrace:"Полученная милость",kNote:"Заметка",write:"Пишите здесь…",add:"Добавить",empty:"Вы ещё ничего не написали.",del:"Удалить",
+listen:"Слушать главу",stop:"Стоп",sleep:"Выключить через",noSleep:"Без таймера",min:"{n} мин",
+walls:"Обои",wallsLead:"Стих дня в цветах литургического периода, готовый для вашего экрана.",widget:"Виджет Phos",widgetLead:"На главном экране: долгое нажатие › Виджеты › Phos. Показывает святого и стих дня.",
+retos:"Библейские задания",retosLead:"Проверьте, что вы знаете о Библии и праздниках, и узнавайте новое каждый день.",daily:"Задание дня",dailyLead:"Пять вопросов, сегодня одинаковые для всех.",who:"Кто я?",whoLead:"Угадайте библейского героя по как можно меньшему числу подсказок.",scr:"Перепутанный стих",scrLead:"Расставьте по порядку слова известного стиха.",tl:"Лента времени",tlLead:"Расставьте по порядку историю спасения.",map:"Библейские путешествия",mapLead:"Пройдите по карте пути Авраама, Моисея и апостола Павла.",group:"Задания для группы",groupLead:"Для прихода, воскресной школы или семьи, с кодом группы.",soon:"Скоро",
+qn:"Вопрос {n} из {t}",right:"Верно!",wrong:"Неверно. Правильный ответ: {a}",result:"Правильных ответов: {n} из {t}",doneToday:"Вы уже выполнили задание дня. Возвращайтесь завтра!",shareRes:"Поделиться результатом",again:"Ещё раз",clue:"Подсказка {n}",moreClue:"Ещё подсказка",qBook:"К какой книге Библии относится это описание?",qFeast:"В какой день празднуется этот праздник? (новый стиль)",qWord:"Какого слова не хватает в стихе?",tapOrder:"Нажимайте на слова по порядку",tapCity:"Нажимайте на города в порядке путешествия",oldFirst:"Нажимайте на события от самого древнего к самому позднему",undo:"Отменить",cont:"Продолжить",points:"{n} очков",onlyEsEn:"Это задание доступно на испанском и английском."},
+ro:{streak:"{n} zile la rând cu Phos",best:"Cea mai bună serie: {n} zile",mile:"{n} zile la rând cu Phos! Mulțumim că revii în fiecare zi 🙏",share:"Distribuie",shareText:"Versetul zilei în Phos",
+mine:"Phos-ul meu",mineLead:"Spațiul tău personal: cont, planuri de lectură, rugăciune și jurnal.",account:"Contul tău",google:"Conectare cu Google",googleLead:"Păstrează sublinierile, notițele, progresul și Phos Premium în contul Phos și regăsește-le pe orice telefon sau pe web.",signed:"Conectat ca {e}",out:"Deconectare",syncNow:"Sincronizează acum",synced:"Sincronizat",consent:"Accept ca Phos să păstreze în contul meu sublinierile, notițele și progresul. Ele pot dezvălui convingerile mele religioase. Pot retrage acordul oricând.",consentNeed:"Pentru sincronizare, bifează mai întâi acordul.",delAcc:"Șterge-mi contul",delSure:"Ești sigur? Contul și tot ce conține vor fi șterse. Nu se poate anula.",deleted:"Cont șters",googleSoon:"Conectarea cu Google este disponibilă în aplicația Phos din Google Play.",authErr:"Conectarea a eșuat. Încearcă din nou.",
+plans:"Planuri de lectură",plansLead:"Citește Biblia cu un plan ghidat și un memento zilnic.",pYear:"Biblia într-un an",pGospels:"Evangheliile în 40 de zile",pPsalms:"Psalmii în 30 de zile",pAdvent:"24 de zile spre Crăciun",pLent:"Postul Mare: 40 de zile spre Paști",day:"Ziua {n} din {t}",done:"Gata",start:"Începe",restart:"Ia de la capăt",todayRead:"Lectura de azi",finished:"Plan încheiat! 🎉",
+rule:"Pravila de rugăciune",ruleLead:"Rugăciunile de dimineață și de seară, una după alta, după Biserica ta.",morning:"Dimineață",evening:"Seară",next:"Următoarea",amen:"Amin",
+diary:"Jurnal duhovnicesc",diaryLead:"Intenții, haruri primite și ce îți spune lectura. Se păstrează pe telefon (și în cont dacă sincronizezi).",kIntent:"Intenție",kGrace:"Har primit",kNote:"Notiță",write:"Scrie aici…",add:"Adaugă",empty:"Încă n-ai scris nimic.",del:"Șterge",
+listen:"Ascultă capitolul",stop:"Oprește",sleep:"Oprire după",noSleep:"Fără cronometru",min:"{n} min",
+walls:"Imagini de fundal",wallsLead:"Versetul zilei în culorile perioadei liturgice, gata pentru ecranul tău.",widget:"Widgetul Phos",widgetLead:"Pe ecranul de pornire: ține apăsat › Widgeturi › Phos. Arată sfântul și versetul zilei.",
+retos:"Provocări biblice",retosLead:"Pune la încercare ce știi despre Biblie și praznice și învață ceva nou în fiecare zi.",daily:"Provocarea zilei",dailyLead:"Cinci întrebări, aceleași pentru toți azi.",who:"Cine sunt?",whoLead:"Ghicește personajul biblic cu cât mai puține indicii.",scr:"Verset amestecat",scrLead:"Pune în ordine cuvintele unui verset cunoscut.",tl:"Linia timpului",tlLead:"Pune în ordine istoria mântuirii.",map:"Călătoriile Bibliei",mapLead:"Urmează pe hartă drumurile lui Avraam, Moise și ale Sfântului Pavel.",group:"Provocări în grup",groupLead:"Pentru parohie, cateheză sau familie, cu un cod de grup.",soon:"În curând",
+qn:"Întrebarea {n} din {t}",right:"Corect!",wrong:"Nu e corect. Răspunsul era: {a}",result:"Ai răspuns corect la {n} din {t}",doneToday:"Ai făcut deja provocarea de azi. Revino mâine!",shareRes:"Distribuie rezultatul",again:"Din nou",clue:"Indiciul {n}",moreClue:"Alt indiciu",qBook:"Din ce carte a Bibliei este acest rezumat?",qFeast:"În ce zi se sărbătorește acest praznic? (calendarul nou)",qWord:"Ce cuvânt lipsește din verset?",tapOrder:"Atinge cuvintele în ordine",tapCity:"Atinge orașele în ordinea călătoriei",oldFirst:"Atinge evenimentele de la cel mai vechi la cel mai recent",undo:"Anulează",cont:"Continuă",points:"{n} puncte",onlyEsEn:"Această provocare este disponibilă în spaniolă și engleză."}
+};
+const qt=(k,o)=>{let s=(QX[LANG]&&QX[LANG][k])||QX.en[k]||k;if(o)for(const x in o)s=s.replace('{'+x+'}',o[x]);return s};
+
+// ---------- Datos de los Retos bíblicos ----------
+// Personajes en inglés, en el mismo orden que BIBFIG (today.js)
+const BIBFIG_EN=[['Abraham','Father of faith: he left his homeland trusting in God’s promise.'],['Sarah','She laughed at the promise and became a mother in her old age.'],['Isaac','The son of the promise, father of Jacob and Esau.'],['Jacob','He wrestled with God and was given the name Israel.'],['Joseph','Sold by his brothers, he forgave them and saved his family.'],['Moses','He led the people out of Egypt and received the Law on Sinai.'],['Miriam','A prophetess who sang of the deliverance by the sea.'],['Joshua','He led the people into the promised land.'],['Deborah','Judge and prophetess who encouraged Israel.'],['Gideon','He won with few men, trusting in God.'],['Ruth','Faithful to her mother-in-law and great-grandmother of King David.'],['Hannah','She prayed in tears and became the mother of Samuel.'],['Samuel','He heard God’s voice as a child.'],['David','Shepherd, king and psalmist after God’s own heart.'],['Solomon','He asked for wisdom to govern the people.'],['Elijah','A prophet who heard God in a gentle whisper.'],['Elisha','He received the mantle and spirit of Elijah.'],['Josiah','A young king who returned to the Word of God.'],['Nehemiah','He rebuilt the walls of Jerusalem, praying and working.'],['Esther','She risked her life for her people.'],['Job','He kept his faith in the midst of suffering.'],['Isaiah','He said: “Here am I, send me.”'],['Jeremiah','A prophet called before he was born.'],['Daniel','Faithful in prayer, even in the lions’ den.'],['Jonah','He ran from God and learned his mercy.'],['Micah','He summed up what God asks: justice, mercy and humility.'],['Mary','The mother of Jesus, who believed the angel’s word.'],['John the Baptist','He prepared the way of the Lord.'],['Peter','A fisherman called by Jesus, rock of the early Church.'],['Andrew','He brought his brother Peter to Jesus.'],['John','The beloved disciple, who wrote “God is love”.'],['James','He taught that faith is seen in works.'],['Matthew','A tax collector who left everything to follow Jesus.'],['Thomas','He doubted and then confessed: “My Lord and my God!”'],['Mary Magdalene','The first witness of the Resurrection.'],['Martha and Mary','Friends of Jesus who welcomed him into their home.'],['Lazarus','Jesus raised him and said: “I am the resurrection.”'],['Zacchaeus','He came down from the tree and changed his life after meeting Jesus.'],['Nicodemus','He came to Jesus by night and heard of the new birth.'],['Stephen','The first martyr, who forgave those who killed him.'],['Philip','He explained the Scriptures to the Ethiopian on the road.'],['Paul','A persecutor who became the apostle to the nations.'],['Barnabas','“Son of encouragement”, he cheered others on.'],['Lydia','A merchant who opened her home to the first church in Europe.'],['Priscilla and Aquila','A couple who taught the faith and hosted churches in their home.'],['Timothy','A young pastor encouraged by Paul to be an example.'],['Silas','He sang hymns in prison alongside Paul.'],['Onesimus','A slave who became a beloved brother.']];
+const figL=i=>LANG==='es'?[BIBFIG[i][0],BIBFIG[i][1]]:BIBFIG_EN[i];
+const FIG_SOLO=BIBFIG.map((f,i)=>i).filter(i=>!/ y /.test(BIBFIG[i][0]));
+
+// Línea del tiempo: [español, inglés, cita], en orden
+const TLEV=[['La creación del mundo','The creation of the world','GEN 1:1'],['El diluvio y el arca de Noé','The flood and Noah’s ark','GEN 7:17'],['La torre de Babel','The tower of Babel','GEN 11:9'],['Dios llama a Abraham','God calls Abraham','GEN 12:1'],['José es vendido por sus hermanos','Joseph is sold by his brothers','GEN 37:28'],['Moisés ante la zarza ardiente','Moses at the burning bush','EXO 3:2'],['El paso del mar Rojo','The crossing of the Red Sea','EXO 14:21'],['Los diez mandamientos en el Sinaí','The Ten Commandments on Sinai','EXO 20:1'],['La caída de Jericó','The fall of Jericho','JOS 6:20'],['David vence a Goliat','David defeats Goliath','1SA 17:50'],['Salomón construye el Templo','Solomon builds the Temple','1KI 6:14'],['Elías en el monte Carmelo','Elijah on Mount Carmel','1KI 18:38'],['El destierro a Babilonia','The exile to Babylon','2KI 25:11'],['Daniel en el foso de los leones','Daniel in the lions’ den','DAN 6:16'],['Nehemías reconstruye las murallas','Nehemiah rebuilds the walls','NEH 6:15'],['La Anunciación a María','The Annunciation to Mary','LUK 1:31'],['Jesús nace en Belén','Jesus is born in Bethlehem','LUK 2:7'],['El bautismo de Jesús en el Jordán','The baptism of Jesus in the Jordan','MAT 3:16'],['El sermón de la montaña','The Sermon on the Mount','MAT 5:1'],['La Transfiguración','The Transfiguration','MAT 17:2'],['La entrada en Jerusalén','The entry into Jerusalem','JOH 12:13'],['La Última Cena','The Last Supper','LUK 22:19'],['La crucifixión','The crucifixion','JOH 19:30'],['La Resurrección','The Resurrection','MAT 28:6'],['La Ascensión','The Ascension','ACT 1:9'],['Pentecostés','Pentecost','ACT 2:4'],['La conversión de Saulo','The conversion of Saul','ACT 9:3'],['El concilio de Jerusalén','The Council of Jerusalem','ACT 15:6'],['Pablo llega a Roma','Paul arrives in Rome','ACT 28:16']];
+
+// Viajes: ciudades con [español, inglés, latitud, longitud]
+const JOURNEYS=[
+ {id:'abraham',es:'El camino de Abraham',en:'Abraham’s journey',ref:'GEN 12:1',pts:[['Ur','Ur',30.96,46.10],['Harán','Haran',36.86,39.03],['Siquem','Shechem',32.21,35.28],['Betel','Bethel',31.93,35.22],['Egipto','Egypt',29.85,31.25],['Hebrón','Hebron',31.53,35.10]]},
+ {id:'exodo',es:'El Éxodo con Moisés',en:'The Exodus with Moses',ref:'EXO 12:37',pts:[['Ramsés','Rameses',30.80,31.83],['Sucot','Succoth',30.55,32.10],['Mar Rojo','Red Sea',30.05,32.55],['Monte Sinaí','Mount Sinai',28.54,33.97],['Cades Barnea','Kadesh Barnea',30.65,34.42],['Monte Nebo','Mount Nebo',31.77,35.73],['Jericó','Jericho',31.87,35.44]]},
+ {id:'pablo1',es:'Primer viaje de san Pablo',en:'Saint Paul’s first journey',ref:'ACT 13:4',pts:[['Antioquía','Antioch',36.20,36.16],['Salamina','Salamis',35.18,33.90],['Pafos','Paphos',34.76,32.41],['Perge','Perga',36.96,30.85],['Antioquía de Pisidia','Pisidian Antioch',38.31,31.19],['Iconio','Iconium',37.87,32.48],['Listra','Lystra',37.58,32.45],['Derbe','Derbe',37.35,33.36]]},
+ {id:'pablo2',es:'Segundo viaje de san Pablo',en:'Saint Paul’s second journey',ref:'ACT 16:9',pts:[['Antioquía','Antioch',36.20,36.16],['Listra','Lystra',37.58,32.45],['Tróade','Troas',39.75,26.16],['Filipos','Philippi',41.01,24.29],['Tesalónica','Thessalonica',40.64,22.94],['Atenas','Athens',37.98,23.73],['Corinto','Corinth',37.91,22.88],['Éfeso','Ephesus',37.94,27.34],['Jerusalén','Jerusalem',31.78,35.23]]},
+ {id:'roma',es:'San Pablo navega a Roma',en:'Saint Paul sails to Rome',ref:'ACT 27:1',pts:[['Cesarea','Caesarea',32.50,34.89],['Sidón','Sidon',33.56,35.37],['Mira','Myra',36.26,29.98],['Buenos Puertos (Creta)','Fair Havens (Crete)',34.93,24.80],['Malta','Malta',35.90,14.40],['Siracusa','Syracuse',37.08,15.29],['Regio','Rhegium',38.11,15.65],['Puteoli','Puteoli',40.82,14.12],['Roma','Rome',41.90,12.50]]}];
+
+// ---------- Retos bíblicos ----------
+// Reto del día: gratis para todos. Resto: Phos Premium (en la app de Google Play).
+const prem=()=>typeof isPremium!=='function'||!IN_APP||isPremium();
+function seeded(str){let h=1779033703^str.length;for(let i=0;i<str.length;i++){h=Math.imul(h^str.charCodeAt(i),3432918353);h=h<<13|h>>>19}
+ return function(){h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);h^=h>>>16;return (h>>>0)/4294967296}}
+const rpick=(r,a)=>a[Math.floor(r()*a.length)];
+const rshuf=(r,a)=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const todayKey=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const cleanW=w=>w.replace(/[^\p{L}\p{M}'’\-]/gu,'');
+async function vText(ref){
+ const [b,cv]=ref.split(' '),[c,v]=cv.split(':');const br=tdBr();
+ const src=LANG==='el'?'ortodoxa-griega':((TRMAP[br]&&TRMAP[br][LANG])||TRMAP.protestante[LANG]||'en-kjv');
+ try{const bk=await getBook(src,b);const [mc,mv]=mapRef('reina-valera-1909',src,b,c,+v);const row=bk&&bk.ch[mc]&&bk.ch[mc].find(r=>r[0]===mv);
+  return row?{txt:String(row[1]).replace(/\s+/g,' ').trim(),lang:TRLANG[src]||(src==='ortodoxa-griega'?'el':'en'),ref:bname(b)+' '+c+', '+v}:null}catch(e){return null}}
+const fmtDM=([m,d])=>{try{return new Intl.DateTimeFormat(LANG,{day:'numeric',month:'long',timeZone:'UTC'}).format(new Date(Date.UTC(2025,m-1,d)))}catch(e){return d+'/'+m}};
+
+// ---- Generadores de preguntas ----
+function qBookSum(r){const codes=Object.keys(SUM).filter(c=>bname(c)!==c);const c=rpick(r,codes);
+ const opts=rshuf(r,[c].concat(rshuf(r,codes.filter(x=>x!==c)).slice(0,3)));
+ return {prompt:qt('qBook'),extra:sumOf(c),options:opts.map(bname),answer:opts.indexOf(c),ref:c}}
+function qFeastDay(r){const fx=FEASTS.map((f,i)=>i).filter(i=>FEASTS[i][1]);const i=rpick(r,fx);
+ const opts=rshuf(r,[i].concat(rshuf(r,fx.filter(x=>x!==i)).slice(0,3)));
+ return {prompt:qt('qFeast'),extra:fName(i),options:opts.map(k=>fmtDM(FEASTS[k][1])),answer:opts.indexOf(i)}}
+function qWho(r){const i=rpick(r,FIG_SOLO);const [n,d]=figL(i);
+ const opts=rshuf(r,[i].concat(rshuf(r,FIG_SOLO.filter(x=>x!==i)).slice(0,3)));
+ return {prompt:qt('who'),extra:d,options:opts.map(k=>figL(k)[0]),answer:opts.indexOf(i)}}
+async function qWord(r){
+ const refs=rshuf(r,VOTD).slice(0,3);const [a,b2,c2]=await Promise.all(refs.map(vText));if(!a)return null;
+ const ws=a.txt.split(' ');const cand=ws.map((w,k)=>[cleanW(w),k]).filter(([w])=>w.length>4);if(!cand.length)return null;
+ const [w,k]=rpick(r,cand);
+ const pool=[b2,c2].filter(Boolean).flatMap(x=>x.txt.split(' ').map(cleanW)).filter(x=>x.length>4&&x.toLowerCase()!==w.toLowerCase());
+ const dis=[...new Set(rshuf(r,pool))].slice(0,3);if(dis.length<3)return null;
+ const opts=rshuf(r,[w].concat(dis));const shown=ws.map((x,j)=>j===k?x.replace(w,'_____'):x).join(' ');
+ return {prompt:qt('qWord'),extra:shown+' — '+a.ref,xlang:a.lang,options:opts,answer:opts.indexOf(w)}}
+async function dailyQs(){
+ const r=seeded('phos-reto-'+todayKey()+'-'+LANG);const es=LANG==='es'||LANG==='en';
+ const q=[qBookSum(r),qFeastDay(r),await qWord(r),es?qWho(r):qBookSum(r),qBookSum(r)];
+ return q.map(x=>x||qBookSum(r));
+}
+
+// ---- Motor de preguntas tipo test ----
+let RQ=null;
+function drawQuiz(){
+ const it=RQ.qs[RQ.i];const per=Math.round(RQ.i/RQ.qs.length*100);
+ view.innerHTML=`<div class="pbar"><i style="width:${per}%"></i></div><p class="note">${esc(qt('qn',{n:RQ.i+1,t:RQ.qs.length}))}</p>
+ <h1 class="qp">${esc(it.prompt)}</h1><p class="qx" ${it.xlang?`lang="${it.xlang}" dir="auto"`:''}>${esc(it.extra)}</p>
+ <div class="opts">${it.options.map((o,k)=>`<button class="opt" data-o="${k}">${esc(o)}</button>`).join('')}</div><div id="rfoot" style="margin-top:14px"></div>`;
+ view.querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>{
+  if(RQ.answered)return;RQ.answered=true;const k=+b.dataset.o,ok=k===it.answer;
+  view.querySelectorAll('[data-o]').forEach((x,j)=>{if(j===it.answer)x.classList.add('ok');else if(j===k)x.classList.add('bad');x.disabled=true});
+  RQ.marks.push(ok);if(ok)RQ.score++;
+  $('#rfoot').innerHTML=`<div class="fb ${ok?'good':'badfb'}" role="status"><b>${esc(ok?qt('right'):qt('wrong',{a:it.options[it.answer]}))}</b></div><button class="btn" id="rnext" style="width:100%">${esc(qt('cont'))}</button>`;
+  $('#rnext').onclick=()=>{RQ.i++;RQ.answered=false;if(RQ.i>=RQ.qs.length)return RQ.done();drawQuiz();window.scrollTo(0,0)};
+ });
+}
+function resultCard(title,n,t,marks,extra){
+ const txt=`Phos · ${title} ${todayKey().split('-').reverse().slice(0,2).join('/')}: ${marks.map(m=>m?'✅':'❌').join('')} ${n}/${t}\nphosbiblias.com`;
+ view.innerHTML=`<div class="lcard" style="text-align:center"><div style="font-size:48px">${n===t?'🏆':n>=t/2?'🌟':'🙏'}</div><h1>${esc(qt('result',{n,t}))}</h1>
+ <p style="font-size:30px;letter-spacing:4px">${marks.map(m=>m?'✅':'❌').join('')}</p>${extra||''}
+ <div style="display:flex;gap:10px;margin-top:14px"><button class="btn ghost" id="rBack" style="flex:1">${esc(qt('retos'))}</button><button class="btn" id="rShare" style="flex:1">${esc(qt('shareRes'))}</button></div></div>`;
+ $('#rBack').onclick=()=>go('retos',{sec:'retos'});
+ $('#rShare').onclick=()=>shareText(txt);
+}
+async function startDaily(){
+ const st=store.get('retoDaily',{});
+ if(st.d===todayKey())return resultCard(qt('daily'),st.n,st.t,st.m,`<p class="note">${esc(qt('doneToday'))}</p>`);
+ view.innerHTML=`<div class="loading">${esc(t('loading'))}</div>`;
+ RQ={qs:await dailyQs(),i:0,score:0,marks:[],answered:false,done(){
+  store.set('retoDaily',{d:todayKey(),n:RQ.score,t:RQ.qs.length,m:RQ.marks});addRetoPts(RQ.score*10);
+  resultCard(qt('daily'),RQ.score,RQ.qs.length,RQ.marks,`<p class="note">${esc(qt('doneToday'))}</p>`)}};
+ drawQuiz();
+}
+const addRetoPts=n=>{const s=store.get('retoPts',0);store.set('retoPts',s+n)};
+
+// ---- ¿Quién soy? (pistas que se van destapando) ----
+function startWho(){
+ const r=Math.random;const i=rpick(r,FIG_SOLO);const [n,d]=figL(i);const ref=BIBFIG[i][2].split(' ')[0];
+ const clues=[(LANG==='es'?'Apareces en el libro de ':LANG==='en'?'You appear in the book of ':'📖 ')+bname(ref),d,(LANG==='es'?'Tu nombre empieza por «':LANG==='en'?'Your name begins with “':'')+n.charAt(0)+(LANG==='es'?'»':LANG==='en'?'”':'…')];
+ const opts=rshuf(r,[i].concat(rshuf(r,FIG_SOLO.filter(x=>x!==i)).slice(0,5)));
+ let shown=1,answered=false;
+ const draw=()=>{view.innerHTML=`${LANG!=='es'&&LANG!=='en'?`<p class="note">${esc(qt('onlyEsEn'))}</p>`:''}<h1 class="qp">${esc(qt('who'))}</h1>
+  ${clues.slice(0,shown).map((c,k)=>`<p class="qx"><b>${esc(qt('clue',{n:k+1}))}:</b> ${esc(c)}</p>`).join('')}
+  ${shown<clues.length&&!answered?`<button class="btn ghost" id="wMore" style="width:100%;margin-bottom:12px">${esc(qt('moreClue'))}</button>`:''}
+  <div class="opts">${opts.map(k=>`<button class="opt" data-w="${k}">${esc(figL(k)[0])}</button>`).join('')}</div><div id="rfoot" style="margin-top:14px"></div>`;
+  const m=$('#wMore');if(m)m.onclick=()=>{shown++;draw()};
+  view.querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{if(answered)return;answered=true;const ok=+b.dataset.w===i;const pts=ok?(4-shown)*10:0;if(ok)addRetoPts(pts);
+   view.querySelectorAll('[data-w]').forEach(x=>{if(+x.dataset.w===i)x.classList.add('ok');else if(x===b)x.classList.add('bad');x.disabled=true});
+   const mm=$('#wMore');if(mm)mm.remove();
+   $('#rfoot').innerHTML=`<div class="fb" role="status"><b>${esc(ok?qt('right')+' · '+qt('points',{n:pts}):qt('wrong',{a:n}))}</b><span>${esc(d)}</span></div><button class="btn" id="rAgain" style="width:100%">${esc(qt('again'))}</button>`;
+   $('#rAgain').onclick=startWho});
+ };draw();
+}
+
+// ---- Versículo desordenado ----
+async function startScramble(){
+ view.innerHTML=`<div class="loading">${esc(t('loading'))}</div>`;
+ let v=null;for(let k=0;k<6&&!v;k++){const x=await vText(rpick(Math.random,VOTD));if(x&&x.txt.split(' ').length<=18)v=x}
+ if(!v)v=await vText('JOH 11:35')||{txt:'…',ref:'',lang:LANG};
+ const words=v.txt.split(' ');const order=rshuf(Math.random,words.map((w,k)=>k));let pick=[],done=false;
+ const draw=()=>{view.innerHTML=`<h1 class="qp">${esc(qt('scr'))}</h1><p class="note">${esc(qt('tapOrder'))} · ${esc(v.ref)}</p>
+  <p class="qx scrline" lang="${v.lang}" dir="auto">${pick.map(k=>esc(words[k])).join(' ')||'&nbsp;'}</p>
+  <div class="chips">${order.map(k=>pick.includes(k)?'':`<button class="opt chipw" data-k="${k}">${esc(words[k])}</button>`).join('')}</div>
+  <div style="display:flex;gap:10px;margin-top:14px">${!done&&pick.length?`<button class="btn ghost" id="sUndo" style="flex:1">${esc(qt('undo'))}</button>`:''}</div><div id="rfoot" style="margin-top:14px"></div>`;
+  const u=$('#sUndo');if(u)u.onclick=()=>{pick.pop();draw()};
+  view.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{if(done)return;pick.push(+b.dataset.k);
+   if(pick.length===words.length){done=true;const ok=pick.map(k=>words[k]).join(' ')===v.txt;if(ok)addRetoPts(20);draw();
+    $('#rfoot').innerHTML=`<div class="fb" role="status"><b>${esc(ok?qt('right')+' · '+qt('points',{n:20}):qt('wrong',{a:''}))}</b><span lang="${v.lang}">${esc(v.txt)}</span></div><button class="btn" id="rAgain" style="width:100%">${esc(qt('again'))}</button>`;
+    $('#rAgain').onclick=startScramble}else draw()});
+ };draw();
+}
+
+// ---- Línea del tiempo ----
+function startTimeline(){
+ const idx=rshuf(Math.random,TLEV.map((e,k)=>k)).slice(0,5);const shown=rshuf(Math.random,idx);let pick=[],done=false;
+ const lab=k=>TLEV[k][LANG==='es'?0:1];
+ const draw=()=>{view.innerHTML=`${LANG!=='es'&&LANG!=='en'?`<p class="note">${esc(qt('onlyEsEn'))}</p>`:''}<h1 class="qp">${esc(qt('tl'))}</h1><p class="note">${esc(qt('oldFirst'))}</p>
+  <ol class="tlpicked">${pick.map((k,j)=>`<li class="${done?(k===[...idx].sort((a,b)=>a-b)[j]?'ok':'bad'):''}">${esc(lab(k))}${done?` <span class="note">(${esc(bname(TLEV[k][2].split(' ')[0]))})</span>`:''}</li>`).join('')}</ol>
+  <div class="opts">${shown.map(k=>pick.includes(k)?'':`<button class="opt" data-k="${k}">${esc(lab(k))}</button>`).join('')}</div>
+  ${!done&&pick.length?`<button class="btn ghost" id="sUndo" style="width:100%;margin-top:12px">${esc(qt('undo'))}</button>`:''}<div id="rfoot" style="margin-top:14px"></div>`;
+  const u=$('#sUndo');if(u)u.onclick=()=>{pick.pop();draw()};
+  view.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{pick.push(+b.dataset.k);if(pick.length===idx.length){done=true;draw();
+   const right=[...idx].sort((a,b)=>a-b);const n=pick.filter((k,j)=>k===right[j]).length;addRetoPts(n*5);
+   $('#rfoot').innerHTML=`<div class="fb" role="status"><b>${esc(qt('result',{n,t:idx.length}))}</b>${n<idx.length?`<span>${right.map(lab).map(esc).join(' → ')}</span>`:''}</div><button class="btn" id="rAgain" style="width:100%">${esc(qt('again'))}</button>`;
+   $('#rAgain').onclick=startTimeline}else draw()});
+ };draw();
+}
+
+// ---- Los viajes de la Biblia (mapa esquemático) ----
+function startMap(ji){
+ if(ji==null){
+  view.innerHTML=`<h1>🧭 ${esc(qt('map'))}</h1><p class="lead">${esc(qt('mapLead'))}</p>${JOURNEYS.map((j,k)=>`<button class="card" data-j="${k}" style="width:100%;text-align:left"><div class="t">${esc(j[LANG==='es'?'es':'en'])}</div><div class="s">${esc(bname(j.ref.split(' ')[0]))} · ${j.pts.length} ${LANG==='es'?'lugares':'places'}</div></button>`).join('')}`;
+  view.querySelectorAll('[data-j]').forEach(b=>b.onclick=()=>startMap(+b.dataset.j));return}
+ const J=JOURNEYS[ji],P=J.pts,nm=p=>p[LANG==='es'?0:1];
+ const lats=P.map(p=>p[2]),lons=P.map(p=>p[3]);const pad=1.2;
+ let x0=Math.min(...lons)-pad,x1=Math.max(...lons)+pad,y0=Math.min(...lats)-pad,y1=Math.max(...lats)+pad;
+ const W=360,H=Math.max(260,Math.min(420,W*(y1-y0)/(x1-x0)*1.25));
+ const X=lon=>14+(lon-x0)/(x1-x0)*(W-28),Y=lat=>14+(y1-lat)/(y1-y0)*(H-28);
+ let step=1,miss=0;
+ const draw=()=>{
+  const route=P.slice(0,step).map(p=>`${X(p[3]).toFixed(1)},${Y(p[2]).toFixed(1)}`).join(' ');
+  let grid='';for(let g=Math.ceil(x0);g<=x1;g++)grid+=`<line x1="${X(g)}" y1="0" x2="${X(g)}" y2="${H}"/>`;for(let g=Math.ceil(y0);g<=y1;g++)grid+=`<line x1="0" y1="${Y(g)}" x2="${W}" y2="${Y(g)}"/>`;
+  view.innerHTML=`<h1 class="qp">${esc(J[LANG==='es'?'es':'en'])}</h1><p class="note">${esc(qt('tapCity'))} · ${esc(bname(J.ref.split(' ')[0]))} ${J.ref.split(' ')[1].replace(':',', ')}</p>
+  <svg class="bmap" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(qt('map'))}"><g class="grid">${grid}</g>
+   <polyline points="${route}" class="route"/>
+   ${P.map((p,k)=>{const vis=k<step;return `<g class="city ${vis?'on':''} ${k===0?'start':''}" data-c="${k}" tabindex="0" role="button" aria-label="${esc(nm(p))}"><circle cx="${X(p[3])}" cy="${Y(p[2])}" r="${vis?7:9}"/><circle class="hit" cx="${X(p[3])}" cy="${Y(p[2])}" r="20"/>${vis?`<text x="${X(p[3])>W-90?X(p[3])-10:X(p[3])+10}" text-anchor="${X(p[3])>W-90?'end':'start'}" y="${Y(p[2])-8}">${k+1}. ${esc(nm(p))}</text>`:''}</g>`}).join('')}
+  </svg>
+  <div class="chips" style="margin-top:10px">${rshuf(seeded(J.id),P.map((p,k)=>k)).filter(k=>k>=step).map(k=>`<span class="pill soft">${esc(nm(P[k]))}</span>`).join(' ')}</div>
+  <div id="rfoot" style="margin-top:14px"></div>`;
+  view.querySelectorAll('.city').forEach(g=>g.onclick=()=>{const k=+g.dataset.c;if(k<step||step>=P.length)return;
+   if(k===step){step++;draw();if(step>=P.length){const pts=Math.max(0,P.length*5-miss*3);addRetoPts(pts);
+    $('#rfoot').innerHTML=`<div class="fb" role="status"><b>${esc(qt('right')+' · '+qt('points',{n:pts}))}</b></div><div style="display:flex;gap:10px"><button class="btn ghost" id="mList" style="flex:1">${esc(qt('map'))}</button><button class="btn" id="rAgain" style="flex:1">${esc(qt('again'))}</button></div>`;
+    $('#rAgain').onclick=()=>startMap(ji);$('#mList').onclick=()=>startMap()}}
+   else{miss++;g.classList.add('shake');setTimeout(()=>g.classList.remove('shake'),400);
+    const nx=P[step];$('#rfoot').innerHTML=`<p class="note">➡️ ${esc(nm(nx))}?</p>`}});
+ };draw();
+}
+
+// ---- Pantalla principal de Retos ----
+function renderRetos(){
+ const v=S.view;
+ if(v==='r_daily')return startDaily();
+ const gate=f=>prem()?f():paywallCard();
+ if(v==='r_who')return gate(startWho);if(v==='r_scr')return gate(startScramble);if(v==='r_tl')return gate(startTimeline);if(v==='r_map')return gate(()=>startMap());
+ const st=store.get('retoDaily',{}),doneD=st.d===todayKey(),pts=store.get('retoPts',0);
+ const item=(id,ico,k,lead,lock)=>`<button class="card rcard" data-r="${id}"><div class="t"><span class="rico">${ico}</span>${esc(qt(k))}${lock&&!prem()?`<span class="pill">👑 Premium</span>`:''}</div><div class="s">${esc(qt(lead))}</div></button>`;
+ view.innerHTML=`<h1>${esc(qt('retos'))}</h1><p class="lead">${esc(qt('retosLead'))}</p>
+ ${pts?`<p class="note">⭐ ${esc(qt('points',{n:pts}))}</p>`:''}
+ <button class="card main rcard" data-r="r_daily"><div class="t"><span class="rico">📅</span>${esc(qt('daily'))}${doneD?`<span class="pill">${st.n}/${st.t}</span>`:''}</div><div class="s">${esc(doneD?qt('doneToday'):qt('dailyLead'))}</div></button>
+ ${item('r_who','🕵️','who','whoLead',1)}${item('r_scr','🧩','scr','scrLead',1)}${item('r_tl','⏳','tl','tlLead',1)}${item('r_map','🧭','map','mapLead',1)}
+ <div class="card off rcard"><div class="t"><span class="rico">👥</span>${esc(qt('group'))}<span class="pill soft">${esc(qt('soon'))}</span></div><div class="s">${esc(qt('groupLead'))}</div></div>`;
+ view.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>go(b.dataset.r));
+}
+
+// ---------- Phos «plus»: portada Hoy, racha, compartir, Mi Phos, voz alta y cuenta ----------
+const API_BASE='https://phosbiblias.com/api/';
+const prem2=()=>typeof isPremium!=='function'||!IN_APP||isPremium();
+
+// ===== Navegación: «Retos bíblicos» después de Aprender y «Mi Phos» al final =====
+(function(){const at=SECS.indexOf('learn')+1;SECS.splice(at,0,'retos');SECS.push('mine');
+ for(const l in NAV){const q=QX[l]||QX.en;NAV[l].splice(at,0,q.retos);NAV[l].push(q.mine)}
+ MENU_ICO.retos='🧩';MENU_ICO.mine='👤'})();
+const _renderArticlesP=renderArticles;
+renderArticles=async function(sec){if(sec==='retos')return renderRetos();if(sec==='mine')return renderMine();return _renderArticlesP(sec)};
+const _setHeaderP=setHeader;
+setHeader=function(){_setHeaderP();if((S.sec==='retos'||S.sec==='mine')&&S.view!==S.sec)$('#back').style.visibility='visible'};
+const _phosBackP=window.phosBack;
+window.phosBack=()=>{if(_phosBackP&&_phosBackP())return true;
+ if((S.sec==='retos'||S.sec==='mine')&&S.view!==S.sec){go(S.sec);return true}
+ if(S.sec!=='today'){$('#back').style.visibility==='visible'?$('#back').click():go('today',{sec:'today'});return true}return false};
+
+// ===== Racha diaria =====
+(function(){const k=todayKey(),v=store.get('visits',{last:null,streak:0,best:0});if(v.last===k)return;
+ const y=new Date();y.setDate(y.getDate()-1);const yk=y.getFullYear()+'-'+String(y.getMonth()+1).padStart(2,'0')+'-'+String(y.getDate()).padStart(2,'0');
+ v.streak=v.last===yk?v.streak+1:1;v.best=Math.max(v.best||0,v.streak);v.last=k;store.set('visits',v);
+ if([7,30,50,100,200,365,500,1000].includes(v.streak))setTimeout(()=>toast(qt('mile',{n:v.streak})),1200)})();
+const streakN=()=>store.get('visits',{streak:1}).streak||1;
+
+// ===== Compartir =====
+function shareText(txt){
+ if(window.PhosApp&&PhosApp.shareText){try{return PhosApp.shareText(txt)}catch(e){}}
+ if(navigator.share)return navigator.share({text:txt}).catch(()=>{});
+ try{navigator.clipboard.writeText(txt);toast('✓')}catch(e){}
+}
+async function shareImage(dataUrl,txt,name){
+ if(window.PhosApp&&PhosApp.shareImage){try{return PhosApp.shareImage(dataUrl.split(',')[1],txt||'')}catch(e){}}
+ try{const blob=await (await fetch(dataUrl)).blob();const f=new File([blob],(name||'phos')+'.png',{type:'image/png'});
+  if(navigator.canShare&&navigator.canShare({files:[f]}))return await navigator.share({files:[f],text:txt||''})}catch(e){}
+ const a=document.createElement('a');a.href=dataUrl;a.download=(name||'phos')+'.png';document.body.appendChild(a);a.click();a.remove();
+}
+// Colores por tiempo litúrgico
+const LITCOL={tdViolet:['#2E1745','#6B3FA0','#E9DDF7'],tdWhite:['#4A1416','#B8913F','#FFF6E0'],tdGreen:['#16341A','#3F7A3A','#E3F2DC'],tdRed:['#4C0D0B','#B3261E','#FCE3DE'],wine:['#2A0B0C','#7A2A2C','#F6F1E7'],night:['#0E1530','#2C3E7A','#E6EBFF'],gold:['#5A3E10','#E2C27A','#2A1B06']};
+function wrapLines(ctx,txt,maxW){const out=[];let line='';for(const w of txt.split(' ')){const tr=line?line+' '+w:w;if(ctx.measureText(tr).width>maxW&&line){out.push(line);line=w}else line=tr}if(line)out.push(line);return out}
+async function cardImage({w=1080,h=1350,col='wine',top='',verse='',ref='',date=''}){
+ try{await Promise.all([document.fonts.load('600 60px "Cormorant Garamond"'),document.fonts.load('500 30px Inter')])}catch(e){}
+ const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');const [c0,c1,ink]=LITCOL[col]||LITCOL.wine;
+ const g=x.createLinearGradient(0,0,w,h);g.addColorStop(0,c0);g.addColorStop(1,c1);x.fillStyle=g;x.fillRect(0,0,w,h);
+ // halo de luz y cruz suave
+ const rg=x.createRadialGradient(w*.5,h*.28,10,w*.5,h*.28,w*.7);rg.addColorStop(0,'rgba(255,240,200,.28)');rg.addColorStop(1,'rgba(255,240,200,0)');x.fillStyle=rg;x.fillRect(0,0,w,h);
+ x.strokeStyle='rgba(226,194,122,.18)';x.lineWidth=w*.012;x.lineCap='round';const cx=w*.5,cy=h*.2,s=h*.07;
+ x.beginPath();x.moveTo(cx,cy-s*1.6);x.lineTo(cx,cy+s*1.6);x.moveTo(cx-s*.5,cy-s*1.05);x.lineTo(cx+s*.5,cy-s*1.05);x.moveTo(cx-s,cy-s*.45);x.lineTo(cx+s,cy-s*.45);x.moveTo(cx-s*.6,cy+s*.75);x.lineTo(cx+s*.6,cy+s*.35);x.stroke();
+ x.textAlign='center';x.fillStyle=ink;const serif='"Cormorant Garamond", "Noto Serif", Georgia, serif',sans='Inter, "Noto Sans", Arial, sans-serif';
+ x.font=`600 ${Math.round(w*.03)}px ${sans}`;x.globalAlpha=.85;x.fillText(date.toUpperCase(),w/2,h*.36);if(top){x.font=`600 ${Math.round(w*.036)}px ${sans}`;x.fillText(top,w/2,h*.36+w*.055)}x.globalAlpha=1;
+ let fs=Math.round(w*(h/w>1.6?.085:.07));x.font=`600 ${fs}px ${serif}`;let lines=wrapLines(x,'«'+verse+'»',w*.8);
+ while(lines.length*fs*1.25>h*.38&&fs>w*.035){fs-=2;x.font=`600 ${fs}px ${serif}`;lines=wrapLines(x,'«'+verse+'»',w*.8)}
+ let y=h*.5-((lines.length-1)*fs*1.25)/2+fs*.3;if(y<h*.45)y=h*.45;lines.forEach(l=>{x.fillText(l,w/2,y);y+=fs*1.25});
+ x.font=`700 ${Math.round(w*.034)}px ${sans}`;x.fillStyle=LITCOL.gold[1];x.fillText(ref,w/2,y+fs*.5);
+ x.fillStyle=ink;x.globalAlpha=.8;x.font=`600 ${Math.round(w*.05)}px ${serif}`;x.fillText('Phos',w/2,h-h*.075);x.font=`500 ${Math.round(w*.024)}px ${sans}`;x.fillText('phosbiblias.com',w/2,h-h*.045);x.globalAlpha=1;
+ return c.toDataURL('image/png');
+}
+async function todayCardData(){
+ const now=new Date(),td=utc(now.getFullYear(),now.getMonth()+1,now.getDate()),br=tdBr(),info=dayInfo(br,td);
+ const ref=VOTD[dayIdx()%VOTD.length];const v=await vText(ref);
+ const cel=info.cel.map(celName).filter(Boolean),sts=daySaints(br,td);
+ return {col:info.color||'wine',top:cel[0]||sts[0]||snName(info.s),verse:v?v.txt:'',ref:v?v.ref:ref,date:fmtLong(new Date(td))};
+}
+
+// ===== Portada «Hoy» =====
+const _renderTodayP=renderToday;
+renderToday=function(){
+ _renderTodayP();
+ const now=new Date(),td=utc(now.getFullYear(),now.getMonth()+1,now.getDate()),br=tdBr(),info=dayInfo(br,td);
+ const ref=VOTD[dayIdx()%VOTD.length];const [vb,cv]=ref.split(' ');const [vc,vv]=cv.split(':');
+ const cel=info.cel.map(celName).filter(Boolean),sts=daySaints(br,td),top=cel[0]||sts[0]||'';
+ const [c0,c1]=LITCOL[info.color]||LITCOL.wine;
+ const old=$('#votd');if(!old)return;
+ const hero=document.createElement('section');hero.className='hero';hero.id='votd';hero.style.background=`radial-gradient(120% 80% at 50% 0%,rgba(255,236,190,.25),transparent 60%),linear-gradient(160deg,${c0},${c1})`;
+ hero.innerHTML=`<div class="hdate">${esc(fmtLong(new Date(td)))}</div>
+  <div class="hseason"><span class="hdot" style="background:${COLHEX[info.color]||'#E2C27A'}"></span>${esc(snName(info.s))}</div>
+  ${top?`<div class="htop">${esc(top)}</div>`:''}
+  <blockquote class="hverse"><span id="votdTxt">…</span><cite>${esc(bname(vb))} ${vc}, ${vv}</cite></blockquote>
+  <div class="hfoot"><span class="hstreak">${streakN()>1?'🔥 '+esc(qt('streak',{n:streakN()})):''}</span>
+  <span class="hbtns"><button class="hbtn" id="hShare" aria-label="${esc(qt('share'))}">↗ ${esc(qt('share'))}</button></span></div>`;
+ old.replaceWith(hero);
+ const head=view.querySelector('.tdhead');if(head){head.classList.add('compact');const dd=head.querySelector('.tddate');if(dd)dd.remove()}
+ $('#hShare').onclick=async e=>{e.stopPropagation();const d=await todayCardData();shareImage(await cardImage(d),qt('shareText')+' · phosbiblias.com','phos-hoy')};
+};
+
+// ===== Voz alta: escuchar el capítulo (Phos Premium) =====
+const AUD={on:false,auto:false,rows:[],timer:null,until:0};
+window.PhosTTS={onVerse(i){const r=AUD.rows[i];view.querySelectorAll('.speaking').forEach(x=>x.classList.remove('speaking'));if(r){r.classList.add('speaking');r.scrollIntoView({block:'center',behavior:'smooth'})}},
+ onEnd(){if(!AUD.on)return;const nx=$('#next');if(nx&&!nx.disabled&&(!AUD.until||Date.now()<AUD.until)){AUD.auto=true;nx.click()}else audStop()}};
+function audRows(){const box=view.querySelector('.reader')||view;return [...box.querySelectorAll('[data-v]')].filter(r=>!r.closest('.reader+.reader'))}
+function audStart(){
+ if(!prem2())return paywallCard();
+ AUD.rows=audRows();const parts=AUD.rows.map(r=>{const el=r.querySelector('.tr')||r;const cl=el.cloneNode(true);cl.querySelectorAll('sup').forEach(s=>s.remove());return cl.textContent.trim()});
+ const lang=(AUD.rows[0]&&((AUD.rows[0].querySelector('.tr')||AUD.rows[0]).closest('[lang]')||{}).lang)||LANG;
+ AUD.on=true;drawListen();
+ if(window.PhosApp&&PhosApp.speakSeq){PhosApp.speakSeq(JSON.stringify(parts),lang);return}
+ if(window.speechSynthesis){speechSynthesis.cancel();parts.forEach((p,i)=>{const u=new SpeechSynthesisUtterance(p);u.lang=lang;u.rate=.95;u.onstart=()=>PhosTTS.onVerse(i);if(i===parts.length-1)u.onend=()=>PhosTTS.onEnd();speechSynthesis.speak(u)})}
+}
+function audStop(){AUD.on=false;AUD.auto=false;AUD.until=0;clearTimeout(AUD.timer);try{if(window.PhosApp)PhosApp.stop();if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}
+ view.querySelectorAll('.speaking').forEach(x=>x.classList.remove('speaking'));drawListen()}
+function drawListen(){
+ let bar=$('#listenBar');if(S.view!=='read'||S.sec!=='bible'){if(bar)bar.remove();return}
+ if(!bar){bar=document.createElement('div');bar.id='listenBar';bar.className='listenbar';document.body.appendChild(bar)}
+ bar.innerHTML=AUD.on?`<button class="lbtn on" id="lStop">⏹ ${esc(qt('stop'))}</button><select id="lSleep" aria-label="${esc(qt('sleep'))}"><option value="0">${esc(qt('noSleep'))}</option>${[15,30,60].map(m=>`<option value="${m}" ${AUD.until&&Math.round((AUD.until-Date.now())/6e4)<=m&&Math.round((AUD.until-Date.now())/6e4)>m-15?'selected':''}>${esc(qt('sleep'))} ${esc(qt('min',{n:m}))}</option>`).join('')}</select>`
+  :`<button class="lbtn" id="lPlay">🔊 ${esc(qt('listen'))}${!prem2()?' · 👑':''}</button>`;
+ const p=$('#lPlay');if(p)p.onclick=audStart;const s=$('#lStop');if(s)s.onclick=audStop;
+ const sl=$('#lSleep');if(sl)sl.onchange=()=>{const m=+sl.value;clearTimeout(AUD.timer);AUD.until=m?Date.now()+m*6e4:0;if(m)AUD.timer=setTimeout(audStop,m*6e4)};
+}
+
+// ===== Mi Phos =====
+function renderMine(){
+ const v=S.view;const gate=f=>prem2()?f():paywallCard();
+ if(v==='m_plans')return gate(drawPlans);if(v==='m_plan')return gate(drawPlan);if(v==='m_rule')return gate(drawRule);
+ if(v==='m_diary')return gate(drawDiary);if(v==='m_walls')return gate(drawWalls);if(v==='m_account')return drawAccount();
+ const a=store.get('acct',null),vs=store.get('visits',{streak:1,best:1});
+ const item=(id,ico,k,lead,lock)=>`<button class="card rcard" data-m="${id}"><div class="t"><span class="rico">${ico}</span>${esc(qt(k))}${lock&&!prem2()?'<span class="pill">👑 Premium</span>':''}</div><div class="s">${esc(lead)}</div></button>`;
+ view.innerHTML=`<h1>${esc(qt('mine'))}</h1><p class="lead">${esc(qt('mineLead'))}</p>
+ <div class="streakbox"><div class="sbig">🔥 ${vs.streak}</div><div><b>${vs.streak>1?esc(qt('streak',{n:vs.streak})):esc(qt('mine'))}</b><div class="note">${esc(qt('best',{n:vs.best||vs.streak}))}</div></div></div>
+ ${item('m_account','👤','account',a?qt('signed',{e:a.email}):qt('googleLead'),0)}
+ ${item('m_plans','📖','plans',qt('plansLead'),1)}${item('m_rule','🕯️','rule',qt('ruleLead'),1)}${item('m_diary','✍️','diary',qt('diaryLead'),1)}
+ ${item('m_walls','🖼️','walls',qt('wallsLead'),1)}
+ <button class="card rcard" data-p="notif"><div class="t"><span class="rico">🔔</span>${esc(pt('reminders'))}${!prem2()?'<span class="pill">👑 Premium</span>':''}</div><div class="s">${esc(pt('remLead'))}</div></button>
+ <div class="card rcard"><div class="t"><span class="rico">📱</span>${esc(qt('widget'))}${!prem2()?'<span class="pill">👑 Premium</span>':''}</div><div class="s">${esc(qt('widgetLead'))}</div></div>
+ <button class="card main rcard" data-p="premium"><div class="t"><span class="rico">👑</span>${esc(pt('prem'))}</div><div class="s">${esc(isPremium&&IN_APP&&isPremium()?pt('active'):pt('premLead'))}</div></button>
+ <button class="card rcard" data-p="apoyo"><div class="t"><span class="rico">🙏</span>${esc(pt('support'))}</div><div class="s">${esc(pt('supportLead'))}</div></button>`;
+ view.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>go(b.dataset.m));
+ view.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>openP(b.dataset.p));
+}
+
+// ---- Planes de lectura ----
+const planEd=()=>({ortodoxa:'ortodoxa-griega',catolica:'vulgata-clementina',protestante:'reina-valera-1909'})[tdBr()];
+const PLANS=['year','gospels','psalms','advent','lent'],PLAN_K={year:'pYear',gospels:'pGospels',psalms:'pPsalms',advent:'pAdvent',lent:'pLent'};
+function chsOf(ed,c){const m=bookMeta(ed).map[c];return m?m.chs.map(String):[]}
+function psa(ed,n){try{return String(mapRef('reina-valera-1909',ed,'PSA',String(n),1)[0])}catch(e){return String(n)}}
+function split(list,n){const out=[];for(let d=0;d<n;d++)out.push(list.slice(Math.floor(d*list.length/n),Math.floor((d+1)*list.length/n)));return out.filter(x=>x.length)}
+function planDays(id){
+ const ed=planEd();const all=c=>chsOf(ed,c).map(ch=>[c,ch]);
+ if(id==='year')return split(bookMeta(ed).books.flatMap(b=>all(b.c)),365);
+ if(id==='gospels')return split(['MAT','MRK','LUK','JOH'].flatMap(all),40);
+ if(id==='psalms')return split(all('PSA'),30);
+ if(id==='advent')return [...Array(20)].map((_,k)=>[['ISA',String(40+k)]]).concat([[['MAT','1']],[['LUK','1']],[['JOH','1']],[['LUK','2']]]);
+ if(id==='lent')return [[['PSA',psa(ed,51)]]].concat(all('MRK').map(x=>[x]),[15,16,17,18,19,20,21].map(n=>[['LUK',String(n)]]),[6,32,38,102,130,143].map(n=>[['PSA',psa(ed,n)]]),[12,13,14,15,16,17,18,19,20,21].map(n=>[['JOH',String(n)]]));
+ return [];
+}
+const planSt=()=>store.get('plans',{});
+const dayLabel=d=>{const g=[];d.forEach(([c,ch])=>{const l=g[g.length-1];if(l&&l.c===c)l.z=ch;else g.push({c,a:ch,z:ch})});return g.map(x=>bname(x.c)+' '+x.a+(x.z!==x.a?'–'+x.z:'')).join(' · ')};
+function planToday(id){const days=planDays(id),st=planSt()[id]||{done:[]};const i=days.findIndex((d,k)=>!st.done.includes(k));return {days,i,st}}
+window.planTodayText=()=>{const a=store.get('planActive',null);if(!a)return '';const {days,i}=planToday(a);return i>=0?qt('todayRead')+': '+dayLabel(days[i]):''};
+function drawPlans(){
+ const st=planSt();
+ view.innerHTML=`<h1>📖 ${esc(qt('plans'))}</h1><p class="lead">${esc(qt('plansLead'))}</p>${PLANS.map(id=>{const n=planDays(id).length,d=(st[id]&&st[id].done.length)||0,p=Math.round(d/n*100);
+  return `<button class="card rcard" data-plan="${id}"><div class="t">${esc(qt(PLAN_K[id]))}${d?`<span class="pill">${p}%</span>`:''}</div><div class="s">${d?esc(qt('day',{n:Math.min(d+1,n),t:n})):esc(n+' · '+dayLabel(planDays(id)[0]))}</div>${d?`<div class="pbar" style="margin-top:8px"><i style="width:${p}%"></i></div>`:''}</button>`}).join('')}`;
+ view.querySelectorAll('[data-plan]').forEach(b=>b.onclick=()=>{S.plan=b.dataset.plan;go('m_plan')});
+}
+function drawPlan(){
+ const id=S.plan||store.get('planActive','gospels');const {days,i,st}=planToday(id);const ed=planEd();
+ if(i<0){view.innerHTML=`<div class="lcard" style="text-align:center"><div style="font-size:48px">🎉</div><h1>${esc(qt('finished'))}</h1><p class="lead">${esc(qt(PLAN_K[id]))}</p><button class="btn" id="pRe" style="width:100%">${esc(qt('restart'))}</button></div>`;
+  $('#pRe').onclick=()=>{const s=planSt();s[id]={done:[]};store.set('plans',s);drawPlan()};return}
+ view.innerHTML=`<h1>${esc(qt(PLAN_K[id]))}</h1><p class="note">${esc(qt('day',{n:i+1,t:days.length}))}</p>
+ <div class="pbar"><i style="width:${Math.round(st.done.length/days.length*100)}%"></i></div>
+ <div class="card main"><div class="t">${esc(qt('todayRead'))}</div><div class="edlist">${days[i].map(([c,ch])=>`<button class="ed" data-c="${c}" data-ch="${ch}"><b>${esc(bname(c))} ${esc(ch)}</b></button>`).join('')}</div>
+ <button class="btn" id="pDone" style="width:100%;margin-top:12px;background:var(--gold);color:var(--wine)">✓ ${esc(qt('done'))}</button></div>
+ <h2>${esc(qt('next'))}</h2><ul class="tdnext">${days.slice(i+1,i+6).map((d,k)=>`<li><b>${esc(qt('day',{n:i+2+k,t:days.length}))}</b><span>${esc(dayLabel(d))}</span></li>`).join('')}</ul>`;
+ view.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>go('read',{sec:'bible',ed,book:b.dataset.c,ch:b.dataset.ch,hl:null}));
+ $('#pDone').onclick=()=>{const s=planSt();s[id]=s[id]||{done:[]};s[id].done.push(i);store.set('plans',s);store.set('planActive',id);
+  if(typeof scheduleReminders==='function')scheduleReminders();drawPlan();window.scrollTo(0,0)};
+ store.set('planActive',id);
+}
+
+// ---- Regla de oración ----
+const RULE={ortodoxa:{m:['heavenly','trisagion','ourf','jesus'],e:['phos','trisagion','ourf','nunc','jesus']},
+ catolica:{m:['ourf','ave','angelus'],e:['magn','ourf','ave','subtuum']},
+ protestante:{m:[['PSA',143,8,8],'ourf'],e:[['PSA',4,8,8],['PSA',141,2,2],'ourf']}};
+function drawRule(){
+ const br=tdBr(),h=new Date().getHours();S.rt=S.rt||(h>=4&&h<14?'m':'e');S.ri=S.ri||0;
+ const list=RULE[br][S.rt],k=list[S.ri],last=S.ri>=list.length-1;
+ const title=Array.isArray(k)?bname(k[0])+' '+k[1]:prName(k);
+ view.innerHTML=`<h1>🕯️ ${esc(qt('rule'))}</h1>
+ <div class="seg" role="group">${['m','e'].map(x=>`<button data-rt="${x}" aria-pressed="${S.rt===x}">${esc(qt(x==='m'?'morning':'evening'))}</button>`).join('')}</div>
+ <div class="rdots">${list.map((x,j)=>`<i class="${j<=S.ri?'on':''}"></i>`).join('')}</div>
+ <div class="lcard"><h2 style="margin-top:0">${esc(title)}</h2><div id="rTxt"><blockquote class="vq tdprayer"><span>…</span></blockquote></div>
+ <button class="btn" id="rNext" style="width:100%;margin-top:14px">${esc(last?qt('amen'):qt('next'))}</button></div>`;
+ view.querySelectorAll('[data-rt]').forEach(b=>b.onclick=()=>{S.rt=b.dataset.rt;S.ri=0;drawRule()});
+ $('#rNext').onclick=()=>{if(last){S.ri=0;toast('🙏 '+qt('amen'));go('mine')}else{S.ri++;drawRule();window.scrollTo(0,0)}};
+ const ref=Array.isArray(k)?k:(PR_BIB[k]||null);
+ if(!ref){$('#rTxt').innerHTML=`<blockquote class="vq tdprayer"><span>${esc(prText(k))}</span></blockquote>`;return}
+ const [b,c,a,z]=ref;fVerses([b,[[c,a,z]]]).then(r=>{const box=$('#rTxt');if(!box)return;if(!r){box.innerHTML=`<blockquote class="vq tdprayer"><span>${esc(prText(k)||'')}</span></blockquote>`;return}
+  box.innerHTML=r.segs.map(s=>`<blockquote class="vq tdprayer"><span>${esc(s.txt)}</span><cite>${esc(bname(b))} ${s.c}, ${s.a}–${s.z}</cite></blockquote>`).join('')});
+}
+
+// ---- Diario espiritual ----
+function drawDiary(){
+ const L=store.get('diary',[]);S.dk=S.dk||'kIntent';
+ const fmt=ts=>{try{return new Intl.DateTimeFormat(LANG,{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}).format(new Date(ts))}catch(e){return ''}};
+ const ico={kIntent:'🙏',kGrace:'✨',kNote:'📖'};
+ view.innerHTML=`<h1>✍️ ${esc(qt('diary'))}</h1><p class="lead">${esc(qt('diaryLead'))}</p>
+ <div class="tdchips">${['kIntent','kGrace','kNote'].map(k=>`<button class="chip${S.dk===k?' on':''}" data-dk="${k}">${ico[k]} ${esc(qt(k))}</button>`).join('')}</div>
+ <textarea id="dTxt" class="dtxt" rows="4" placeholder="${esc(qt('write'))}"></textarea><button class="btn" id="dAdd" style="width:100%;margin-top:8px">${esc(qt('add'))}</button>
+ <div class="dlist">${L.length?L.slice().reverse().map(e=>`<div class="dent"><div class="note">${ico[e.k]||'•'} ${esc(qt(e.k))} · ${esc(fmt(e.ts))}</div><p>${esc(e.txt)}</p><button class="linkbtn" data-del="${e.id}">${esc(qt('del'))}</button></div>`).join(''):`<p class="note">${esc(qt('empty'))}</p>`}</div>`;
+ view.querySelectorAll('[data-dk]').forEach(b=>b.onclick=()=>{S.dk=b.dataset.dk;view.querySelectorAll('[data-dk]').forEach(x=>x.classList.toggle('on',x===b))});
+ $('#dAdd').onclick=()=>{const v=$('#dTxt').value.trim();if(!v)return;const L2=store.get('diary',[]);L2.push({id:Date.now().toString(36),ts:Date.now(),k:S.dk,txt:v.slice(0,4000)});store.set('diary',L2);drawDiary()};
+ view.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{if(b.dataset.sure){store.set('diary',store.get('diary',[]).filter(e=>e.id!==b.dataset.del));drawDiary()}else{b.dataset.sure='1';b.textContent='✓ '+qt('del')+'?'}});
+}
+
+// ---- Fondos de pantalla ----
+async function drawWalls(){
+ view.innerHTML=`<h1>🖼️ ${esc(qt('walls'))}</h1><p class="lead">${esc(qt('wallsLead'))}</p><div class="loading">${esc(t('loading'))}</div>`;
+ const d=await todayCardData();const cols=[d.col,'wine','night','gold'].filter((x,k,a)=>a.indexOf(x)===k);
+ const imgs=await Promise.all(cols.map(col=>cardImage(Object.assign({},d,{col,w:540,h:1170}))));
+ view.innerHTML=`<h1>🖼️ ${esc(qt('walls'))}</h1><p class="lead">${esc(qt('wallsLead'))}</p><div class="walls">${imgs.map((src,k)=>`<figure><img src="${src}" alt="${esc(qt('walls'))} ${k+1}"><figcaption>
+  ${window.PhosApp&&PhosApp.setWallpaper?`<button class="btn" data-set="${k}">📱</button>`:''}<button class="btn ghost" data-sh="${k}">↗</button></figcaption></figure>`).join('')}</div>`;
+ const full=k=>cardImage(Object.assign({},d,{col:cols[k],w:1080,h:2340}));
+ view.querySelectorAll('[data-sh]').forEach(b=>b.onclick=async()=>shareImage(await full(+b.dataset.sh),'phosbiblias.com','phos-fondo'));
+ view.querySelectorAll('[data-set]').forEach(b=>b.onclick=async()=>{const u=await full(+b.dataset.set);try{PhosApp.setWallpaper(u.split(',')[1]);toast('✓')}catch(e){}});
+}
+
+// ---- Widget: se le pasan los próximos 14 días ----
+async function feedWidget(){
+ if(!(window.PhosApp&&PhosApp.widgetSet))return;
+ if(!prem2()){try{PhosApp.widgetSet('[]')}catch(e){}return}
+ const out=[],br=tdBr();
+ for(let i=0;i<14;i++){const d=new Date();d.setDate(d.getDate()+i);const td=utc(d.getFullYear(),d.getMonth()+1,d.getDate());
+  let top='';try{const info=dayInfo(br,td);top=info.cel.map(celName).filter(Boolean)[0]||daySaints(br,td)[0]||snName(info.s)}catch(e){}
+  const di=Math.floor((d-new Date(d.getFullYear(),0,0))/864e5);const v=await vText(VOTD[di%VOTD.length]);
+  out.push({d:d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'),t:top,b:v?'«'+v.txt+'» — '+v.ref:''})}
+ try{PhosApp.widgetSet(JSON.stringify(out))}catch(e){}
+}
+
+// ===== Cuenta: entrar con Google y sincronizar =====
+const SYNC_SKIP=new Set(['_ts','acct','premium','lang']);
+const _storeSet=store.set.bind(store);
+store.set=function(k,v){_storeSet(k,v);if(k==='_ts'||SYNC_SKIP.has(k))return;try{const ts=JSON.parse(localStorage.getItem('phos:_ts')||'{}');ts[k]=Date.now();localStorage.setItem('phos:_ts',JSON.stringify(ts))}catch(e){}SYNC_DIRTY()};
+let _syncT=null;const SYNC_DIRTY=()=>{const a=store.get('acct',null);if(!a||!a.consent)return;clearTimeout(_syncT);_syncT=setTimeout(()=>syncNow(true),8000)};
+async function api(path,body){const a=store.get('acct',null);
+ const r=await fetch(API_BASE+path,{method:'POST',headers:Object.assign({'Content-Type':'application/json','X-Phos':'1'},a&&a.token?{Authorization:'Bearer '+a.token}:{}),body:JSON.stringify(body||{})});
+ const j=await r.json().catch(()=>({ok:false,error:'HTTP '+r.status}));if(r.status===401){store.set('acct',null)}return j}
+async function syncNow(quiet){
+ const a=store.get('acct',null);if(!a)return;if(!a.consent){if(!quiet)toast(qt('consentNeed'));return}
+ const ts=JSON.parse(localStorage.getItem('phos:_ts')||'{}'),data={};
+ for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(!k.startsWith('phos:'))continue;const kk=k.slice(5);if(SYNC_SKIP.has(kk))continue;data[kk]={v:localStorage.getItem(k),ts:ts[kk]||0}}
+ try{const j=await api('app-sync.php',{consent:true,data});if(!j.ok)throw new Error(j.error);
+  const nts=JSON.parse(localStorage.getItem('phos:_ts')||'{}');
+  for(const k in j.data){const x=j.data[k];if(!data[k]||x.ts>(data[k].ts||0)){localStorage.setItem('phos:'+k,x.v);nts[k]=x.ts}}
+  localStorage.setItem('phos:_ts',JSON.stringify(nts));const a2=store.get('acct',null);if(a2){a2.last=Date.now();_storeSet('acct',a2)}
+  if(!quiet){toast(qt('synced'));render()}}catch(e){if(!quiet)toast(qt('authErr')+(e&&e.message?' · '+e.message:''))}
+}
+window.PhosAuth={async onGoogle(idToken){
+  try{const j=await api('app-google.php',{idToken});if(!j.ok)throw new Error(j.error);store.set('acct',{token:j.token,email:j.user.email,consent:!!j.user.religConsent});
+   if(j.user.religConsent)await syncNow(true);if(S.view==='m_account')drawAccount()}catch(e){toast(qt('authErr')+(e&&e.message?' · '+e.message:''))}},
+ onError(msg){if(msg)toast(qt('authErr')+' · '+msg)}};
+function drawAccount(){
+ const a=store.get('acct',null);
+ let h=`<h1>👤 ${esc(qt('account'))}</h1>`;
+ if(!a){h+=`<p class="lead">${esc(qt('googleLead'))}</p>${window.PhosApp&&PhosApp.googleSignIn?`<button class="gbtn" id="gIn"><svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>${esc(qt('google'))}</button>`:`<div class="card"><div class="s">${esc(qt('googleSoon'))}</div></div>`}
+  <p class="note">${esc(pt('privacy'))}: <a href="${PRIV_URL}" target="_blank" rel="noopener">phosbiblias.com/privacidad</a></p>`}
+ else{h+=`<div class="card main"><div class="t">✓ ${esc(qt('signed',{e:a.email}))}</div>${a.last?`<div class="s">${esc(qt('synced'))} · ${esc(new Date(a.last).toLocaleString(LANG))}</div>`:''}</div>
+  <label class="nrow"><input type="checkbox" id="aCons" ${a.consent?'checked':''}><span class="small">${esc(qt('consent'))}</span></label>
+  <button class="btn" id="aSync" style="width:100%;margin-top:12px">${esc(qt('syncNow'))}</button>
+  <button class="btn ghost" id="aOut" style="width:100%;margin-top:10px">${esc(qt('out'))}</button>
+  <button class="linkbtn danger" id="aDel" style="margin-top:22px">${esc(qt('delAcc'))}</button><div id="aDelBox"></div>`}
+ view.innerHTML=h;
+ const g=$('#gIn');if(g)g.onclick=()=>{try{PhosApp.googleSignIn()}catch(e){toast(qt('authErr'))}};
+ if(!a)return;
+ $('#aCons').onchange=e=>{const x=store.get('acct',null);x.consent=e.target.checked;_storeSet('acct',x);if(!x.consent)api('app-sync.php',{consent:false}).catch(()=>{})};
+ $('#aSync').onclick=()=>syncNow(false);
+ $('#aOut').onclick=()=>{api('app-salir.php').catch(()=>{});_storeSet('acct',null);drawAccount()};
+ $('#aDel').onclick=()=>{$('#aDelBox').innerHTML=`<p class="note">${esc(qt('delSure'))}</p><button class="btn danger" id="aDelOk" style="width:100%">${esc(qt('delAcc'))}</button>`;
+  $('#aDelOk').onclick=async()=>{const j=await api('app-borrar.php',{confirmo:'BORRAR'});if(j.ok){_storeSet('acct',null);toast(qt('deleted'));drawAccount()}else toast(j.error||qt('authErr'))}};
+}
+
+// ===== Arranque =====
+const _renderPlus=render;
+render=function(){
+ if(AUD.on&&!(S.view==='read'&&S.sec==='bible'))audStop();
+ const p=_renderPlus.apply(this,arguments);
+ Promise.resolve(p).then(()=>{drawListen();if(AUD.auto&&S.view==='read'){AUD.auto=false;setTimeout(audStart,400)}});
+ return p};
+(function(){const st=document.createElement('style');st.textContent=`
+.hero{position:relative;border-radius:22px;padding:22px 20px 18px;margin:6px 0 16px;color:#FBF6EA;box-shadow:0 10px 30px rgba(42,11,12,.25);overflow:hidden;cursor:pointer}
+.hero:before{content:"";position:absolute;right:-30px;top:-20px;width:170px;height:230px;opacity:.07;background:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 40' fill='none' stroke='%23E2C27A' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M15 3v34M10 8h10M5 16h20M9 29l12-5'/%3E%3C/svg%3E")}
+.hdate{font-size:13px;letter-spacing:1.5px;text-transform:uppercase;opacity:.85}
+.hseason{display:flex;align-items:center;gap:8px;margin-top:6px;font-weight:600;color:#F1DDA9}.hdot{width:12px;height:12px;border-radius:50%;border:2px solid rgba(255,255,255,.6)}
+.htop{font-family:'Cormorant Garamond',serif;font-size:26px;line-height:1.15;margin-top:10px;color:#fff}
+.hverse{margin:16px 0 0;padding:0;border:0;font-family:'Noto Serif',serif;font-size:21px;line-height:1.55;color:#fff}
+.hverse cite{display:block;margin-top:8px;font-style:normal;font-family:Inter,sans-serif;font-size:14px;font-weight:700;color:#E2C27A}
+.hfoot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:18px;flex-wrap:wrap}.hstreak{font-size:14px;font-weight:600}
+.hbtn{border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.12);color:#fff;border-radius:999px;padding:9px 16px;font:inherit;font-weight:600}
+.tdhead.compact h1{font-size:24px}
+.rcard{width:100%;text-align:left;display:block}.rcard .t{display:flex;align-items:center;gap:10px;justify-content:flex-start}.rcard .pill{margin-left:auto}.rico{font-size:24px}
+.streakbox{display:flex;align-items:center;gap:16px;background:linear-gradient(135deg,#FFF3D6,#F6E3B4);border-radius:18px;padding:16px;margin:8px 0 14px;color:#4A1416}.sbig{font-size:34px;font-weight:800;font-family:'Cormorant Garamond',serif;white-space:nowrap}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.opt.chipw{width:auto;min-height:44px;padding:8px 14px}.scrline{min-height:56px}
+.tlpicked{padding-left:22px}.tlpicked li{padding:6px 0}.tlpicked li.ok{color:#1B5E20}.tlpicked li.bad{color:#A12A1E}
+.bmap{width:100%;height:auto;background:radial-gradient(circle at 30% 20%,#FBF3DF,#EFE1BE);border-radius:16px;border:1px solid var(--line)}
+.bmap .grid line{stroke:rgba(122,90,28,.15);stroke-width:1}.bmap .route{fill:none;stroke:#7A2A2C;stroke-width:3;stroke-dasharray:6 5;stroke-linecap:round}
+.bmap .city circle{fill:#fff;stroke:#7A5A1C;stroke-width:2.5}.bmap .city .hit{fill:transparent;stroke:none}.bmap .city.on circle:first-child{fill:#7A2A2C;stroke:#E2C27A}
+.bmap .city.start circle:first-child{fill:#E2C27A}.bmap text{font:600 12px Inter,sans-serif;fill:#4A1416;paint-order:stroke;stroke:#FBF3DF;stroke-width:3px}
+.bmap .city.shake circle:first-child{fill:#C0392B;transition:fill .1s}
+.listenbar{position:fixed;left:50%;transform:translateX(-50%);bottom:16px;z-index:20;display:flex;gap:8px;align-items:center;background:var(--wine);padding:6px;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.lbtn{white-space:nowrap;border:0;background:transparent;color:#F6F1E7;font:inherit;font-weight:700;padding:10px 16px;border-radius:999px}.lbtn.on{background:#E2C27A;color:#4A1416}
+.listenbar select{font:inherit;border-radius:999px;border:0;padding:8px 10px;background:#F6F1E7;color:#4A1416}
+.speaking{background:#FFF3D6!important;border-radius:8px;box-shadow:0 0 0 4px #FFF3D6}
+.rdots{display:flex;gap:6px;justify-content:center;margin:12px 0}.rdots i{width:9px;height:9px;border-radius:50%;background:var(--line)}.rdots i.on{background:var(--wine)}
+.dtxt{width:100%;font:inherit;padding:12px;border:1px solid var(--line);border-radius:12px;margin-top:12px;background:#fff;box-sizing:border-box}
+.dlist{margin-top:16px}.dent{border-bottom:1px solid var(--line);padding:10px 0}.dent p{margin:4px 0;white-space:pre-wrap}
+.walls{display:grid;grid-template-columns:1fr 1fr;gap:12px}.walls figure{margin:0}.walls img{width:100%;border-radius:14px;display:block;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.walls figcaption{display:flex;gap:8px;margin-top:6px}.walls figcaption .btn{flex:1;padding:8px}
+.gbtn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:1px solid #DADCE0;background:#fff;color:#3C4043;font:600 16px Inter,sans-serif;padding:13px;border-radius:999px;margin:10px 0}
+.linkbtn.danger,.btn.danger{color:#A12A1E}.btn.danger{background:#A12A1E;color:#fff}.small{font-size:14px}
+[data-theme=dark] .streakbox{background:linear-gradient(135deg,#3A2C17,#2A2012);color:#F1DDA9}[data-theme=dark] .bmap{filter:brightness(.85)}`;document.head.appendChild(st)})();
+if(IN_APP){setTimeout(feedWidget,2500);const a=store.get('acct',null);if(a&&a.consent)setTimeout(()=>syncNow(true),4000);
+ document.addEventListener('visibilitychange',()=>{if(document.hidden){const a=store.get('acct',null);if(a&&a.consent)syncNow(true)}})}
 
 applyLang();
 render();

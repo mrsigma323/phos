@@ -8,3 +8,6 @@
   Header always set Referrer-Policy "same-origin"
 </IfModule>
 Options -Indexes
+
+# La app de Android se identifica con «Authorization: Bearer»; algunos servidores lo eliminan si no se pasa explícitamente
+SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
