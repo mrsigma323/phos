@@ -160,6 +160,8 @@ public class MainActivity extends Activity {
             if (Build.VERSION.SDK_INT >= 33) runOnUiThread(() -> requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 7));
         }
         @JavascriptInterface public String appVersion() { return BuildConfigLite.VERSION; }
+        /** Solo la APK de prueba (depurable) desbloquea Premium; la de Google Play no es depurable. */
+        @JavascriptInterface public boolean isTestBuild() { return (getApplicationInfo().flags & android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE) != 0; }
 
         // ---------- Voz continua, compartir, fondo, widget y cuenta ----------
         @JavascriptInterface public void speakSeq(String json, String lang) { if (ttsReady) Extras.speakSeq(tts, json, lang); }

@@ -2622,7 +2622,9 @@ const pt=k=>(PT[LANG]&&PT[LANG][k])||PT.en[k]||k;
 const IN_APP=!!(window.PhosApp&&PhosApp.billingAvailable);
 const TIPS=['apoyo_2','apoyo_5','apoyo_10'];
 const PAY={products:null,err:null,busy:false};
-const isPremium=()=>!!store.get('premium',{on:false}).on;
+// En la APK de prueba (compilación de depuración) Premium está desbloqueado; en la de Google Play, nunca.
+const TEST_BUILD=!!(window.PhosApp&&PhosApp.isTestBuild&&PhosApp.isTestBuild());
+const isPremium=()=>TEST_BUILD||!!store.get('premium',{on:false}).on;
 const LEGAL_URL='https://phosbiblias.com/condiciones-aportaciones.html',PRIV_URL='https://phosbiblias.com/privacidad.html';
 const CROWN='<svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z"/></svg>';
 
@@ -2774,6 +2776,7 @@ header.top{gap:4px;padding-left:8px;padding-right:8px}header.top .iconbtn{width:
 .card.pbanner{width:100%;text-align:left;border-color:var(--gold)}
 .ptoast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,40px);opacity:0;transition:.25s;background:var(--wine);color:var(--ground);padding:12px 18px;border-radius:18px;z-index:50;max-width:90vw;text-align:center}
 .ptoast.on{opacity:1;transform:translate(-50%,0)}`;document.head.appendChild(st)})();
+if(TEST_BUILD)setTimeout(()=>toast('🧪 Versión de prueba · Premium desbloqueado'),2200);
 if(IN_APP){try{PhosApp.billingRefresh()}catch(e){}setTimeout(scheduleReminders,1500)}
 if(location.hash&&/^#(premium|apoyo|notif|plan|retos|hoy|vida)$/.test(location.hash))setTimeout(()=>phosOpen(location.hash.slice(1)),0);
 
