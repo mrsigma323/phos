@@ -9,7 +9,7 @@ const BRANCHES=[
  {id:'etiope',eds:[],soon:true}
 ];
 const ED={};BRANCHES.forEach(b=>b.eds.forEach(e=>{e.branch=b;ED[e.id]=e}));
-const TRLANG={'en-ortho':'en','en-dra':'en','en-kjv':'en','es-blm':'es','pt-bsl':'pt','fr-sbl':'fr','fr-lsg':'fr','it-1927':'it','de-1912':'de','ru-syn':'ru','ro-bl':'ro','reina-valera-1909':'es'};
+const TRLANG={'en-ortho':'en','en-dra':'en','en-kjv':'en','es-blm':'es','pt-bsl':'pt','fr-sbl':'fr','fr-lsg':'fr','it-1927':'it','de-1912':'de','ru-syn':'ru','ro-bl':'ro','reina-valera-1909':'es','ortodoxa-griega':'el'};
 const store={get(k,d){try{const v=localStorage.getItem('phos:'+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem('phos:'+k,JSON.stringify(v))}catch(e){}}};
 
 // ---------- Datos: trozos, caché en memoria y en el dispositivo (IndexedDB) ----------

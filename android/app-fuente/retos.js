@@ -81,10 +81,10 @@ const addRetoPts=n=>{const s=store.get('retoPts',0);store.set('retoPts',s+n)};
 // ---- ¿Quién soy? (pistas que se van destapando) ----
 function startWho(){
  const r=Math.random;const i=rpick(r,FIG_SOLO);const [n,d]=figL(i);const ref=BIBFIG[i][2].split(' ')[0];
- const clues=[(LANG==='es'?'Apareces en el libro de ':LANG==='en'?'You appear in the book of ':'📖 ')+bname(ref),d,(LANG==='es'?'Tu nombre empieza por «':LANG==='en'?'Your name begins with “':'')+n.charAt(0)+(LANG==='es'?'»':LANG==='en'?'”':'…')];
+ const clues=[rtx('clue1',{b:bname(ref)}),d,rtx('clue3',{c:n.charAt(0)})];
  const opts=rshuf(r,[i].concat(rshuf(r,FIG_SOLO.filter(x=>x!==i)).slice(0,5)));
  let shown=1,answered=false;
- const draw=()=>{view.innerHTML=`${LANG!=='es'&&LANG!=='en'?`<p class="note">${esc(qt('onlyEsEn'))}</p>`:''}<h1 class="qp">${esc(qt('who'))}</h1>
+ const draw=()=>{view.innerHTML=`${!figOK()?`<p class="note">${esc(qt('onlyEsEn'))}</p>`:''}<h1 class="qp">${esc(qt('who'))}</h1>
   ${clues.slice(0,shown).map((c,k)=>`<p class="qx"><b>${esc(qt('clue',{n:k+1}))}:</b> ${esc(c)}</p>`).join('')}
   ${shown<clues.length&&!answered?`<button class="btn ghost" id="wMore" style="width:100%;margin-bottom:12px">${esc(qt('moreClue'))}</button>`:''}
   <div class="opts">${opts.map(k=>`<button class="opt" data-w="${k}">${esc(figL(k)[0])}</button>`).join('')}</div><div id="rfoot" style="margin-top:14px"></div>`;
@@ -118,8 +118,8 @@ async function startScramble(){
 // ---- Línea del tiempo ----
 function startTimeline(){
  const idx=rshuf(Math.random,TLEV.map((e,k)=>k)).slice(0,5);const shown=rshuf(Math.random,idx);let pick=[],done=false;
- const lab=k=>TLEV[k][LANG==='es'?0:1];
- const draw=()=>{view.innerHTML=`${LANG!=='es'&&LANG!=='en'?`<p class="note">${esc(qt('onlyEsEn'))}</p>`:''}<h1 class="qp">${esc(qt('tl'))}</h1><p class="note">${esc(qt('oldFirst'))}</p>
+ const lab=k=>tlevL(k);
+ const draw=()=>{view.innerHTML=`${!figOK()?`<p class="note">${esc(qt('onlyEsEn'))}</p>`:''}<h1 class="qp">${esc(qt('tl'))}</h1><p class="note">${esc(qt('oldFirst'))}</p>
   <ol class="tlpicked">${pick.map((k,j)=>`<li class="${done?(k===[...idx].sort((a,b)=>a-b)[j]?'ok':'bad'):''}">${esc(lab(k))}${done?` <span class="note">(${esc(bname(TLEV[k][2].split(' ')[0]))})</span>`:''}</li>`).join('')}</ol>
   <div class="opts">${shown.map(k=>pick.includes(k)?'':`<button class="opt" data-k="${k}">${esc(lab(k))}</button>`).join('')}</div>
   ${!done&&pick.length?`<button class="btn ghost" id="sUndo" style="width:100%;margin-top:12px">${esc(qt('undo'))}</button>`:''}<div id="rfoot" style="margin-top:14px"></div>`;
@@ -134,9 +134,9 @@ function startTimeline(){
 // ---- Los viajes de la Biblia (mapa esquemático) ----
 function startMap(ji){
  if(ji==null){
-  view.innerHTML=`<h1>🧭 ${esc(qt('map'))}</h1><p class="lead">${esc(qt('mapLead'))}</p>${JOURNEYS.map((j,k)=>`<button class="card" data-j="${k}" style="width:100%;text-align:left"><div class="t">${esc(j[LANG==='es'?'es':'en'])}</div><div class="s">${esc(bname(j.ref.split(' ')[0]))} · ${j.pts.length} ${LANG==='es'?'lugares':'places'}</div></button>`).join('')}`;
+  view.innerHTML=`<h1>🧭 ${esc(qt('map'))}</h1><p class="lead">${esc(qt('mapLead'))}</p>${JOURNEYS.map((j,k)=>`<button class="card" data-j="${k}" style="width:100%;text-align:left"><div class="t">${esc(jourT(j))}</div><div class="s">${esc(bname(j.ref.split(' ')[0]))} · ${j.pts.length} ${esc(rtx('places'))}</div></button>`).join('')}`;
   view.querySelectorAll('[data-j]').forEach(b=>b.onclick=()=>startMap(+b.dataset.j));return}
- const J=JOURNEYS[ji],P=J.pts,nm=p=>p[LANG==='es'?0:1];
+ const J=JOURNEYS[ji],P=J.pts,nm=p=>jourP(J,P.indexOf(p));
  const lats=P.map(p=>p[2]),lons=P.map(p=>p[3]);const pad=1.2;
  let x0=Math.min(...lons)-pad,x1=Math.max(...lons)+pad,y0=Math.min(...lats)-pad,y1=Math.max(...lats)+pad;
  const W=360,H=Math.max(260,Math.min(420,W*(y1-y0)/(x1-x0)*1.25));
@@ -145,7 +145,7 @@ function startMap(ji){
  const draw=()=>{
   const route=P.slice(0,step).map(p=>`${X(p[3]).toFixed(1)},${Y(p[2]).toFixed(1)}`).join(' ');
   let grid='';for(let g=Math.ceil(x0);g<=x1;g++)grid+=`<line x1="${X(g)}" y1="0" x2="${X(g)}" y2="${H}"/>`;for(let g=Math.ceil(y0);g<=y1;g++)grid+=`<line x1="0" y1="${Y(g)}" x2="${W}" y2="${Y(g)}"/>`;
-  view.innerHTML=`<h1 class="qp">${esc(J[LANG==='es'?'es':'en'])}</h1><p class="note">${esc(qt('tapCity'))} · ${esc(bname(J.ref.split(' ')[0]))} ${J.ref.split(' ')[1].replace(':',', ')}</p>
+  view.innerHTML=`<h1 class="qp">${esc(jourT(J))}</h1><p class="note">${esc(qt('tapCity'))} · ${esc(bname(J.ref.split(' ')[0]))} ${J.ref.split(' ')[1].replace(':',', ')}</p>
   <svg class="bmap" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(qt('map'))}"><g class="grid">${grid}</g>
    <polyline points="${route}" class="route"/>
    ${P.map((p,k)=>{const vis=k<step;return `<g class="city ${vis?'on':''} ${k===0?'start':''}" data-c="${k}" tabindex="0" role="button" aria-label="${esc(nm(p))}"><circle cx="${X(p[3])}" cy="${Y(p[2])}" r="${vis?7:9}"/><circle class="hit" cx="${X(p[3])}" cy="${Y(p[2])}" r="20"/>${vis?`<text x="${X(p[3])>W-90?X(p[3])-10:X(p[3])+10}" text-anchor="${X(p[3])>W-90?'end':'start'}" y="${Y(p[2])-8}">${k+1}. ${esc(nm(p))}</text>`:''}</g>`}).join('')}

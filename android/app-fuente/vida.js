@@ -19,7 +19,7 @@ pay2:"Pido que el servicio empiece ahora mismo y entiendo que, una vez empezado,
 payNeed:"Para continuar, marca las dos casillas.",
 p_disc:"40 días de disciplina",p_discL:"Oración, Biblia, ejercicio y descanso cada día, a ritmo constante.",p_body:"El cuerpo, templo del Espíritu",p_bodyL:"21 días de ejercicio suave y buen descanso, con un versículo cada día.",
 p_fast:"Ayuno con sentido",p_fastL:"40 días siguiendo el ayuno de tu Iglesia, con oración y limosna. Solo para mayores de edad.",p_sil:"Silencio y oración",p_silL:"30 días de silencio y oración, empezando por 3 minutos.",
-onlyEsEn:"Esta sección está en español y en inglés.",done:"Hecho",allDone:"¡Regla cumplida hoy! 🙏",fastToday:"Hoy toca ayuno en tu Iglesia: {f}",noTask:"Hoy descansa de este reto."},
+onlyEsEn:"Esta sección está en español y en inglés.",f_name:"Nombre",f_acct:"Cuenta",f_adult:"Mayor de edad",f_yes:"sí",f_no:"no",f_goals:"Metas",f_hour:"Mensaje de la mañana",f_prog:"Programa",f_ver:"Versión de las condiciones",done:"Hecho",allDone:"¡Regla cumplida hoy! 🙏",fastToday:"Hoy toca ayuno en tu Iglesia: {f}",noTask:"Hoy descansa de este reto."},
 en:{vida:"Rule of life",vidaLead:"Your daily training in faith, body and habits: prayer, Bible, exercise, rest, fasting and silence.",
 disc:"Phos is not a medical, nutrition, sports training or professional spiritual direction service. Its suggestions are for guidance only and in NO case replace a doctor, a priest or pastor, a personal trainer or a nutritionist. If in any doubt, we strongly recommend that you consult your specialist.",
 discHealth:"If you have an illness, are pregnant, take medication or have had eating problems, talk to your doctor before fasting or changing your physical activity.",
@@ -36,7 +36,7 @@ pay2:"I ask for the service to start right away and understand that, once starte
 payNeed:"To continue, tick both boxes.",
 p_disc:"40 days of discipline",p_discL:"Prayer, Bible, exercise and rest every day, at a steady pace.",p_body:"The body, temple of the Spirit",p_bodyL:"21 days of gentle exercise and good rest, with a verse each day.",
 p_fast:"Fasting with meaning",p_fastL:"40 days following your Church's fast, with prayer and almsgiving. Adults only.",p_sil:"Silence and prayer",p_silL:"30 days of silence and prayer, starting with 3 minutes.",
-onlyEsEn:"This section is available in Spanish and English.",done:"Done",allDone:"Rule completed today! 🙏",fastToday:"Today is a fasting day in your Church: {f}",noTask:"Rest from this challenge today."}};
+onlyEsEn:"This section is available in Spanish and English.",f_name:"Name",f_acct:"Account",f_adult:"Adult",f_yes:"yes",f_no:"no",f_goals:"Goals",f_hour:"Morning message",f_prog:"Programme",f_ver:"Terms version",done:"Done",allDone:"Rule completed today! 🙏",fastToday:"Today is a fasting day in your Church: {f}",noTask:"Rest from this challenge today."}};
 const vt=(k,o)=>{let s=(VX[LANG]&&VX[LANG][k])||VX.en[k]||k;if(o)for(const x in o)s=s.replace('{'+x+'}',o[x]);return s};
 const GOALS=['pray','read','move','rest','fast','screen','silence'],GICO={pray:'🙏',read:'📖',move:'🚶',rest:'🌙',fast:'🍞',screen:'📵',silence:'🕯️'};
 // Retos por meta y nivel [suave, constante, exigente]
@@ -80,7 +80,7 @@ const PROGS={disc:{days:40,goals:['pray','read','move','rest'],level:1},body:{da
 const vida=()=>store.get('vida',null);
 const cid=()=>{let c=store.get('cid',null);if(!c){c='PH-'+Math.random().toString(36).slice(2,6).toUpperCase()+'-'+Date.now().toString(36).slice(-4).toUpperCase();store.set('cid',c)}return c};
 const vlog=()=>store.get('vidaLog',{});
-const tasksL=()=>TASKS[LANG==='es'?'es':'en'];
+const tasksL=()=>TASKS[LANG]||TASKS.en;
 function goalTask(g,lv,v){
  if(g==='fast'){try{const now=new Date(),td=utc(now.getFullYear(),now.getMonth()+1,now.getDate()),info=dayInfo(tdBr(),td);
    if(FASTDAYS.has(info.f))return vt('fastToday',{f:ftText(info.f)})}catch(e){}}
@@ -99,9 +99,9 @@ function renderVida(){
  const k=todayKey(),L=vlog(),dl=L[k]||{},G=activeGoals(v),lv=activeLevel(v);
  const c=COACH[dayIdx()%COACH.length];
  const allDone=G.every(g=>dl[g]);
- let h=`${LANG!=='es'&&LANG!=='en'?`<p class="note">${esc(vt('onlyEsEn'))}</p>`:''}
+ let h=`${!VX[LANG]?`<p class="note">${esc(vt('onlyEsEn'))}</p>`:''}
  <h1>⛰️ ${esc(vt('vida'))}</h1>
- <section class="coach"><div class="cl">${esc(vt('coach'))}${v.name?' · '+esc(v.name):''}</div><p class="cmsg">${esc(c[LANG==='es'?1:2])}</p>
+ <section class="coach"><div class="cl">${esc(vt('coach'))}${v.name?' · '+esc(v.name):''}</div><p class="cmsg">${esc(coachTxt(c,COACH.indexOf(c)))}</p>
   <blockquote class="cverse"><span id="cVerse">…</span><cite id="cRef"></cite></blockquote></section>
  ${v.prog?`<p class="note">🏁 ${esc(vt('p_'+v.prog.id))} · ${esc(vt('progDay',{n:Math.min(Object.keys(L).filter(d=>d>=v.prog.start&&isFull(L[d],PROGS[v.prog.id].goals,v)).length+1,PROGS[v.prog.id].days),t:PROGS[v.prog.id].days}))}</p>`:''}
  <h2>${esc(vt('todayTasks'))}</h2><div class="vtasks">${G.map(g=>`<button class="vtask ${dl[g]?'on':''}" data-g="${g}" aria-pressed="${!!dl[g]}"><span class="vico">${dl[g]?'✅':GICO[g]}</span><span><b>${esc(vt('g_'+g))}</b><small>${esc(goalTask(g,lv,v))}</small></span></button>`).join('')}</div>
@@ -152,26 +152,26 @@ function drawVidaSetup(){
 }
 function drawProgs(){const v=vida();
  view.innerHTML=`<h1>🏁 ${esc(vt('programs'))}</h1>${Object.keys(PROGS).map(id=>{const p=PROGS[id],on=v.prog&&v.prog.id===id,off=p.adult&&!v.adult;
-  return `<div class="card ${on?'main':''}"><div class="t">${esc(vt('p_'+id))}${on?`<span class="pill">${esc(vt('progActive'))}</span>`:''}</div><div class="s">${esc(vt('p_'+id+'L'))} · ${p.days} ${LANG==='es'?'días':'days'}</div>
+  return `<div class="card ${on?'main':''}"><div class="t">${esc(vt('p_'+id))}${on?`<span class="pill">${esc(vt('progActive'))}</span>`:''}</div><div class="s">${esc(vt('p_'+id+'L'))} · ${p.days} ${esc(vt('days'))}</div>
   ${off?`<p class="note">${esc(vt('minorNote'))}</p>`:on?'':`<button class="btn ghost" data-prog="${id}" style="width:100%;margin-top:10px">${esc(vt('progStart'))}</button>`}</div>`}).join('')}${discBox(true)}`;
  view.querySelectorAll('[data-prog]').forEach(b=>b.onclick=()=>{const v2=vida();v2.prog={id:b.dataset.prog,start:todayKey()};store.set('vida',v2);sendFicha();go('vida')});
 }
 
 // ---- Ficha personal y condiciones ----
 function fichaText(){
- const v=vida()||{},a=store.get('acct',null),acc=v.acc||{};const es=LANG==='es';
+ const v=vida()||{},a=store.get('acct',null),acc=v.acc||{};const F=k=>vt('f_'+k);
  const fd=x=>{try{return new Date(x).toLocaleString(LANG,{dateStyle:'short',timeStyle:'medium'})+' ('+x+')'}catch(e){return x}};
  const L=[`PHOS · ${vt('ficha').toUpperCase()}`,`${vt('clientId')}: ${cid()}`];
- if(v.name)L.push(`${es?'Nombre':'Name'}: ${v.name}`);if(a&&a.email)L.push(`${es?'Cuenta':'Account'}: ${a.email}`);
- L.push(`${vt('started')}: ${v.started||'—'}`,`${es?'Mayor de edad':'Adult'}: ${v.adult?(es?'sí':'yes'):'no'}`,
-  `${es?'Metas':'Goals'}: ${(v.goals||[]).map(g=>vt('g_'+g)).join(', ')}`,`${vt('level')}: ${vt('l_'+['soft','steady','hard'][v.level||0])}`,
-  `${es?'Mensaje de la mañana':'Morning message'}: ${v.hour||'—'}`);
- if(v.prog)L.push(`${es?'Programa':'Programme'}: ${vt('p_'+v.prog.id)} (${v.prog.start})`);
+ if(v.name)L.push(`${F('name')}: ${v.name}`);if(a&&a.email)L.push(`${F('acct')}: ${a.email}`);
+ L.push(`${vt('started')}: ${v.started||'—'}`,`${F('adult')}: ${v.adult?F('yes'):F('no')}`,
+  `${F('goals')}: ${(v.goals||[]).map(g=>vt('g_'+g)).join(', ')}`,`${vt('level')}: ${vt('l_'+['soft','steady','hard'][v.level||0])}`,
+  `${F('hour')}: ${v.hour||'—'}`);
+ if(v.prog)L.push(`${F('prog')}: ${vt('p_'+v.prog.id)} (${v.prog.start})`);
  L.push('',`${vt('accepted')}:`);
  if(acc.disc)L.push(`· ${vt('accDisc')} — ${fd(acc.disc)}`);
  if(acc.pay1)L.push(`· ${vt('pay1')} — ${fd(acc.pay1)}`);if(acc.pay2)L.push(`· ${vt('pay2')} — ${fd(acc.pay2)}`);
  if(acc.order)L.push(`· Google Play: ${acc.product||''} ${acc.order}`);
- L.push(`· ${es?'Versión de las condiciones':'Terms version'}: ${TERMS_VERSION}`,'',vt('discShort'),'phosbiblias.com');
+ L.push(`· ${F('ver')}: ${TERMS_VERSION}`,'',vt('discShort'),'phosbiblias.com');
  return L.join('\n');
 }
 function drawFicha(){
@@ -188,7 +188,7 @@ function drawFicha(){
 // Condiciones con los datos de cada cliente rellenados automáticamente (versión en español e inglés)
 function termsHTML(){
  const v=vida()||{},a=store.get('acct',null),acc=v.acc||{},es=LANG==='es';const who=v.name||(a&&a.email)||cid();
- const S1=es?[
+ const TT=trGet('TERMS');const S1=TT?TT.map(([h,p])=>[h,p.replace('{who}',who).replace('{cid}',cid()).replace('{acct}',a&&a.email?trGet('termsAcct').replace('{e}',a.email):'').replace('{ver}',TERMS_VERSION).replace('{disc}',vt('disc')+' '+vt('discHealth'))]):es?[
   ['1. Partes',`Estas condiciones se aceptan entre el titular de Phos (sus datos de contacto figuran en phosbiblias.com › Aviso legal y en la ficha de la app en Google Play) y ${who}, con código de cliente ${cid()}${a&&a.email?' y cuenta '+a.email:''}.`],
   ['2. Qué es Phos Premium',`Una suscripción de la app de Phos para Android, gestionada y cobrada por Google Play, que da acceso a recordatorios personalizados, aprendizaje completo, Retos bíblicos, Regla de vida y otras funciones descritas en la app. Phos es y seguirá siendo gratis en phosbiblias.com.`],
   ['3. Aviso importante',vt('disc')+' '+vt('discHealth')],
@@ -234,7 +234,7 @@ window.vidaPurchase=p=>{const v=vida()||{goals:[],level:0,hour:'08:00'};v.acc=v.
 // ---- Aviso de la mañana (lo programa premium.js) ----
 window.vidaReminder=(y,m,dd)=>{const v=vida();if(!v)return null;const [hh,mi]=(v.hour||'08:00').split(':').map(Number);
  const c=COACH[(Math.floor((new Date(y,m-1,dd)-new Date(y,0,0))/864e5))%COACH.length];
- return {id:'vida-'+y+m+dd,at:new Date(y,m-1,dd,hh||8,mi||0).getTime(),title:'⛰️ '+vt('vida'),body:c[LANG==='es'?1:2],open:'vida'}};
+ return {id:'vida-'+y+m+dd,at:new Date(y,m-1,dd,hh||8,mi||0).getTime(),title:'⛰️ '+vt('vida'),body:coachTxt(c,COACH.indexOf(c)),open:'vida'}};
 
 // ---- Navegación ----
 (function(){const at=SECS.indexOf('retos')+1;SECS.splice(at,0,'vida');

@@ -105,7 +105,7 @@ function easyPool(br,c){
  const L=CL(),out=[],books=COURSE_META[br].books.map(b=>b[0]).filter(x=>SUM[x]);
  const far=books.filter(x=>GOF[x]!==GOF[c]);const tag=q=>{if(q){q.wk=c;q.wbr=br;q.lvl='easy'}return q};
  // 1. Escritas a mano
- ((EASY[L]||EASY.en)[c]||[]).forEach(q=>out.push(tag(mcq(q[0],q[1],q.slice(2,5),undefined,q[5]))));
+ ((EASY[L]||{})[c]||[]).forEach(q=>out.push(tag(mcq(q[0],q[1],q.slice(2,5),undefined,q[5]))));
  if(L==='es'&&typeof BASIC!=='undefined'&&BASIC.books[c])BASIC.books[c].forEach(q=>out.push(tag(mcq(q[0],q[1],q.slice(2,5),undefined,q[5]))));
  // 2. Resumen → libro (las opciones son de otras partes de la Biblia: más fácil)
  out.push(tag(mcq(ezt('sum'),bname(c),pickN(far.length>3?far:books,3,[c]).map(bname),sumOf(c),ezt('whyBook',{b:bname(c),s:sumOf(c)}))));
@@ -119,9 +119,9 @@ function easyPool(br,c){
   for(let k=0;k<2&&ks.length;k++){const ch=ks[rnd(ks.length)],vv=b.ch[ch].filter(x=>x[1].length>30&&x[1].length<180);if(!vv.length)continue;const v=vv[rnd(Math.min(vv.length,6))];
    out.push(tag(mcq(ezt('famous'),bname(c),pickN(far.length>3?far:books,3,[c]).map(bname),'«'+v[1]+'»',bname(c)+' '+ch+', '+v[0])))}}catch(e){}}
  // 6. Personajes de este libro (los distractores son del otro Testamento)
- if(typeof BIBFIG!=='undefined'){const mine=BIBFIG.map((f,i)=>i).filter(i=>BIBFIG[i][2].split(' ')[0]===c&&!/ y | and /.test(BIBFIG[i][0]));
+ if(typeof BIBFIG!=='undefined'&&figOK()){const mine=BIBFIG.map((f,i)=>i).filter(i=>BIBFIG[i][2].split(' ')[0]===c&&!/ y | and /.test(BIBFIG[i][0]));
   const other=BIBFIG.map((f,i)=>i).filter(i=>isNT(BIBFIG[i][2].split(' ')[0])!==isNT(c)&&!/ y | and /.test(BIBFIG[i][0]));
-  const nm=i=>L==='es'?BIBFIG[i][0]:(typeof BIBFIG_EN!=='undefined'?BIBFIG_EN[i][0]:BIBFIG[i][0]),ds=i=>L==='es'?BIBFIG[i][1]:(typeof BIBFIG_EN!=='undefined'?BIBFIG_EN[i][1]:BIBFIG[i][1]);
+  const nm=i=>figL(i)[0],ds=i=>figL(i)[1];
   shuffle(mine).slice(0,1).forEach(i=>{if(other.length>=3)out.push(tag(mcq(ezt('who',{b:bname(c)}),nm(i),pickN(other,3,[i]).map(nm),undefined,ds(i))))})}
  return out.filter(Boolean);
 }

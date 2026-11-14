@@ -144,7 +144,7 @@ function maybeTrap(){
  if(!/^(ortodoxa|catolica|protestante)$/.test(LS.br)||lv()!=='easy'||/^(exam|ex:|rev:|intro)/.test(LS.id))return;
  const U=courseUnits(LS.br),all=U.flatMap(u=>u.lessons).filter(x=>!/^(intro|rev:|ex:|exam)/.test(x)),pos=all.indexOf(LS.id);if(pos!==1&&pos!==5)return;
  const T=store.get('traps',{}),key=LS.br+':'+pos;if(T[key])return;
- const tr=TRAPS[(LS.br.length*7+pos)%TRAPS.length][LANG==='es'?'es':'en'];
+ const T0=TRAPS[(LS.br.length*7+pos)%TRAPS.length],tr=(T0[LANG]||T0.en).map(x=>Array.isArray(x)?x.map(trB):trB(x));
  const at=Math.min(LS.items.length,3+Math.floor(Math.random()*3));
  LS.items.splice(at,0,{type:'mcq',prompt:lt('trap')+' · '+tr[0],options:shuffle(tr[1]),answer:tr[2],why:tr[3],trap:key});
 }
@@ -174,14 +174,14 @@ const LOGROS=[
  ['thomas','🔒',"«Tomás el incrédulo»","Fallar tres veces la misma pregunta.","“Doubting Thomas”","Fail the same question three times.",1],
  ['jonah','🔒',"«Jonás en la ballena»","Quedarte sin vidas 10 veces.","“Jonah in the fish”","Run out of lives 10 times.",1],
  ['saul','🔒',"«Saulo camino de Damasco»","Perder 100 vidas: caíste muchas veces… y te levantaste todas. ✨","“Saul on the road to Damascus”","Lose 100 lives: you fell many times… and got up every time. ✨",1]];
-function giveLogro(id){const L=store.get('logros',{});if(L[id])return;L[id]=Date.now();store.set('logros',L);const g=LOGROS.find(x=>x[0]===id);if(g)setTimeout(()=>toast('🏅 '+lt('got')+' '+(LANG==='es'?g[2]:g[4])),900)}
+function giveLogro(id){const L=store.get('logros',{});if(L[id])return;L[id]=Date.now();store.set('logros',L);const g=LOGROS.find(x=>x[0]===id);if(g)setTimeout(()=>toast('🏅 '+lt('got')+' '+logroN(g)),900)}
 function checkLogros(){const st=lstat(),s=lives(),L=store.get('logros',{});
  if(st.outs>=1&&totalLives(s)>0)giveLogro('lazarus');if(st.lost>=49)giveLogro('seven');if(st.sg>=1)giveLogro('manna');if((st.sStreak||0)>=2)giveLogro('cup');if(st.sg>=12)giveLogro('baskets');
  if(st.adTot>=1)giveLogro('job');if((st.adDay||0)>=3)giveLogro('servant');if(st.adTot>=30)giveLogro('talents');if(st.offUsed>=1)giveLogro('widow');if(s.offer>=10)giveLogro('joseph');if(st.so>=5)giveLogro('goodsoil');
  if(st.outs>=10)giveLogro('jonah');if(st.lost>=100)giveLogro('saul')}
 function drawLogros(){const L=store.get('logros',{}),es=LANG==='es';
  view.innerHTML=`<h1>🏅 ${esc(lt('logros'))}</h1><p class="lead">${esc(lt('logrosL'))}</p>${bubbleHTML()}<div class="lgrid">${LOGROS.map(g=>{const on=!!L[g[0]],hid=g[6]&&!on;
-  return `<div class="lgo ${on?'on':''}"><span class="lgi">${hid?'🔒':g[1]}</span><b>${esc(hid?lt('hidden'):(es?g[2]:g[4]))}</b><small>${esc(hid?'???':(es?g[3]:g[5]))}</small></div>`}).join('')}</div>`;paintBubble()}
+  return `<div class="lgo ${on?'on':''}"><span class="lgi">${hid?'🔒':g[1]}</span><b>${esc(hid?lt('hidden'):logroN(g))}</b><small>${esc(hid?'???':logroD(g))}</small></div>`}).join('')}</div>`;paintBubble()}
 PVIEWS.logros=drawLogros;
 
 // ===== Racha: regalos y logros de vuelta =====
@@ -193,8 +193,15 @@ PVIEWS.logros=drawLogros;
 
 // ===== Aprender: burbuja, logros y aviso de lo gratuito =====
 // Texto de los niveles: ahora las vidas son las mismas en los tres
-(function(){if(typeof T==='undefined')return;const N={es:"Fácil: traducción siempre visible. Normal: botón «Ver traducción». Difícil: traducción solo al responder y sin transcripción. Las vidas son las mismas en los tres niveles.",
- en:"Easy: translation always visible. Normal: «Show translation» button. Hard: translation only after answering, no transliteration. Lives are the same on all three levels."};
+(function(){if(typeof T==='undefined')return;const N={es:"Fácil: lo esencial de cada libro. Normal: quién lo dijo, ordenar hechos, verdadero o falso y versículos. Difícil: datos concretos, capítulos y números. Las vidas son las mismas en los tres niveles.",
+ en:"Easy: the essentials of each book. Normal: who said it, putting events in order, true or false and verses. Hard: precise facts, chapters and numbers. Lives are the same on all three levels.",
+ pt:"Fácil: o essencial de cada livro. Normal: quem disse, ordenar fatos, verdadeiro ou falso e versículos. Difícil: dados concretos, capítulos e números. As vidas são as mesmas nos três níveis.",
+ fr:"Facile : l’essentiel de chaque livre. Normal : qui l’a dit, remettre les faits dans l’ordre, vrai ou faux et versets. Difficile : faits précis, chapitres et nombres. Les vies sont les mêmes aux trois niveaux.",
+ it:"Facile: l’essenziale di ogni libro. Normale: chi l’ha detto, mettere in ordine i fatti, vero o falso e versetti. Difficile: dati precisi, capitoli e numeri. Le vite sono le stesse nei tre livelli.",
+ de:"Leicht: das Wichtigste aus jedem Buch. Normal: Wer hat das gesagt?, Ereignisse ordnen, richtig oder falsch und Verse. Schwer: genaue Fakten, Kapitel und Zahlen. Die Leben sind auf allen drei Stufen gleich.",
+ el:"Εύκολο: τα βασικά κάθε βιβλίου. Κανονικό: ποιος το είπε, σειρά γεγονότων, σωστό ή λάθος και στίχοι. Δύσκολο: ακριβή στοιχεία, κεφάλαια και αριθμοί. Οι ζωές είναι ίδιες και στα τρία επίπεδα.",
+ ru:"Лёгкий: главное о каждой книге. Обычный: кто это сказал, порядок событий, верно или неверно и стихи. Сложный: точные факты, главы и числа. Жизни одинаковы на всех трёх уровнях.",
+ ro:"Ușor: esențialul fiecărei cărți. Normal: cine a spus, ordinea faptelor, adevărat sau fals și versete. Dificil: date precise, capitole și numere. Viețile sunt aceleași la toate cele trei niveluri."};
  for(const l in T){if(N[l])T[l].lvNote=N[l];else if(T[l])delete T[l].lvNote}})();
 const _renderLearnV=renderLearn;
 renderLearn=function(){const r=_renderLearnV.apply(this,arguments);

@@ -110,7 +110,7 @@ const NTRAPS={es:[["¿Cuál es el versículo más corto de los Evangelios en la 
 
 const MATCH=new Map();// prompt → lista de la izquierda (para pintarla también al repetir)
 function normalHand(br,c){
- const L=CL(),N=((NORMAL[L]||NORMAL.en)[c])||{},out=[];
+ const L=CL(),N=((NORMAL[L]||{})[c])||{},out=[];
  if(N.q)out.push(mcq(nmt('who'),N.q[1],N.q.slice(2,5),N.q[0],N.q[5]));
  if(N.o){const p=nmt('ord',{b:bname(c)});out.push({type:'order',prompt:p,items:N.o[0].slice(),answer:N.o[0].slice(),lvl:'normal'})}
  if(N.v)out.push(mcq(nmt('tf'),N.v[1]?nmt('T'):nmt('F'),[N.v[1]?nmt('F'):nmt('T')],N.v[0],N.v[2]));
@@ -118,16 +118,16 @@ function normalHand(br,c){
 }
 function matchItem(br,c){
  const books=COURSE_META[br].books.map(b=>b[0]).filter(x=>SUM[x]);
- if(Math.random()<.5&&typeof BIBFIG!=='undefined')return matchChars(br,c);
+ if(Math.random()<.5&&typeof BIBFIG!=='undefined'&&figOK())return matchChars(br,c);
 
  return matchBooks(br,c,books)}
 function matchChars(br,c){
   const L=CL(),ids=shuffle(BIBFIG.map((f,i)=>i).filter(i=>!/ y | and /.test(BIBFIG[i][0]))).slice(0,3);
-  const nm=i=>L==='es'?BIBFIG[i][0]:(typeof BIBFIG_EN!=='undefined'?BIBFIG_EN[i][0]:BIBFIG[i][0]),ds=i=>L==='es'?BIBFIG[i][1]:(typeof BIBFIG_EN!=='undefined'?BIBFIG_EN[i][1]:BIBFIG[i][1]);
+  const nm=i=>figL(i)[0],ds=i=>figL(i)[1];
   const p=nmt('mC')+' ('+ids.map(nm).join(', ')+')';MATCH.set(p,ids.map(nm));
   return {type:'order',prompt:p,items:ids.map(ds),answer:ids.map(ds),wk:c,wbr:br}}
 function matchBooks(br,c,books){
- if(GOF[c]==='apoc')return matchChars(br,c);
+ if(GOF[c]==='apoc')return figOK()?matchChars(br,c):null;
  const pick=[c];for(const x of shuffle(books.filter(b=>GOF[b]!=='apoc')))if(pick.length<3&&!pick.some(y=>GOF[y]===GOF[x]))pick.push(x);if(pick.length<3)return null;
  const p=nmt('mB')+' ('+pick.map(bname).join(', ')+')';MATCH.set(p,pick.map(bname));
  return {type:'order',prompt:p,items:pick.map(x=>ct('g_'+GOF[x])),answer:pick.map(x=>ct('g_'+GOF[x])),wk:c,wbr:br};
@@ -156,7 +156,7 @@ buildLesson=function(br,id){
 const _drawLessonM=drawLesson;
 drawLesson=function(){_drawLessonM.apply(this,arguments);const it=LS&&LS.items[LS.i];if(!it||it.type!=='order')return;
  const q=view.querySelector('.qp');if(!q)return;const nt=q.nextElementSibling;
- if(!MATCH.has(it.prompt)){if(it.lvl==='normal'&&nt&&nt.classList.contains('note'))nt.textContent=nmt('evHow');return}
+ if(!MATCH.has(it.prompt)){if((it.lvl==='normal'||it.lvl==='hard')&&nt&&nt.classList.contains('note'))nt.textContent=nmt('evHow');return}
  if(nt&&nt.classList.contains('note'))nt.remove();if(view.querySelector('.mlist'))return;
  q.textContent=it.prompt.replace(/\s*\(.*\)$/,'');
  q.insertAdjacentHTML('afterend',`<p class="note">${esc(nmt('mHow'))}</p><ol class="mlist">${MATCH.get(it.prompt).map(x=>`<li>${esc(x)}</li>`).join('')}</ol>`)};
@@ -167,7 +167,7 @@ maybeTrap=function(){
  if(lv()!=='normal'||!/^(ortodoxa|catolica|protestante)$/.test(LS.br)||/^(exam|ex:|rev:|intro)/.test(LS.id))return;
  const all=courseUnits(LS.br).flatMap(u=>u.lessons).filter(x=>!/^(intro|rev:|ex:|exam)/.test(x)),pos=all.indexOf(LS.id);if(pos!==3&&pos!==9)return;
  const T=store.get('traps',{}),key='n:'+LS.br+':'+pos;if(T[key])return;
- const tr=(NTRAPS[CL()]||NTRAPS.en)[(LS.br.length+pos)%3];
- LS.items.splice(Math.min(LS.items.length,3),0,{type:'mcq',prompt:lt('trap')+' · '+tr[0],options:shuffle([tr[1]].concat(tr[2])),answer:tr[1],why:tr[3],trap:key});
+ const tr=(NTRAPS[LANG]||NTRAPS.en)[(LS.br.length+pos)%3];
+ LS.items.splice(Math.min(LS.items.length,3),0,{type:'mcq',prompt:lt('trap')+' · '+trB(tr[0]),options:shuffle([trB(tr[1])].concat(tr[2].map(trB))),answer:trB(tr[1]),why:trB(tr[3]),trap:key});
 };
 (function(){const st=document.createElement('style');st.textContent=`.mlist{margin:4px 0 10px;padding-left:24px;font-weight:700;color:var(--wine);font-size:17px}.mlist li{padding:3px 0}`;document.head.appendChild(st)})();

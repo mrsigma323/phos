@@ -100,7 +100,7 @@ function homeExtras(){
 }
 async function bindHomeExtras(){
  const ref=VOTD[dayIdx()%VOTD.length];const [b,cv]=ref.split(' ');const [c,v]=cv.split(':');
- const src=TRMAP.protestante[LANG]||'en-kjv';
+ const src=LANG==='el'?'ortodoxa-griega':TRMAP.protestante[LANG]||'en-kjv';
  try{const bk=await getBook(src,b);const [mc,mv]=mapRef('reina-valera-1909',src,b,c,+v);const row=bk&&bk.ch[mc]&&bk.ch[mc].find(r=>r[0]===mv);const el=$('#votdTxt');if(el&&row){el.textContent=row[1];el.lang=TRLANG[src]}}catch(e){}
  const vd=$('#votd');if(vd){vd.style.cursor='pointer';vd.onclick=()=>{const [oc,ov]=mapRef('reina-valera-1909','ortodoxa-griega',b,c,+v);const ed=bookMeta('ortodoxa-griega').map[b]?'ortodoxa-griega':'reina-valera-1909';go('read',{ed,book:b,ch:ed==='ortodoxa-griega'?oc:c,hl:ed==='ortodoxa-griega'?ov:+v})}}
  const ps=$('#plS');if(ps)ps.onclick=()=>{planPick=true;renderHome()};

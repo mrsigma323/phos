@@ -126,7 +126,7 @@ function renderToday(){
  ${br==='ortodoxa'?`<div class="tdchips small" role="group"><button class="chip${!tdOld()?' on':''}" data-cal="0" aria-pressed="${!tdOld()}">${esc(t('tdCalNew'))}</button><button class="chip${tdOld()?' on':''}" data-cal="1" aria-pressed="${tdOld()}">${esc(t('tdCalOld'))}</button></div>`:''}
  <div class="card main" id="votd"><div class="t">${esc(t('votd'))}</div><div class="s" id="votdTxt" style="font-family:'Noto Serif',serif;font-size:18px;line-height:1.6;color:#F6F1E7;margin-top:8px">…</div><div class="s" style="margin-top:6px;color:#E2C27A;font-weight:700">${esc(bname(vb))} ${vc}, ${vv}</div></div>
  <section class="art tdcard"><h2 class="tdh">✝️ ${esc(t('tdCeleb'))}</h2>
-  ${(()=>{const sts=daySaints(br,td);return (info.cel.length||sts.length)?`<ul class="tdcel">${info.cel.map(c=>`<li${(br==='ortodoxa'?O_MAJ:br==='catolica'?C_MAJ:P_MAJ).has(c)?' class="maj"':''}>${esc(celName(c))}</li>`).join('')}${sts.map(n=>`<li>${br==='ortodoxa'?'☦️':'😇'} ${esc(n)}</li>`).join('')}</ul>`:(br==='protestante'?'':`<p class="note">${esc(t('tdNone'))}</p>`)})()}
+  ${(()=>{const sts=LANG==='es'?daySaints(br,td):[];return (info.cel.length||sts.length)?`<ul class="tdcel">${info.cel.map(c=>`<li${(br==='ortodoxa'?O_MAJ:br==='catolica'?C_MAJ:P_MAJ).has(c)?' class="maj"':''}>${esc(celName(c))}</li>`).join('')}${sts.map(n=>`<li>${br==='ortodoxa'?'☦️':'😇'} ${esc(n)}</li>`).join('')}</ul>`:(br==='protestante'?'':`<p class="note">${esc(t('tdNone'))}</p>`)})()}
   ${br==='protestante'?(()=>{const f=figToday(),[fb,fcv]=f[2].split(' '),[fc,fv]=fcv.split(':');return `<div class="tdfig"><p class="tdper">📜 Personaje bíblico del día · <b>${esc(f[0])}</b></p><p>${esc(f[1])} <span class="note">(${esc(bname(fb))} ${fc}, ${fv})</span></p></div>`})():''}
   <p class="tdseason"><span class="pill soft">${esc(snName(info.s))}</span>${info.color?`<span class="tdcolor"><i style="background:${COLHEX[info.color]}"></i>${esc(t('tdColor'))}: ${esc(t(info.color))}</span>`:''}</p></section>
  ${LANG==='es'?(()=>{const [lg,[w,tr,m,r]]=wordOfDay(br),[wb,wcv]=r.split(' '),[wc,wv]=wcv.split(':');return `<section class="art tdcard"><h2 class="tdh">✍️ Palabra ${lg} del día</h2><p class="tdword"><b lang="${lg==='latina'?'la':lg==='hebrea'?'he':'grc'}" style="font-family:'Noto Serif',serif;font-size:24px">${esc(w)}</b> <i>${esc(tr)}</i> · ${esc(m)}</p><p class="note">${esc(bname(wb))} ${wc}, ${wv}</p></section>`})():''}
@@ -140,7 +140,7 @@ function renderToday(){
  view.querySelectorAll('[data-br]').forEach(b=>b.onclick=()=>{store.set('todayBr',b.dataset.br);renderToday()});
  view.querySelectorAll('[data-cal]').forEach(b=>b.onclick=()=>{store.set('oldCal',b.dataset.cal==='1');renderToday()});
  // versículo del día
- (async()=>{const src=(TRMAP[br]&&TRMAP[br][LANG])||TRMAP.protestante[LANG]||'en-kjv';
+ (async()=>{const src=LANG==='el'?'ortodoxa-griega':(TRMAP[br]&&TRMAP[br][LANG])||TRMAP.protestante[LANG]||'en-kjv';
   try{const bk=await getBook(src,vb);const [mc,mv]=mapRef('reina-valera-1909',src,vb,vc,+vv);const row=bk&&bk.ch[mc]&&bk.ch[mc].find(r=>r[0]===mv);const el=$('#votdTxt');if(el&&row){el.textContent=row[1];el.lang=TRLANG[src]}}catch(e){}
   const vd=$('#votd');if(vd){vd.style.cursor='pointer';vd.onclick=()=>{const [oc,ov]=mapRef('reina-valera-1909','ortodoxa-griega',vb,vc,+vv);go('read',{sec:'bible',ed:'ortodoxa-griega',book:vb,ch:oc,hl:ov})}}})();
  // oración bíblica en el idioma del usuario

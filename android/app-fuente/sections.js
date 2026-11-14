@@ -23,7 +23,7 @@ const today=()=>new Date().toISOString().slice(0,10);
 const COURSE_ED={ortodoxa:'ortodoxa-griega',catolica:'vulgata-clementina',protestante:'reina-valera-1909'};
 const VSRC={es:{ortodoxa:'es-blm',catolica:'es-blm',protestante:'reina-valera-1909'},en:{ortodoxa:'en-ortho',catolica:'en-dra',protestante:'en-kjv'}};
 const VB={};
-const vsrc=br=>(VSRC[CL()]&&VSRC[CL()][br])||(LANG==='el'&&br==='ortodoxa'?'ortodoxa-griega':null)||TRMAP[br][LANG]||TRFALL[br];
+const vsrc=br=>(VSRC[CL()]&&VSRC[CL()][br])||(LANG==='el'?'ortodoxa-griega':null)||TRMAP[br][LANG]||TRFALL[br];
 const hasV=(br,c)=>!!VB[vsrc(br)+':'+c];
 async function needVerses(br,codes){const src=vsrc(br);for(const c of codes){const k=src+':'+c;if(k in VB)continue;try{const b=await getBookAlias(src,c);VB[k]=b?{ch:b.ch,chs:Object.keys(b.ch)}:null}catch(e){VB[k]=null}}}
 const NOTPROT=new Set('TOB JDT WIS SIR BAR EPJ PRA SUS BEL 1MA 2MA 3MA 1ES'.split(' '));
@@ -239,7 +239,7 @@ function endLesson(ok){
 async function renderArticles(sec){
  const X=CX[CL()]?CX[CL()].artx:ARTX[CL()],L=CL()==='es'?0:1,AL=CX[CL()]?CX[CL()].art[sec]:null;
  view.innerHTML=`<div class="loading">${esc(t('loading'))}</div>`;
- const src=TRMAP.protestante[LANG]||'en-kjv';const refs=ART[sec].flatMap(a=>a.r);const BK={};
+ const src=LANG==='el'?'ortodoxa-griega':TRMAP.protestante[LANG]||'en-kjv';const refs=ART[sec].flatMap(a=>a.r);const BK={};
  for(const r of refs){const b=r.split(' ')[0];if(!(b in BK)){try{BK[b]=await getBook(src,b)}catch(e){BK[b]=null}}}
  const verse=ref=>{const [b,r]=ref.split(' ');const [c0,vs]=r.split(':');const [a,z]=vs.split('-').map(Number);
   const [c]=mapRef('reina-valera-1909',src,b,c0,a);const bk=BK[b];

@@ -52,7 +52,7 @@ renderLearn=function(){
 // ---------- Memorizar un versículo (sin traducción visible) ----------
 async function memoItems(){
  const ref=VOTD[dayIdx()%VOTD.length];const [b,cv]=ref.split(' ');const [c,v]=cv.split(':');
- const src=TRMAP.protestante[LANG]||'en-kjv';
+ const src=LANG==='el'?'ortodoxa-griega':TRMAP.protestante[LANG]||'en-kjv';
  const bk=await getBook(src,b);const [mc,mv]=mapRef('reina-valera-1909',src,b,c,+v);const row=bk&&bk.ch[mc]&&bk.ch[mc].find(r=>r[0]===mv);if(!row)return[];
  const text=row[1],refTxt=`${bname(b)} ${c}, ${v}`,words=text.split(/\s+/);
  const items=[{type:'lcard',html:`<div class="lcard"><span class="pill soft">${esc(t('memo'))}</span><h1 style="font-size:24px">${esc(refTxt)}</h1><p class="qx" lang="${TRLANG[src]}" style="font-size:20px">${esc(text)}</p>${sayBtn(text,TRLANG[src])}</div>`}];
