@@ -95,7 +95,7 @@ function scheduleReminders(){
   try{const p=prayerFor(br,7);add('morning',pt('rMorning'),(nm(p.k)||pt('rMorning'))+' · '+pt('nOpen'),'hoy')}catch(e){}
   try{const p=prayerFor(br,20);add('evening',pt('rEvening'),(nm(p.k)||pt('rEvening'))+' · '+pt('nOpen'),'hoy')}catch(e){}
   if(info&&FASTDAYS.has(info.f))try{add('fast',pt('nFast'),ftText(info.f),'hoy')}catch(e){}
-  try{const c=(typeof celebsOn==='function'?celebsOn(br,td).map(celName).filter(Boolean):[]).concat(daySaints(br,td));
+  try{const c=(typeof celebsOn==='function'?celebsOn(br,td).map(celName).filter(Boolean):[]).concat(LANG==='es'?daySaints(br,td):[]);
    if(c.length)add('saint',pt('nSaint'),c.slice(0,2).join(' · '),'hoy')}catch(e){}
   if(typeof vidaReminder==='function'){const r=vidaReminder(y,m,dd);if(r&&r.at>now+30e3)out.push(r)}
   add('plan',pt('rPlan'),(typeof planTodayText==='function'&&planTodayText())||pt('nPlan'),'plan');
@@ -104,8 +104,9 @@ function scheduleReminders(){
 }
 
 // ---------- Bloqueo de Aprende ----------
-function paywallCard(){
- view.innerHTML=`<div class="lcard"><div style="font-size:44px">👑</div><h1>${esc(pt('locked'))}</h1><p class="lead">${esc(pt('lockedLead'))}</p>
+function paywallCard(kind){
+ const les=kind==='lesson';
+ view.innerHTML=`<div class="lcard"><div style="font-size:44px">👑</div><h1>${esc(pt(les?'locked':'premOnly'))}</h1><p class="lead">${esc(pt(les?'lockedLead':'premLead'))}</p><p class="note">${esc(pt('notApp'))}</p>
  <button class="btn" id="pwGo" style="width:100%;background:var(--gold);color:var(--wine)">${esc(pt('seePlans'))}</button></div>`;
  $('#pwGo').onclick=()=>openP('premium');
  S.view='paywall';setHeader();$('#back').style.visibility='visible';
@@ -113,11 +114,11 @@ function paywallCard(){
 const freeLesson=(br,id)=>{if(id.startsWith('intro'))return true;if(id==='exam')return false;
  const u=courseUnits(br);return (u[0]&&u[0].lessons.includes(id))||(u[1]&&u[1].lessons.includes(id))};
 if(IN_APP){
- const _sl=startLesson;startLesson=function(br,id){return isPremium()||freeLesson(br,id)?_sl(br,id):paywallCard()};
- const _sll=startLangLesson;startLangLesson=function(lc,id){return isPremium()?_sll(lc,id):paywallCard()};
- const _sp=startPractice;startPractice=function(k){return isPremium()?_sp(k):paywallCard()};
- const _sm=startMemo;startMemo=function(){return isPremium()?_sm():paywallCard()};
- const _sf=startFeast;startFeast=function(i){return isPremium()||i<3?_sf(i):paywallCard()};
+ const _sl=startLesson;startLesson=function(br,id){return isPremium()||freeLesson(br,id)?_sl(br,id):paywallCard('lesson')};
+ const _sll=startLangLesson;startLangLesson=function(lc,id){return isPremium()?_sll(lc,id):paywallCard('lesson')};
+ const _sp=startPractice;startPractice=function(k){return isPremium()?_sp(k):paywallCard('lesson')};
+ const _sm=startMemo;startMemo=function(){return isPremium()?_sm():paywallCard('lesson')};
+ const _sf=startFeast;startFeast=function(i){return isPremium()||i<3?_sf(i):paywallCard('lesson')};
  const _rl=renderLearn;renderLearn=function(){const r=_rl.apply(this,arguments);
   if(!isPremium()&&S.view!=='lesson'){const c=document.createElement('button');c.className='card pbanner';c.innerHTML=`<div class="t">👑 ${esc(pt('prem'))}</div><div class="s">${esc(pt('f2'))}</div>`;c.onclick=()=>openP('premium');view.insertBefore(c,view.firstChild)}
   return r};

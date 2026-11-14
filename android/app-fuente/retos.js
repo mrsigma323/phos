@@ -18,9 +18,15 @@ const fmtDM=([m,d])=>{try{return new Intl.DateTimeFormat(LANG,{day:'numeric',mon
 function qBookSum(r){const codes=Object.keys(SUM).filter(c=>bname(c)!==c);const c=rpick(r,codes);
  const opts=rshuf(r,[c].concat(rshuf(r,codes.filter(x=>x!==c)).slice(0,3)));
  return {prompt:qt('qBook'),extra:sumOf(c),options:opts.map(bname),answer:opts.indexOf(c),ref:c}}
-function qFeastDay(r){const fx=FEASTS.map((f,i)=>i).filter(i=>FEASTS[i][1]);const i=rpick(r,fx);
- const opts=rshuf(r,[i].concat(rshuf(r,fx.filter(x=>x!==i)).slice(0,3)));
- return {prompt:qt('qFeast'),extra:fName(i),options:opts.map(k=>fmtDM(FEASTS[k][1])),answer:opts.indexOf(i)}}
+function branchFeasts(){
+ // Fiestas de fecha fija de la tradición elegida (mismo día este año y el próximo), con su nombre traducido
+ const br=tdBr(),y=new Date().getFullYear(),md=td=>{const d=new Date(td);return [d.getUTCMonth()+1,d.getUTCDate()]};
+ const B=new Map(yearEvents(br,y+1).map(e=>[e[0],md(e[1])]));const seen=new Set(),out=[];
+ for(const [k,td] of yearEvents(br,y)){const v=md(td),w=B.get(k);if(!w||w[0]!==v[0]||w[1]!==v[1])continue;const n=celName(k);const key=v.join('-');if(!n||seen.has(key))continue;seen.add(key);out.push({n,m:v})}
+ return out}
+function qFeastDay(r){const F=branchFeasts();if(F.length<4)return qBookSum(r);const f=rpick(r,F);
+ const opts=rshuf(r,[f].concat(rshuf(r,F.filter(x=>x!==f)).slice(0,3)));
+ return {prompt:qt('qFeast'),extra:f.n,options:opts.map(x=>fmtDM(x.m)),answer:opts.indexOf(f)}}
 function qWho(r){const i=rpick(r,FIG_SOLO);const [n,d]=figL(i);
  const opts=rshuf(r,[i].concat(rshuf(r,FIG_SOLO.filter(x=>x!==i)).slice(0,3)));
  return {prompt:qt('who'),extra:d,options:opts.map(k=>figL(k)[0]),answer:opts.indexOf(i)}}

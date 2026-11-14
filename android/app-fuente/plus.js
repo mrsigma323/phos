@@ -59,7 +59,7 @@ async function cardImage({w=1080,h=1350,col='wine',top='',verse='',ref='',date='
 async function todayCardData(){
  const now=new Date(),td=utc(now.getFullYear(),now.getMonth()+1,now.getDate()),br=tdBr(),info=dayInfo(br,td);
  const ref=VOTD[dayIdx()%VOTD.length];const v=await vText(ref);
- const cel=info.cel.map(celName).filter(Boolean),sts=daySaints(br,td);
+ const cel=info.cel.map(celName).filter(Boolean),sts=LANG==='es'?daySaints(br,td):[];
  return {col:info.color||'wine',top:cel[0]||sts[0]||snName(info.s),verse:v?v.txt:'',ref:v?v.ref:ref,date:fmtLong(new Date(td))};
 }
 
@@ -69,7 +69,7 @@ renderToday=function(){
  _renderTodayP();
  const now=new Date(),td=utc(now.getFullYear(),now.getMonth()+1,now.getDate()),br=tdBr(),info=dayInfo(br,td);
  const ref=VOTD[dayIdx()%VOTD.length];const [vb,cv]=ref.split(' ');const [vc,vv]=cv.split(':');
- const cel=info.cel.map(celName).filter(Boolean),sts=daySaints(br,td),top=cel[0]||sts[0]||'';
+ const cel=info.cel.map(celName).filter(Boolean),sts=LANG==='es'?daySaints(br,td):[],top=cel[0]||sts[0]||'';
  const [c0,c1]=LITCOL[info.color]||LITCOL.wine;
  const old=$('#votd');if(!old)return;
  const hero=document.createElement('section');hero.className='hero';hero.id='votd';hero.style.background=`radial-gradient(120% 80% at 50% 0%,rgba(255,236,190,.25),transparent 60%),linear-gradient(160deg,${c0},${c1})`;
@@ -131,6 +131,7 @@ function renderMine(){
 // ---- Planes de lectura ----
 const planEd=()=>({ortodoxa:'ortodoxa-griega',catolica:'vulgata-clementina',protestante:'reina-valera-1909'})[tdBr()];
 const PLANS=['year','gospels','psalms','advent','lent'],PLAN_K={year:'pYear',gospels:'pGospels',psalms:'pPsalms',advent:'pAdvent',lent:'pLent'};
+const planName=id=>{const n=qt(PLAN_K[id]);return id==='advent'&&tdBr()==='ortodoxa'?n.split(/:\s*/).pop():n};
 function chsOf(ed,c){const m=bookMeta(ed).map[c];return m?m.chs.map(String):[]}
 function psa(ed,n){try{return String(mapRef('reina-valera-1909',ed,'PSA',String(n),1)[0])}catch(e){return String(n)}}
 function split(list,n){const out=[];for(let d=0;d<n;d++)out.push(list.slice(Math.floor(d*list.length/n),Math.floor((d+1)*list.length/n)));return out.filter(x=>x.length)}
@@ -150,14 +151,14 @@ window.planTodayText=()=>{const a=store.get('planActive',null);if(!a)return '';c
 function drawPlans(){
  const st=planSt();
  view.innerHTML=`<h1>📖 ${esc(qt('plans'))}</h1><p class="lead">${esc(qt('plansLead'))}</p>${PLANS.map(id=>{const n=planDays(id).length,d=(st[id]&&st[id].done.length)||0,p=Math.round(d/n*100);
-  return `<button class="card rcard" data-plan="${id}"><div class="t">${esc(qt(PLAN_K[id]))}${d?`<span class="pill">${p}%</span>`:''}</div><div class="s">${d?esc(qt('day',{n:Math.min(d+1,n),t:n})):esc(n+' · '+dayLabel(planDays(id)[0]))}</div>${d?`<div class="pbar" style="margin-top:8px"><i style="width:${p}%"></i></div>`:''}</button>`}).join('')}`;
+  return `<button class="card rcard" data-plan="${id}"><div class="t">${esc(planName(id))}${d?`<span class="pill">${p}%</span>`:''}</div><div class="s">${esc(qt('day',{n:Math.min(d+1,n),t:n})+' · '+dayLabel(planDays(id)[Math.min(d,n-1)]))}</div>${d?`<div class="pbar" style="margin-top:8px"><i style="width:${p}%"></i></div>`:''}</button>`}).join('')}`;
  view.querySelectorAll('[data-plan]').forEach(b=>b.onclick=()=>{S.plan=b.dataset.plan;go('m_plan')});
 }
 function drawPlan(){
  const id=S.plan||store.get('planActive','gospels');const {days,i,st}=planToday(id);const ed=planEd();
  if(i<0){view.innerHTML=`<div class="lcard" style="text-align:center"><div style="font-size:48px">🎉</div><h1>${esc(qt('finished'))}</h1><p class="lead">${esc(qt(PLAN_K[id]))}</p><button class="btn" id="pRe" style="width:100%">${esc(qt('restart'))}</button></div>`;
   $('#pRe').onclick=()=>{const s=planSt();s[id]={done:[]};store.set('plans',s);drawPlan()};return}
- view.innerHTML=`<h1>${esc(qt(PLAN_K[id]))}</h1><p class="note">${esc(qt('day',{n:i+1,t:days.length}))}</p>
+ view.innerHTML=`<h1>${esc(planName(id))}</h1><p class="note">${esc(qt('day',{n:i+1,t:days.length}))}</p>
  <div class="pbar"><i style="width:${Math.round(st.done.length/days.length*100)}%"></i></div>
  <div class="card main"><div class="t">${esc(qt('todayRead'))}</div><div class="edlist">${days[i].map(([c,ch])=>`<button class="ed" data-c="${c}" data-ch="${ch}"><b>${esc(bname(c))} ${esc(ch)}</b></button>`).join('')}</div>
  <button class="btn" id="pDone" style="width:100%;margin-top:12px;background:var(--gold);color:var(--wine)">✓ ${esc(qt('done'))}</button></div>
@@ -169,6 +170,16 @@ function drawPlan(){
 }
 
 // ---- Regla de oración ----
+// Padrenuestro: texto litúrgico tradicional (dominio público) para ortodoxos y católicos
+const OURF={es:"Padre nuestro, que estás en el cielo, santificado sea tu Nombre; venga a nosotros tu reino; hágase tu voluntad en la tierra como en el cielo. Danos hoy nuestro pan de cada día; perdona nuestras ofensas, como también nosotros perdonamos a los que nos ofenden; no nos dejes caer en la tentación, y líbranos del mal. Amén.",
+en:"Our Father, who art in heaven, hallowed be thy name; thy kingdom come; thy will be done on earth as it is in heaven. Give us this day our daily bread; and forgive us our trespasses, as we forgive those who trespass against us; and lead us not into temptation, but deliver us from evil. Amen.",
+pt:"Pai nosso, que estais nos céus, santificado seja o vosso nome; venha a nós o vosso reino; seja feita a vossa vontade, assim na terra como no céu. O pão nosso de cada dia nos dai hoje; perdoai-nos as nossas ofensas, assim como nós perdoamos a quem nos tem ofendido; e não nos deixeis cair em tentação, mas livrai-nos do mal. Amém.",
+fr:"Notre Père, qui es aux cieux, que ton nom soit sanctifié, que ton règne vienne, que ta volonté soit faite sur la terre comme au ciel. Donne-nous aujourd’hui notre pain de ce jour. Pardonne-nous nos offenses, comme nous pardonnons aussi à ceux qui nous ont offensés. Et ne nous laisse pas entrer en tentation, mais délivre-nous du Mal. Amen.",
+it:"Padre nostro, che sei nei cieli, sia santificato il tuo nome, venga il tuo regno, sia fatta la tua volontà, come in cielo così in terra. Dacci oggi il nostro pane quotidiano, e rimetti a noi i nostri debiti come anche noi li rimettiamo ai nostri debitori, e non abbandonarci alla tentazione, ma liberaci dal male. Amen.",
+de:"Vater unser im Himmel, geheiligt werde dein Name. Dein Reich komme. Dein Wille geschehe, wie im Himmel, so auf Erden. Unser tägliches Brot gib uns heute. Und vergib uns unsere Schuld, wie auch wir vergeben unsern Schuldigern. Und führe uns nicht in Versuchung, sondern erlöse uns von dem Bösen. Amen.",
+el:"Πάτερ ἡμῶν ὁ ἐν τοῖς οὐρανοῖς, ἁγιασθήτω τὸ ὄνομά σου, ἐλθέτω ἡ βασιλεία σου, γενηθήτω τὸ θέλημά σου, ὡς ἐν οὐρανῷ καὶ ἐπὶ τῆς γῆς. Τὸν ἄρτον ἡμῶν τὸν ἐπιούσιον δὸς ἡμῖν σήμερον· καὶ ἄφες ἡμῖν τὰ ὀφειλήματα ἡμῶν, ὡς καὶ ἡμεῖς ἀφίεμεν τοῖς ὀφειλέταις ἡμῶν· καὶ μὴ εἰσενέγκῃς ἡμᾶς εἰς πειρασμόν, ἀλλὰ ῥῦσαι ἡμᾶς ἀπὸ τοῦ πονηροῦ.",
+ru:"Отче наш, Иже еси на небесех! Да святится имя Твое, да приидет Царствие Твое, да будет воля Твоя, яко на небеси и на земли. Хлеб наш насущный даждь нам днесь; и остави нам долги наша, якоже и мы оставляем должником нашим; и не введи нас во искушение, но избави нас от лукаваго.",
+ro:"Tatăl nostru, Care eşti în ceruri, sfinţească-Se numele Tău, vie împărăţia Ta, facă-se voia Ta, precum în cer aşa şi pe pământ. Pâinea noastră cea de toate zilele dă-ne-o nouă astăzi şi ne iartă nouă greşelile noastre, precum şi noi iertăm greşiţilor noştri. Şi nu ne duce pe noi în ispită, ci ne izbăveşte de cel rău."};
 const RULE={ortodoxa:{m:['heavenly','trisagion','ourf','jesus'],e:['phos','trisagion','ourf','nunc','jesus']},
  catolica:{m:['ourf','ave','angelus'],e:['magn','ourf','ave','subtuum']},
  protestante:{m:[['PSA',143,8,8],'ourf'],e:[['PSA',4,8,8],['PSA',141,2,2],'ourf']}};
@@ -183,10 +194,12 @@ function drawRule(){
  <button class="btn" id="rNext" style="width:100%;margin-top:14px">${esc(last?qt('amen'):qt('next'))}</button></div>`;
  view.querySelectorAll('[data-rt]').forEach(b=>b.onclick=()=>{S.rt=b.dataset.rt;S.ri=0;drawRule()});
  $('#rNext').onclick=()=>{if(last){S.ri=0;toast('🙏 '+qt('amen'));go('mine')}else{S.ri++;drawRule();window.scrollTo(0,0)}};
- const ref=Array.isArray(k)?k:(PR_BIB[k]||null);
- if(!ref){$('#rTxt').innerHTML=`<blockquote class="vq tdprayer"><span>${esc(prText(k))}</span></blockquote>`;return}
+ // Ortodoxos y católicos rezan el texto tradicional de la oración; los protestantes, el texto bíblico
+ let trad='';try{trad=Array.isArray(k)?'':(k==='ourf'?(OURF[LANG]||OURF.en):(prText(k)||''))}catch(e){}
+ const ref=Array.isArray(k)?k:(br!=='protestante'&&trad?null:(PR_BIB[k]||null));
+ if(!ref){$('#rTxt').innerHTML=`<blockquote class="vq tdprayer"><span>${esc(trad)}</span></blockquote>`;return}
  const [b,c,a,z]=ref;fVerses([b,[[c,a,z]]]).then(r=>{const box=$('#rTxt');if(!box)return;if(!r){box.innerHTML=`<blockquote class="vq tdprayer"><span>${esc(prText(k)||'')}</span></blockquote>`;return}
-  box.innerHTML=r.segs.map(s=>`<blockquote class="vq tdprayer"><span>${esc(s.txt)}</span><cite>${esc(bname(b))} ${s.c}, ${s.a}–${s.z}</cite></blockquote>`).join('')});
+  box.innerHTML=r.segs.map(s=>`<blockquote class="vq tdprayer"><span>${esc(s.txt)}</span><cite>${esc(bname(b))} ${s.c}, ${s.a}${s.z!==s.a?'–'+s.z:''}</cite></blockquote>`).join('')});
 }
 
 // ---- Diario espiritual ----
@@ -221,7 +234,7 @@ async function feedWidget(){
  if(!prem2()){try{PhosApp.widgetSet('[]')}catch(e){}return}
  const out=[],br=tdBr();
  for(let i=0;i<14;i++){const d=new Date();d.setDate(d.getDate()+i);const td=utc(d.getFullYear(),d.getMonth()+1,d.getDate());
-  let top='';try{const info=dayInfo(br,td);top=info.cel.map(celName).filter(Boolean)[0]||daySaints(br,td)[0]||snName(info.s)}catch(e){}
+  let top='';try{const info=dayInfo(br,td);top=info.cel.map(celName).filter(Boolean)[0]||(LANG==='es'?daySaints(br,td)[0]:'')||snName(info.s)}catch(e){}
   const di=Math.floor((d-new Date(d.getFullYear(),0,0))/864e5);const v=await vText(VOTD[di%VOTD.length]);
   out.push({d:d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'),t:top,b:v?'«'+v.txt+'» — '+v.ref:''})}
  try{PhosApp.widgetSet(JSON.stringify(out))}catch(e){}

@@ -71,7 +71,7 @@ function drawMsgs(){
  store.set('msgRead',L.map(m=>String(m.id)));paintBadge();
 }
 const _renderMineW=renderMine;
-renderMine=function(){if(S.view==='m_msgs')return drawMsgs();_renderMineW();
+renderMine=function(){if(S.view==='m_msgs')return drawMsgs();_renderMineW();if(S.view!=='mine')return;
  const c=document.createElement('button');c.className='card rcard';c.innerHTML=`<div class="t"><span class="rico">✉️</span>${esc(wt('msgs'))}${unread()?`<span class="pill">${unread()}</span>`:''}</div><div class="s">${esc(wt('msgsLead'))}</div>`;
  c.onclick=()=>go('m_msgs');const first=view.querySelector('.rcard');if(first)first.after(c);else view.appendChild(c)};
 
