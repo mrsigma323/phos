@@ -51,7 +51,8 @@ const F_DEUT=new Set(['TOB','WIS','SIR','DNG']);
 const fNum=n=>n===1?t('fN1'):t('fN').replace('{n}',n);
 const fCite=p=>{let last=null;return bname(p[0])+' '+p[1].map(([c,a,z])=>{const v=a===z?String(a):a+'–'+z;const s=c===last?v:c+', '+v;last=c;return s}).join('; ')};
 function fCount(){const m={};FIDS.forEach(f=>m[f]={G:0,J:0,n:0});FPAS.forEach(p=>p[4].forEach(f=>{m[f][p[2]]++;m[f].n++}));return m}
-function fEds(){if(LANG==='el')return['ortodoxa-griega','en-ortho'];return [...new Set([TRMAP.protestante[LANG],TRMAP.ortodoxa[LANG],TRMAP.catolica[LANG],'en-ortho'].filter(Boolean))]}
+// Primero la traducción de la Iglesia elegida (católicos y ortodoxos no ven la Reina-Valera si hay otra)
+function fEds(){if(LANG==='el')return['ortodoxa-griega','en-ortho'];const br=typeof tdBr==='function'?tdBr():'protestante';return [...new Set([(TRMAP[br]||{})[LANG],TRMAP.protestante[LANG],TRMAP.ortodoxa[LANG],TRMAP.catolica[LANG],TRFALL[br],'en-ortho'].filter(Boolean))]}
 function fHas(id,b){const m=bookMeta(id).map;return !!(m[b]||(ALIAS[b]||[]).some(x=>m[x])||(b==='DNG'&&m.BEL))}
 const F_CACHE={};
 function fBook(id,b){const k=id+'/'+b;return F_CACHE[k]||(F_CACHE[k]=getBookAlias(id,b).catch(()=>null))}

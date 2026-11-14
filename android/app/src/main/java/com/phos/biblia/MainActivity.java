@@ -170,6 +170,8 @@ public class MainActivity extends Activity {
         @JavascriptInterface public void shareImage(String b64, String txt) { Extras.shareImage(MainActivity.this, b64, txt); }
         @JavascriptInterface public void setWallpaper(String b64) { Extras.setWallpaper(MainActivity.this, b64); }
         @JavascriptInterface public void widgetSet(String json) { Extras.widgetSet(MainActivity.this, json); }
+        /** «Entrar con Google» solo se muestra cuando el ID de cliente está configurado. */
+        @JavascriptInterface public boolean googleReady() { return !getString(R.string.google_web_client_id).isEmpty(); }
         @JavascriptInterface public void googleSignIn() { runOnUiThread(() -> Extras.googleSignIn(MainActivity.this, MainActivity.this::toJs)); }
     }
 

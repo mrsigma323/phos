@@ -32,7 +32,7 @@ const per=p=>/Y$/.test(p||'')?pt('perYear'):pt('perMonth');
 function drawPremium(){
  const on=isPremium(),sub=prod('phos_premium');
  let h=`<h1>${CROWN.replace('22','30').replace('22','30')} ${esc(pt('prem'))}</h1><p class="lead">${esc(pt('premLead'))}</p>
- <ul class="plist"><li>🔔 ${esc(pt('f1'))}</li><li>📖 ${esc(pt('f2'))}</li><li>🕯️ ${esc(pt('f3'))}</li></ul>`;
+ <ul class="plist"><li>🔔 ${esc(pt('f1'))}</li><li>📖 ${esc(pt('f2'))}</li><li>🧩 ${esc(typeof qt==='function'?qt('retos'):'')} · ⛰️ ${esc(typeof vt==='function'?vt('vida'):'')} · 🔊 ${esc(typeof qt==='function'?qt('listen'):'')}</li><li>🕯️ ${esc(pt('f3'))}</li></ul>`;
  if(!IN_APP)h+=`<div class="card"><div class="s">${esc(pt('notApp'))}</div></div>`;
  else if(on)h+=`<div class="card main"><div class="t">✓ ${esc(pt('active'))}</div><button class="btn ghost" id="pManage" style="margin-top:12px;width:100%">${esc(pt('manage'))}</button></div>
   <button class="card" id="pNotif"><div class="t">🔔 ${esc(pt('reminders'))}</div><div class="s">${esc(pt('remLead'))}</div></button>`;

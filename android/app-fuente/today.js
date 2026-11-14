@@ -88,6 +88,7 @@ function prayerFor(br,h){
   protestante:{tdMorning:['psalm','PSA',143,8,8],tdMidday:'ourf',tdAfternoon:['psalm','PSA',121,1,2],tdEvening:['psalm','PSA',141,2,2],tdNight:['psalm','PSA',4,8,8]}};
  const p=M[br][per];
  if(Array.isArray(p))return {per,k:p[0],ref:p.slice(1)};
+ if(p==='ourf'&&br!=='protestante'&&typeof OURF!=='undefined')return {per,k:p,ref:null};
  return {per,k:p,ref:PR_BIB[p]||null};
 }
 const capF=x=>x?x.charAt(0).toUpperCase()+x.slice(1):x;
@@ -132,7 +133,7 @@ function renderToday(){
  <section class="art tdcard"><h2 class="tdh">🍞 ${esc(t('tdFast'))}</h2><p class="tdfast f-${info.f}">${esc(ftText(info.f))}</p>
   ${br==='catolica'?`<p class="note">${esc(t('tdEuch'))}</p>`:''}${br!=='protestante'?`<p class="note">${esc(t('tdFastHint'))}</p>`:''}</section>
  <section class="art tdcard"><h2 class="tdh">🙏 ${esc(t('tdPrayer'))}</h2><p class="tdper">${esc(t(pr.per))} · <b>${esc(prName(pr.k))}</b></p>
-  <div id="tdPr">${pr.ref?'<blockquote class="vq"><cite>…</cite></blockquote>':`<blockquote class="vq tdprayer"><span>${esc(prText(pr.k))}</span></blockquote>`}</div>
+  <div id="tdPr">${pr.ref?'<blockquote class="vq"><cite>…</cite></blockquote>':`<blockquote class="vq tdprayer"><span>${esc(pr.k==='ourf'&&typeof OURF!=='undefined'?(OURF[LANG]||OURF.en):prText(pr.k))}</span></blockquote>`}</div>
   ${info.lent?`<p class="tdper" style="margin-top:14px">${esc(t('tdLentPr'))} <b>${esc(prName('ephrem'))}</b></p><blockquote class="vq tdprayer"><span>${esc(prText('ephrem'))}</span></blockquote>`:''}</section>
  <section class="art tdcard"><h2 class="tdh">💡 ${esc(t('tdNote'))}</h2><p>${esc(snNote(info.s))}</p>${br==='ortodoxa'&&tdOld()?`<p class="note">${esc(t('tdCalNote'))}</p>`:''}</section>
  <section class="art tdcard"><h2 class="tdh">⏳ ${esc(t('tdNext'))}</h2><ul class="tdnext">${up.map(([id,x])=>`<li><b>${esc(celName(id))}</b><span>${esc(fmtD(new Date(x)))} · ${esc(days(x))}</span></li>`).join('')}</ul></section>`;

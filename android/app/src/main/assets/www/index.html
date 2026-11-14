@@ -2158,7 +2158,8 @@ const F_DEUT=new Set(['TOB','WIS','SIR','DNG']);
 const fNum=n=>n===1?t('fN1'):t('fN').replace('{n}',n);
 const fCite=p=>{let last=null;return bname(p[0])+' '+p[1].map(([c,a,z])=>{const v=a===z?String(a):a+'–'+z;const s=c===last?v:c+', '+v;last=c;return s}).join('; ')};
 function fCount(){const m={};FIDS.forEach(f=>m[f]={G:0,J:0,n:0});FPAS.forEach(p=>p[4].forEach(f=>{m[f][p[2]]++;m[f].n++}));return m}
-function fEds(){if(LANG==='el')return['ortodoxa-griega','en-ortho'];return [...new Set([TRMAP.protestante[LANG],TRMAP.ortodoxa[LANG],TRMAP.catolica[LANG],'en-ortho'].filter(Boolean))]}
+// Primero la traducción de la Iglesia elegida (católicos y ortodoxos no ven la Reina-Valera si hay otra)
+function fEds(){if(LANG==='el')return['ortodoxa-griega','en-ortho'];const br=typeof tdBr==='function'?tdBr():'protestante';return [...new Set([(TRMAP[br]||{})[LANG],TRMAP.protestante[LANG],TRMAP.ortodoxa[LANG],TRMAP.catolica[LANG],TRFALL[br],'en-ortho'].filter(Boolean))]}
 function fHas(id,b){const m=bookMeta(id).map;return !!(m[b]||(ALIAS[b]||[]).some(x=>m[x])||(b==='DNG'&&m.BEL))}
 const F_CACHE={};
 function fBook(id,b){const k=id+'/'+b;return F_CACHE[k]||(F_CACHE[k]=getBookAlias(id,b).catch(()=>null))}
@@ -2455,6 +2456,7 @@ function prayerFor(br,h){
   protestante:{tdMorning:['psalm','PSA',143,8,8],tdMidday:'ourf',tdAfternoon:['psalm','PSA',121,1,2],tdEvening:['psalm','PSA',141,2,2],tdNight:['psalm','PSA',4,8,8]}};
  const p=M[br][per];
  if(Array.isArray(p))return {per,k:p[0],ref:p.slice(1)};
+ if(p==='ourf'&&br!=='protestante'&&typeof OURF!=='undefined')return {per,k:p,ref:null};
  return {per,k:p,ref:PR_BIB[p]||null};
 }
 const capF=x=>x?x.charAt(0).toUpperCase()+x.slice(1):x;
@@ -2499,7 +2501,7 @@ function renderToday(){
  <section class="art tdcard"><h2 class="tdh">🍞 ${esc(t('tdFast'))}</h2><p class="tdfast f-${info.f}">${esc(ftText(info.f))}</p>
   ${br==='catolica'?`<p class="note">${esc(t('tdEuch'))}</p>`:''}${br!=='protestante'?`<p class="note">${esc(t('tdFastHint'))}</p>`:''}</section>
  <section class="art tdcard"><h2 class="tdh">🙏 ${esc(t('tdPrayer'))}</h2><p class="tdper">${esc(t(pr.per))} · <b>${esc(prName(pr.k))}</b></p>
-  <div id="tdPr">${pr.ref?'<blockquote class="vq"><cite>…</cite></blockquote>':`<blockquote class="vq tdprayer"><span>${esc(prText(pr.k))}</span></blockquote>`}</div>
+  <div id="tdPr">${pr.ref?'<blockquote class="vq"><cite>…</cite></blockquote>':`<blockquote class="vq tdprayer"><span>${esc(pr.k==='ourf'&&typeof OURF!=='undefined'?(OURF[LANG]||OURF.en):prText(pr.k))}</span></blockquote>`}</div>
   ${info.lent?`<p class="tdper" style="margin-top:14px">${esc(t('tdLentPr'))} <b>${esc(prName('ephrem'))}</b></p><blockquote class="vq tdprayer"><span>${esc(prText('ephrem'))}</span></blockquote>`:''}</section>
  <section class="art tdcard"><h2 class="tdh">💡 ${esc(t('tdNote'))}</h2><p>${esc(snNote(info.s))}</p>${br==='ortodoxa'&&tdOld()?`<p class="note">${esc(t('tdCalNote'))}</p>`:''}</section>
  <section class="art tdcard"><h2 class="tdh">⏳ ${esc(t('tdNext'))}</h2><ul class="tdnext">${up.map(([id,x])=>`<li><b>${esc(celName(id))}</b><span>${esc(fmtD(new Date(x)))} · ${esc(days(x))}</span></li>`).join('')}</ul></section>`;
@@ -2787,7 +2789,7 @@ const per=p=>/Y$/.test(p||'')?pt('perYear'):pt('perMonth');
 function drawPremium(){
  const on=isPremium(),sub=prod('phos_premium');
  let h=`<h1>${CROWN.replace('22','30').replace('22','30')} ${esc(pt('prem'))}</h1><p class="lead">${esc(pt('premLead'))}</p>
- <ul class="plist"><li>🔔 ${esc(pt('f1'))}</li><li>📖 ${esc(pt('f2'))}</li><li>🕯️ ${esc(pt('f3'))}</li></ul>`;
+ <ul class="plist"><li>🔔 ${esc(pt('f1'))}</li><li>📖 ${esc(pt('f2'))}</li><li>🧩 ${esc(typeof qt==='function'?qt('retos'):'')} · ⛰️ ${esc(typeof vt==='function'?vt('vida'):'')} · 🔊 ${esc(typeof qt==='function'?qt('listen'):'')}</li><li>🕯️ ${esc(pt('f3'))}</li></ul>`;
  if(!IN_APP)h+=`<div class="card"><div class="s">${esc(pt('notApp'))}</div></div>`;
  else if(on)h+=`<div class="card main"><div class="t">✓ ${esc(pt('active'))}</div><button class="btn ghost" id="pManage" style="margin-top:12px;width:100%">${esc(pt('manage'))}</button></div>
   <button class="card" id="pNotif"><div class="t">🔔 ${esc(pt('reminders'))}</div><div class="s">${esc(pt('remLead'))}</div></button>`;
@@ -3474,7 +3476,7 @@ window.PhosAuth={async onGoogle(idToken){
 function drawAccount(){
  const a=store.get('acct',null);
  let h=`<h1>👤 ${esc(qt('account'))}</h1>`;
- if(!a){h+=`<p class="lead">${esc(qt('googleLead'))}</p>${window.PhosApp&&PhosApp.googleSignIn?`<button class="gbtn" id="gIn"><svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>${esc(qt('google'))}</button>`:`<div class="card"><div class="s">${esc(qt('googleSoon'))}</div></div>`}
+ if(!a){h+=`<p class="lead">${esc(qt('googleLead'))}</p>${window.PhosApp&&PhosApp.googleSignIn&&(!PhosApp.googleReady||PhosApp.googleReady())?`<button class="gbtn" id="gIn"><svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>${esc(qt('google'))}</button>`:`<div class="card"><div class="s">${esc(qt('googleSoon'))}</div></div>`}
   <p class="note">${esc(pt('privacy'))}: <a href="${PRIV_URL}" target="_blank" rel="noopener">phosbiblias.com/privacidad</a></p>`}
  else{h+=`<div class="card main"><div class="t">✓ ${esc(qt('signed',{e:a.email}))}</div>${a.last?`<div class="s">${esc(qt('synced'))} · ${esc(new Date(a.last).toLocaleString(LANG))}</div>`:''}</div>
   <label class="nrow"><input type="checkbox" id="aCons" ${a.consent?'checked':''}><span class="small">${esc(qt('consent'))}</span></label>
@@ -3836,7 +3838,7 @@ function showWelcome(step){
   w.innerHTML=`<div class="wbox">${logo}<h1 class="wtitle">${esc(wt('signTitle'))}</h1><p class="wlead">${esc(wt('signLead'))}</p>
   <ul class="wlist"><li>🔔 ${esc(wt('sign1'))}</li><li>📖 ${esc(wt('sign2'))}</li><li>✉️ ${esc(wt('sign3'))}</li></ul>
   ${a?`<p class="wok">✓ ${esc(qt('signed',{e:a.email}))}</p><button class="wbtn" id="wDone">${esc(wt('start'))}</button>`
-   :`${window.PhosApp&&PhosApp.googleSignIn?`<button class="gbtn" id="wG"><svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>${esc(qt('google'))}</button>`:''}
+   :`${window.PhosApp&&PhosApp.googleSignIn&&(!PhosApp.googleReady||PhosApp.googleReady())?`<button class="gbtn" id="wG"><svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>${esc(qt('google'))}</button>`:''}
     <button class="wskip big" id="wSkip">${esc(wt('skip'))}</button><p class="wnote">${esc(wt('later'))}</p>`}
   <p class="wnote">${esc(wt('noPrem'))}</p>${dots}</div>`;
   const g=$('#wG');if(g)g.onclick=()=>{WELCOME_WAIT=true;try{PhosApp.googleSignIn()}catch(e){}};
