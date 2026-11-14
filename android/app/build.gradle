@@ -7,8 +7,8 @@ android {
         applicationId 'com.phos.biblia'
         minSdk 24
         targetSdk 36
-        versionCode 13
-        versionName '2.3'
+        versionCode 1
+        versionName '1.0'
     }
     signingConfigs {
         upload {
@@ -24,6 +24,7 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix '.prueba'
+            versionNameSuffix '-prueba'
         }
         release {
             minifyEnabled false

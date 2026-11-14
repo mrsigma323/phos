@@ -1,6 +1,6 @@
 # Phos en Google Play: qué crear en Play Console
 
-Paquete: `com.phos.biblia` · versión 2.0 (código 10)
+Paquete: `com.phos.biblia` · primera versión en Google Play: **1.0** (código 1). Las APK de prueba se llaman «1.0-prueba» y se instalan aparte como «Phos prueba».
 
 ## Suscripción
 - ID del producto: `phos_premium` (nombre visible: «Phos Premium»)
