@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mejoras de Phos por mercado</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+*{box-sizing:border-box}body{margin:0}
+/* Layout: una columna estrecha de lectura; barras horizontales y tabla con scroll propio */
+:root{
+ --bg:#F7F5FA; --surface:#FFFFFF; --fg:#221B2E; --muted:#6A6178; --line:#E4DEEC;
+ --wine:#6E1F3A; --gold:#B8862B; --track:#EEE8F3;
+ --top:#6E1F3A; --rest:#B9A9C4;
+ --f-head:"Space Grotesk",system-ui,sans-serif; --f-body:"Inter",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+ --bg:#17131D; --surface:#211B29; --fg:#F1ECF5; --muted:#A99FB6; --line:#352C40;
+ --wine:#E58BA6; --gold:#E2C27A; --track:#2C2436; --top:#E58BA6; --rest:#6E6080; color-scheme:dark}}
+:root[data-theme="dark"]{
+ --bg:#17131D; --surface:#211B29; --fg:#F1ECF5; --muted:#A99FB6; --line:#352C40;
+ --wine:#E58BA6; --gold:#E2C27A; --track:#2C2436; --top:#E58BA6; --rest:#6E6080; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.5}
+.wrap{max-width:760px;margin:0 auto;padding-block:24px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:28px}
+h1,h2{font-family:var(--f-head);text-wrap:balance;margin:0}
+h1{font-size:1.75rem;color:var(--wine)}
+h2{font-size:1.2rem}
+p{margin:0}
+.lead{color:var(--muted);max-width:62ch}
+.eyebrow{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);font-weight:700}
+section{display:grid;gap:12px}
+.formula{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:.9rem}
+.formula b{color:var(--wine)}
+.bars{display:grid;gap:10px;list-style:none;margin:0;padding:0}
+.bar{display:grid;grid-template-columns:1.6rem minmax(0,1fr);gap:4px 8px;align-items:center}
+.rank{font-family:var(--f-head);font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;grid-row:span 2}
+.bar.top .rank{color:var(--wine)}
+.name{font-size:.92rem;display:flex;justify-content:space-between;gap:8px;min-width:0}
+.name span:first-child{min-width:0}
+.name .sc{font-variant-numeric:tabular-nums;font-weight:700}
+.track{height:12px;background:var(--track);border-radius:6px;overflow:hidden}
+.fill{height:100%;background:var(--rest);border-radius:6px}
+.bar.top .fill{background:var(--top)}
+.sub{grid-column:2;font-size:.75rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.pill{display:inline-block;font-size:.68rem;font-weight:700;padding:1px 7px;border-radius:99px;background:var(--wine);color:var(--bg);margin-left:6px;vertical-align:1px}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:.85rem}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+tbody tr:last-child td{border-bottom:0}
+td.n{font-variant-numeric:tabular-nums}
+tr.tot td{font-weight:700;background:var(--track)}
+.est{color:var(--gold);font-weight:700}
+.note{font-size:.8rem;color:var(--muted)}
+.picks{display:grid;gap:8px;margin:0;padding-left:1.2rem}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+ <header style="display:grid;gap:8px">
+  <span class="eyebrow">Phos · investigación 2 · 14-11-2026</span>
+  <h1>Mejoras de Phos por mercado</h1>
+  <p class="lead">Las 20 mejoras de la tarea 1, ordenadas por probabilidad de éxito según la demanda en los países de los 9 idiomas de Phos, el encaje con la app y lo fácil que es hacerlas.</p>
+ </header>
+
+ <section>
+  <h2>Mejoras, de más a menos</h2>
+  <p class="formula"><b>Nota = 0,5 × Demanda + 0,3 × Encaje + 0,2 × Facilidad</b> (cada una de 0 a 10). Las notas parciales son <span class="est">estimaciones</span> mías a partir de los datos de la tabla de abajo.</p>
+  <ol class="bars" id="bars"></ol>
+  <p class="note">D = demanda · E = encaje con Phos · F = facilidad (10 = días; 2 = necesita grabaciones o derechos). En morado, las 5 elegidas.</p>
+ </section>
+
+ <section>
+  <h2>Cristianos por rama y país</h2>
+  <p class="note">«≈» y el color dorado = <span class="est">estimación</span> (porcentaje de la fuente × población aproximada). El resto viene tal cual de la fuente.</p>
+  <div class="tbl"><table>
+   <thead><tr><th>País (idioma)</th><th>Ortodoxos</th><th>Católicos</th><th>Protestantes</th><th>Fuente</th></tr></thead>
+   <tbody>
+    <tr><td>España (es)</td><td>—</td><td class="n">52,8 % · <span class="est">≈25 M</span></td><td class="n">3,5 % otras rel.</td><td>CIS 2026</td></tr>
+    <tr><td>México (es)</td><td>—</td><td class="n">97 M (77,7 %)</td><td class="n">14,1 M (11,2 %)</td><td>INEGI 2020</td></tr>
+    <tr><td>EE. UU. (en)</td><td>en 3 % «otros»</td><td class="n">19 % · <span class="est">≈50 M</span></td><td class="n">40 % · <span class="est">≈100 M</span></td><td>Pew 2023-24</td></tr>
+    <tr><td>Brasil (pt)</td><td>—</td><td class="n">100,2 M (56,7 %)</td><td class="n">47,4 M (26,9 %)</td><td>IBGE 2022</td></tr>
+    <tr><td>Francia (fr)</td><td>—</td><td class="n"><span class="est">≈29 %</span> (18–59 años)</td><td>—</td><td>INSEE TeO2</td></tr>
+    <tr><td>Italia (it)</td><td>diáspora rumana</td><td class="n"><span class="est">≈80 % cristianos</span>, mayoría cat.</td><td>—</td><td>Pew 2018</td></tr>
+    <tr><td>Alemania (de)</td><td class="n"><span class="est">≈3,8–4 M</span></td><td class="n">19,8 M (23,7 %)</td><td class="n">≈18 M (EKD)</td><td>DBK/EKD 2024</td></tr>
+    <tr><td>Grecia (el)</td><td class="n">90 % · <span class="est">≈9 M</span></td><td>—</td><td>—</td><td>Pew 2017</td></tr>
+    <tr><td>Rusia (ru)</td><td class="n">65 % · <span class="est">≈95 M</span></td><td>—</td><td>—</td><td>FOM 2026</td></tr>
+    <tr><td>Rumanía (ro)</td><td class="n">13,99 M (73,4 %)</td><td class="n">0,86 M</td><td class="n">6,2 %</td><td>INS 2021</td></tr>
+    <tr class="tot"><td>Total</td><td class="n est">≈120 M</td><td class="n est">≈340–360 M</td><td class="n est">≈180 M</td><td>suma</td></tr>
+   </tbody>
+  </table></div>
+ </section>
+
+ <section>
+  <h2>Señales de uso de apps parecidas</h2>
+  <div class="tbl"><table>
+   <thead><tr><th>Señal</th><th>Dato</th><th>Mejora</th></tr></thead>
+   <tbody>
+    <tr><td>Hallow, Miércoles de Ceniza 2026</td><td class="n">263 000 descargas, ≈25× la media diaria <span class="est">(Appfigures, estim.)</span></td><td>Retos de temporada</td></tr>
+    <tr><td>Reto Pray40 de Hallow</td><td class="n">más de 1,4 M de participantes</td><td>Retos de temporada</td></tr>
+    <tr><td>Calendario ortodoxo ruso (Kotyuk)</td><td class="n">1M+ descargas, 4,8 ★, widget y avisos gratis</td><td>Avisos · widget</td></tr>
+    <tr><td>Laudate · iBreviary</td><td class="n">1M+ cada una</td><td>Lecturas · Horas</td></tr>
+    <tr><td>«Santo Rosario con Audio»</td><td class="n">253 000+ instalaciones (una sola app pequeña)</td><td>Rosario</td></tr>
+    <tr><td>Búsquedas «church» en EE. UU.</td><td>picos en Pascua, Navidad y Ceniza (Google Trends 2004-13)</td><td>Retos de temporada</td></tr>
+    <tr><td>Biblia digital en EE. UU.</td><td class="n">41 % usa la Biblia; ⅔ en digital; 62 % de ellos con apps</td><td>Lecturas · widget</td></tr>
+   </tbody>
+  </table></div>
+ </section>
+
+ <section>
+  <h2>Las 5 elegidas</h2>
+  <ol class="picks">
+   <li><b>Aviso gratuito de ayuno y fiesta.</b> Ya está programado en Phos; solo hay que sacarlo de Premium.</li>
+   <li><b>Lecturas del día.</b> Es lo que más hace volver cada día en las tres Iglesias.</li>
+   <li><b>Rosario guiado (y komboskini).</b> Sirve al grupo más grande y es barato de hacer.</li>
+   <li><b>Retos de temporada.</b> La Cuaresma es el mayor pico de descargas; hay que tenerlo antes de febrero de 2027.</li>
+   <li><b>Widget gratuito.</b> Ya existe y deja Phos a la vista cada día.</li>
+  </ol>
+  <p class="note">Detalle, plan por archivo y fuentes: <code>android/investigacion/2-mercado.md</code>.</p>
+ </section>
+</div>
+
+<script>
+const M=[
+ ["Aviso gratuito de ayuno y fiesta",8,10,10,1],
+ ["Lecturas del día",9,10,6,1],
+ ["Rosario guiado (y komboskini)",9,8,9,1],
+ ["Retos de temporada",9,9,6,1],
+ ["Widget gratuito",7,9,10,1],
+ ["Libro de oraciones por horas",8,9,3],
+ ["Examen de conciencia",6,8,9],
+ ["Intenciones privadas (pomiannik)",6,8,8],
+ ["Tropario y kontakion del día",6,9,5],
+ ["Santos en los 9 idiomas",6,9,5],
+ ["Audio sincronizado con el texto",6,7,8],
+ ["Oración de Jesús con respiración",4,9,9],
+ ["Biblia en audio con voz humana",8,7,2],
+ ["Biblias en paralelo",5,9,6],
+ ["Sincronizar notas y subrayados",6,7,5],
+ ["Akathistos y Paraklisis",5,8,5],
+ ["Becas de Premium",3,8,9],
+ ["Historias para niños y para dormir",7,5,2],
+ ["Plan familiar y regalo",5,6,5],
+ ["Encuentra tu iglesia (enlaces)",3,6,9]
+];
+const fmt=n=>n.toFixed(1).replace('.',',');
+const ol=document.getElementById('bars');
+M.forEach(([n,d,e,f,top],i)=>{
+ const s=.5*d+.3*e+.2*f;
+ const li=document.createElement('li');li.className='bar'+(top?' top':'');
+ li.innerHTML=`<span class="rank">${i+1}</span><div class="name"><span>${n}${top?'<span class="pill">elegida</span>':''}</span><span class="sc">${fmt(s)}</span></div><div class="track" role="img" aria-label="Nota ${fmt(s)} de 10"><div class="fill" style="width:${s*10}%"></div></div><span class="sub">D ${d} · E ${e} · F ${f}</span>`;
+ ol.appendChild(li);
+});
+</script>
+
+</body>
+</html>
