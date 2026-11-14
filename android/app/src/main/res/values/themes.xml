@@ -1,0 +1,8 @@
+<resources>
+  <style name="PhosTheme" parent="@android:style/Theme.Material.Light.NoActionBar">
+    <item name="android:windowBackground">@color/phos_vino</item>
+    <item name="android:statusBarColor">@color/phos_vino</item>
+    <item name="android:navigationBarColor">@color/phos_vino</item>
+  </style>
+  <color name="phos_vino">#4A1416</color>
+</resources>

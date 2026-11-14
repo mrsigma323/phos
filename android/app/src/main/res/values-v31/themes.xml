@@ -1,0 +1,9 @@
+<resources>
+  <style name="PhosTheme" parent="@android:style/Theme.Material.Light.NoActionBar">
+    <item name="android:windowBackground">@color/phos_vino</item>
+    <item name="android:statusBarColor">@color/phos_vino</item>
+    <item name="android:navigationBarColor">@color/phos_vino</item>
+    <item name="android:windowSplashScreenBackground">@color/phos_vino</item>
+    <item name="android:windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+  </style>
+</resources>

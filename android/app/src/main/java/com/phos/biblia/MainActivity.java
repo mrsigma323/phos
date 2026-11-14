@@ -39,6 +39,7 @@ public class MainActivity extends Activity {
         getWindow().setStatusBarColor(Color.rgb(74, 20, 22));
         getWindow().setNavigationBarColor(Color.rgb(246, 241, 231));
         web = new WebView(this);
+        web.setBackgroundColor(0xFF4A1416); // mismo vino que la pantalla de carga: sin destello blanco
         setContentView(web);
         WebSettings s = web.getSettings();
         s.setJavaScriptEnabled(true);
