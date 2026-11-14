@@ -40,7 +40,7 @@ else:
     js = "\n".join(r(f) for f in parts)
     js += "\n" + r("app.js").replace("__VIVLOS__", r("vivlos.json"))
     js += "\n" + r("sections.js")
-    rest = ["features.js"] + LEARN_FILES + OTHER + ["mejoras_i18n.js", "premium_i18n.js", "premium.js", "plus_i18n.js", "retos_data.js", "retos.js", "plus.js", "vida.js", "welcome.js", "mejoras.js", "guia.js", "vidas.js", "focus.js"]
+    rest = ["features.js"] + LEARN_FILES + OTHER + ["mejoras_i18n.js", "premium_i18n.js", "premium.js", "plus_i18n.js", "retos_data.js", "retos.js", "plus.js", "vida.js", "welcome.js", "mejoras.js", "guia.js", "vidas.js", "focus.js", "nivel.js"]
 for f in rest:
     if os.path.exists(D + f): js += "\n" + r(f)
 if WEB:
