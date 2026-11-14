@@ -35,6 +35,8 @@ import java.util.function.Consumer;
 class Billing implements PurchasesUpdatedListener {
     static final String SUB = "phos_premium";
     static final List<String> TIPS = Arrays.asList("apoyo_2", "apoyo_5", "apoyo_10");
+    /** Paquetes de vidas de Aprender (consumibles): 2, 4 y 10 «vidas de ofrenda». */
+    static final List<String> LIVES = Arrays.asList("vidas_2", "vidas_4", "vidas_10");
 
     final BillingClient client;
     final Consumer<String> js;
@@ -69,6 +71,7 @@ class Billing implements PurchasesUpdatedListener {
         List<QueryProductDetailsParams.Product> subs = new ArrayList<>();
         subs.add(QueryProductDetailsParams.Product.newBuilder().setProductId(SUB).setProductType(BillingClient.ProductType.SUBS).build());
         List<QueryProductDetailsParams.Product> tips = new ArrayList<>();
+        for (String t : LIVES) tips.add(QueryProductDetailsParams.Product.newBuilder().setProductId(t).setProductType(BillingClient.ProductType.INAPP).build());
         for (String t : TIPS) tips.add(QueryProductDetailsParams.Product.newBuilder().setProductId(t).setProductType(BillingClient.ProductType.INAPP).build());
         query(subs);
         query(tips);
@@ -146,12 +149,12 @@ class Billing implements PurchasesUpdatedListener {
 
     void handle(Purchase p) {
         if (p.getPurchaseState() != Purchase.PurchaseState.PURCHASED) return;   // pendiente: se resuelve más tarde
-        boolean tip = false;
-        for (String id : p.getProducts()) if (TIPS.contains(id)) tip = true;
+        boolean tip = false, lives = false;
+        for (String id : p.getProducts()) { if (TIPS.contains(id)) tip = true; if (LIVES.contains(id)) lives = true; }
         // El servidor de Phos guarda el recibo (y lo verifica con Google cuando esté configurado).
         js.accept("window.PhosPay&&PhosPay.onPurchase({\"products\":" + list(p.getProducts()) + ",\"token\":" + MainActivity.quote(p.getPurchaseToken())
-                + ",\"order\":" + MainActivity.quote(p.getOrderId() == null ? "" : p.getOrderId()) + ",\"tip\":" + tip + "})");
-        if (tip) {
+                + ",\"order\":" + MainActivity.quote(p.getOrderId() == null ? "" : p.getOrderId()) + ",\"tip\":" + tip + ",\"lives\":" + lives + "})");
+        if (tip || lives) {
             client.consumeAsync(ConsumeParams.newBuilder().setPurchaseToken(p.getPurchaseToken()).build(), (res, t) -> { });
         } else if (!p.isAcknowledged()) {
             client.acknowledgePurchase(AcknowledgePurchaseParams.newBuilder().setPurchaseToken(p.getPurchaseToken()).build(), res -> { });

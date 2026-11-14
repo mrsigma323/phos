@@ -20,7 +20,7 @@ import org.json.JSONObject;
  * La lista se guarda y se vuelve a programar al reiniciar el móvil.
  */
 final class Reminders {
-    static final String PREFS = "phos_reminders", KEY = "list", CHANNEL = "phos_diario";
+    static final String PREFS = "phos_reminders", KEY = "list", CHANNEL = "phos_diario", CHANNEL_OFFERS = "phos_ofertas";
     static final int MAX = 60;
 
     static void replace(Context c, String json) {
@@ -57,6 +57,7 @@ final class Reminders {
                 .putExtra("title", r.optString("title", "Phos"))
                 .putExtra("body", r.optString("body", ""))
                 .putExtra("open", r.optString("open", ""))
+                .putExtra("ch", r.optString("ch", ""))
                 .putExtra("n", i);
         return PendingIntent.getBroadcast(c, i, it, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
@@ -64,15 +65,20 @@ final class Reminders {
     public static class Fire extends BroadcastReceiver {
         @Override public void onReceive(Context c, Intent in) {
             NotificationManager nm = (NotificationManager) c.getSystemService(Context.NOTIFICATION_SERVICE);
-            if (Build.VERSION.SDK_INT >= 26 && nm.getNotificationChannel(CHANNEL) == null) {
-                NotificationChannel ch = new NotificationChannel(CHANNEL, "Recordatorios de Phos", NotificationManager.IMPORTANCE_DEFAULT);
-                ch.setDescription("Oración, ayunos, santo del día y plan de lectura");
+            // Dos canales: recordatorios y ofertas (las ofertas se pueden desactivar aparte en los ajustes de Android)
+            boolean offer = "ofertas".equals(in.getStringExtra("ch"));
+            String chId = offer ? CHANNEL_OFFERS : CHANNEL;
+            if (Build.VERSION.SDK_INT >= 26 && nm.getNotificationChannel(chId) == null) {
+                NotificationChannel ch = offer
+                        ? new NotificationChannel(chId, "Ofertas de Phos", NotificationManager.IMPORTANCE_LOW)
+                        : new NotificationChannel(chId, "Recordatorios de Phos", NotificationManager.IMPORTANCE_DEFAULT);
+                ch.setDescription(offer ? "Regalos y ofertas en días de fiesta" : "Oración, ayunos, santo del día y plan de lectura");
                 nm.createNotificationChannel(ch);
             }
             Intent open = new Intent(c, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     .putExtra("open", in.getStringExtra("open"));
             PendingIntent tap = PendingIntent.getActivity(c, 1000 + in.getIntExtra("n", 0), open, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-            android.app.Notification.Builder b = Build.VERSION.SDK_INT >= 26 ? new android.app.Notification.Builder(c, CHANNEL) : new android.app.Notification.Builder(c);
+            android.app.Notification.Builder b = Build.VERSION.SDK_INT >= 26 ? new android.app.Notification.Builder(c, chId) : new android.app.Notification.Builder(c);
             b.setSmallIcon(R.mipmap.ic_launcher)
              .setColor(Color.rgb(74, 20, 22))
              .setContentTitle(in.getStringExtra("title"))

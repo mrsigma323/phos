@@ -20,7 +20,7 @@ window.phosBack=()=>{if(_phosBackP&&_phosBackP())return true;
 // ===== Racha diaria =====
 (function(){const k=todayKey(),v=store.get('visits',{last:null,streak:0,best:0});if(v.last===k)return;
  const y=new Date();y.setDate(y.getDate()-1);const yk=y.getFullYear()+'-'+String(y.getMonth()+1).padStart(2,'0')+'-'+String(y.getDate()).padStart(2,'0');
- v.streak=v.last===yk?v.streak+1:1;v.best=Math.max(v.best||0,v.streak);v.last=k;store.set('visits',v);
+ v.gap=v.last?Math.round((new Date(k)-new Date(v.last))/864e5):0;v.streak=v.last===yk?v.streak+1:1;v.best=Math.max(v.best||0,v.streak);v.last=k;store.set('visits',v);
  if([7,30,50,100,200,365,500,1000].includes(v.streak))setTimeout(()=>toast(qt('mile',{n:v.streak})),1200)})();
 const streakN=()=>store.get('visits',{streak:1}).streak||1;
 

@@ -101,6 +101,7 @@ function scheduleReminders(){
   try{const p=prayerFor(br,20);add('evening',pt('rEvening'),(nm(p.k)||pt('rEvening'))+' · '+pt('nOpen'),'hoy')}catch(e){}
   if(info&&FASTDAYS.has(info.f))try{add('fast',pt('nFast'),ftText(info.f),'hoy')}catch(e){}
   try{const mj=info?info.cel.filter(c=>majSet(br).has(c)).map(celName).filter(Boolean):[];if(mj.length)add('feast',mx('nFeast'),mj.join(' · '),'hoy')}catch(e){}
+  if(typeof offerReminders==='function'){const r=offerReminders(y,m,dd);if(r&&r.at>now+30e3)out.push(r)}
   if(!pr)continue;
   try{const c=(typeof celebsOn==='function'?celebsOn(br,td).map(celName).filter(Boolean):[]).concat(LANG==='es'?daySaints(br,td):[]);
    if(c.length)add('saint',pt('nSaint'),c.slice(0,2).join(' · '),'hoy')}catch(e){}
@@ -118,8 +119,9 @@ function paywallCard(kind){
  $('#pwGo').onclick=()=>openP('premium');
  S.view='paywall';setHeader();$('#back').style.visibility='visible';
 }
-const freeLesson=(br,id)=>{if(id.startsWith('intro'))return true;if(id==='exam')return false;
- const u=courseUnits(br);return (u[0]&&u[0].lessons.includes(id))||(u[1]&&u[1].lessons.includes(id))};
+// Gratis: la introducción y la primera mitad de cada curso, solo en nivel Fácil. Normal y Difícil: Phos Premium.
+const freeLesson=(br,id)=>{if(id.startsWith('intro'))return true;if(id==='exam'||(typeof lv==='function'&&lv()!=='easy'))return false;
+ const u=courseUnits(br),half=Math.ceil(u.length/2),i=/^(rev|ex):/.test(id)?+id.split(':')[1]:u.findIndex(x=>x.lessons.includes(id));return i>=0&&i<half};
 if(IN_APP){
  const _sl=startLesson;startLesson=function(br,id){return isPremium()||freeLesson(br,id)?_sl(br,id):paywallCard('lesson')};
  const _sll=startLangLesson;startLangLesson=function(lc,id){return isPremium()?_sll(lc,id):paywallCard('lesson')};

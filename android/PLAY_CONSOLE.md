@@ -39,3 +39,13 @@ Sin ellos, el AAB sale sin firmar y solo sirve el APK de prueba.
 ## Gratis y Premium en 2.1
 - Gratis: portada Hoy, racha, compartir imagen, Reto del día, cuenta y sincronización.
 - Premium: ¿Quién soy?, Versículo desordenado, Línea del tiempo, Viajes de la Biblia, escuchar capítulos con temporizador, planes de lectura, regla de oración, diario espiritual, fondos de pantalla, widget y recordatorios.
+
+## Paquetes de vidas de Aprender (productos únicos, consumibles)
+- `vidas_2` «Puñado»: 2 vidas de ofrenda · 0,99 €
+- `vidas_4` «Cesta»: 4 vidas de ofrenda · 1,49 € (la más elegida)
+- `vidas_10` «Granero»: 10 vidas de ofrenda · 2,99 €
+En las grandes fiestas de la Iglesia de cada usuario la app regala +1, +3 y +5 vidas (nunca en Viernes ni Sábado Santo ni en ayuno estricto).
+Máximo 30 vidas compradas guardadas. Las probabilidades (30 % gracia y ofrenda, 15 % ánimo) se muestran en la app.
+
+## Anuncios con recompensa (pendiente)
+Preparado pero apagado: la app solo muestra «Ver un anuncio» si `PhosApp.adsReady()` existe y devuelve verdadero. Falta cuenta de AdMob, consentimiento UMP, bloquear categorías sensibles y declararlo en «Seguridad de los datos». Máximo 3 al día y nunca con Premium.
