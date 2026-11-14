@@ -225,7 +225,7 @@ dialog::backdrop{background:rgba(35,28,26,.45)}
 [data-theme=dark] .tch.done .tpmark{border-color:#8DB06A;color:#B9D79C}
 [data-theme=dark] .tpbar{background:var(--ground)}
 .tabs[hidden]{display:none!important}
-.menubtn{flex:0 0 auto;width:52px;height:52px;border-radius:50%;border:1.5px solid rgba(226,194,122,.55);background:rgba(226,194,122,.12);display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer;transition:background .2s,transform .15s,box-shadow .2s}
+.menubtn{flex:0 0 auto;height:42px;border-radius:999px;border:1.5px solid rgba(226,194,122,.7);background:rgba(226,194,122,.16);color:#F1DDA9;display:flex;align-items:center;justify-content:center;gap:6px;padding:0 13px 0 10px;font:700 14px Inter,sans-serif;letter-spacing:.3px;cursor:pointer;transition:background .2s,transform .15s,box-shadow .2s}
 .menubtn:hover,.menubtn.on{background:rgba(226,194,122,.25);box-shadow:0 0 0 3px rgba(226,194,122,.18)}
 .menubtn:active{transform:scale(.94)}
 .menu{position:fixed;top:72px;left:12px;z-index:20;min-width:min(17rem,calc(100vw - 24px));background:#fff;border-radius:18px;box-shadow:0 12px 32px rgba(35,28,26,.28);padding:8px;animation:menuIn .18s ease-out}
@@ -327,6 +327,13 @@ dialog::backdrop{background:rgba(35,28,26,.45)}
 .planop.on{border-color:#E2C27A;background:rgba(226,194,122,.14)}
 .planchg{display:block;width:100%;margin-top:10px;background:none;border:0;color:#E2C27A;font:inherit;font-size:14px;text-decoration:underline;cursor:pointer;padding:4px}
 
+.brandx{flex:0 0 auto;margin-left:2px;filter:drop-shadow(0 0 6px rgba(226,194,122,.35))}
+@media (max-width:420px){.brand small{display:none}.brand b{font-size:23px}.brand{gap:7px}}
+#back[style*="hidden"]{display:none}
+.brand>div{min-width:0;overflow:hidden}.brand b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:430px){header.top:has(#back:not([style*="hidden"])) .brand>div{display:none}}
+@media (max-width:350px){.brand>div{display:none}}
+
 </style>
 </head>
 <body>
@@ -336,7 +343,8 @@ dialog::backdrop{background:rgba(35,28,26,.45)}
 <header class="top">
 <button class="iconbtn" id="back" aria-label="Volver" style="visibility:hidden"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button>
 <div class="brand">
-<button class="menubtn" id="menuBtn" aria-haspopup="true" aria-expanded="false" aria-controls="menu" aria-label="Menú"><svg aria-hidden="true" width="26" height="35" viewBox="0 0 30 40" fill="none" stroke="#E2C27A" stroke-width="2.6" stroke-linecap="round"><path d="M15 3v34M10 8h10M5 16h20M9 29l12-5"/></svg></button>
+<button class="menubtn" id="menuBtn" aria-haspopup="true" aria-expanded="false" aria-controls="menu" aria-label="Menú"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span id="menuLbl">Menú</span></button>
+<svg class="brandx" aria-hidden="true" width="20" height="27" viewBox="0 0 30 40" fill="none" stroke="#E2C27A" stroke-width="2.6" stroke-linecap="round"><path d="M15 3v34M10 8h10M5 16h20M9 29l12-5"/></svg>
 <div><b>Phos</b><small id="sub"></small></div>
 </div>
 <button class="iconbtn" id="searchBtn" aria-label="Buscar en esta Biblia"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
@@ -2344,7 +2352,7 @@ function drawMenu(){
  const tabs=[...document.querySelectorAll('#tabs [data-sec]')];
  list.innerHTML=tabs.map(x=>`<button role="menuitem" class="mitem" data-sec="${x.dataset.sec}" ${x.getAttribute('aria-current')?'aria-current="page"':''}><span class="mico" aria-hidden="true">${MENU_ICO[x.dataset.sec]||'•'}</span><span>${esc(x.textContent)}</span></button>`).join('');
  list.querySelectorAll('[data-sec]').forEach(b=>b.onclick=()=>{menuOpen(false);const tb=document.querySelector(`#tabs [data-sec="${b.dataset.sec}"]`);if(tb)tb.click()});
- const mb=$('#menuBtn');if(mb)mb.setAttribute('aria-label',MENU_T[LANG]||MENU_T.en);
+ const mb=$('#menuBtn');if(mb)mb.setAttribute('aria-label',MENU_T[LANG]||MENU_T.en);const ml=$('#menuLbl');if(ml)ml.textContent=MENU_T[LANG]||MENU_T.en;
 }
 const _drawTabsM=drawTabs;
 drawTabs=function(){_drawTabsM();drawMenu()};
@@ -3069,7 +3077,9 @@ const prem2=()=>typeof isPremium!=='function'||!IN_APP||isPremium();
 const _renderArticlesP=renderArticles;
 renderArticles=async function(sec){if(sec==='retos')return renderRetos();if(sec==='mine')return renderMine();return _renderArticlesP(sec)};
 const _setHeaderP=setHeader;
-setHeader=function(){_setHeaderP();if((S.sec==='retos'||S.sec==='mine')&&S.view!==S.sec)$('#back').style.visibility='visible'};
+const fitBrand=()=>{const d=document.querySelector('.brand>div');if(!d)return;d.style.display='';const b=d.querySelector('b');if(b&&b.scrollWidth>b.clientWidth+1)d.style.display='none'};
+addEventListener('resize',fitBrand);
+setHeader=function(){_setHeaderP();setTimeout(fitBrand,0);if((S.sec==='retos'||S.sec==='mine')&&S.view!==S.sec)$('#back').style.visibility='visible'};
 const _phosBackP=window.phosBack;
 window.phosBack=()=>{if(_phosBackP&&_phosBackP())return true;
  if((S.sec==='retos'||S.sec==='mine')&&S.view!==S.sec){go(S.sec);return true}
