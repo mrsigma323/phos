@@ -4,6 +4,6 @@
     <item name="android:statusBarColor">@color/phos_vino</item>
     <item name="android:navigationBarColor">@color/phos_vino</item>
     <item name="android:windowSplashScreenBackground">@color/phos_vino</item>
-    <item name="android:windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+    <item name="android:windowSplashScreenAnimatedIcon">@drawable/phos_mark</item>
   </style>
 </resources>

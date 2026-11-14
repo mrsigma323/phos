@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Marca de Phos (Φ en un círculo), vectorial para que se vea nítida en la pantalla de carga y en el icono.
+     Todo cabe dentro del círculo seguro de Android (radio 80 de 120), así no se recorta. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="240dp" android:height="240dp" android:viewportWidth="240" android:viewportHeight="240">
+  <path android:strokeColor="#E2C27A" android:strokeWidth="4" android:fillColor="#00000000"
+      android:pathData="M50,120 a70,70 0 1,0 140,0 a70,70 0 1,0 -140,0"/>
+  <path android:strokeColor="#33E2C27A" android:strokeWidth="1.5" android:fillColor="#00000000"
+      android:pathData="M58,120 a62,62 0 1,0 124,0 a62,62 0 1,0 -124,0"/>
+  <path android:strokeColor="#E2C27A" android:strokeWidth="9" android:fillColor="#00000000"
+      android:pathData="M89,120 a31,25 0 1,0 62,0 a31,25 0 1,0 -62,0"/>
+  <path android:fillColor="#E2C27A"
+      android:pathData="M115.5,80 h9 v80 h-9z M102,74 h36 v8 h-36z M102,158 h36 v8 h-36z"/>
+</vector>

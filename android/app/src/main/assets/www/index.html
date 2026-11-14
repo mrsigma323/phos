@@ -3183,16 +3183,27 @@ function startMap(ji){
   view.innerHTML=`<h1 class="qp">${esc(jourT(J))}</h1><p class="note">${esc(qt('tapCity'))} · ${esc(bname(J.ref.split(' ')[0]))} ${J.ref.split(' ')[1].replace(':',', ')}</p>
   <svg class="bmap" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(qt('map'))}"><g class="grid">${grid}</g>
    <polyline points="${route}" class="route"/>
-   ${P.map((p,k)=>{const vis=k<step;return `<g class="city ${vis?'on':''} ${k===0?'start':''}" data-c="${k}" tabindex="0" role="button" aria-label="${esc(nm(p))}"><circle cx="${X(p[3])}" cy="${Y(p[2])}" r="${vis?7:9}"/><circle class="hit" cx="${X(p[3])}" cy="${Y(p[2])}" r="20"/>${vis?`<text x="${X(p[3])>W-90?X(p[3])-10:X(p[3])+10}" text-anchor="${X(p[3])>W-90?'end':'start'}" y="${Y(p[2])-8}">${k+1}. ${esc(nm(p))}</text>`:''}</g>`}).join('')}
+   ${(()=>{const lab=[];return P.map((p,k)=>{const vis=k<step;let ty=Y(p[2])-8;const tx=X(p[3]);
+    if(vis){while(lab.some(([x,y])=>Math.abs(x-tx)<70&&Math.abs(y-ty)<13))ty+=15;lab.push([tx,ty])}
+    return `<g class="city ${vis?'on':''} ${k===0?'start':''}" data-c="${k}" tabindex="0" role="button" aria-label="${esc(nm(p))}"><circle cx="${tx}" cy="${Y(p[2])}" r="${vis?7:9}"/><circle class="hit" cx="${tx}" cy="${Y(p[2])}" r="20"/>${vis?`<text x="${tx>W-90?tx-10:tx+10}" text-anchor="${tx>W-90?'end':'start'}" y="${ty}">${k+1}. ${esc(nm(p))}</text>`:''}</g>`}).join('')})()}
   </svg>
-  <div class="chips" style="margin-top:10px">${rshuf(seeded(J.id),P.map((p,k)=>k)).filter(k=>k>=step).map(k=>`<span class="pill soft">${esc(nm(P[k]))}</span>`).join(' ')}</div>
+  <div class="chips" style="margin-top:10px">${rshuf(seeded(J.id),P.map((p,k)=>k)).filter(k=>k>=step).map(k=>`<button class="pill soft mchip" data-c="${k}">${esc(nm(P[k]))}</button>`).join(' ')}</div>
   <div id="rfoot" style="margin-top:14px"></div>`;
-  view.querySelectorAll('.city').forEach(g=>g.onclick=()=>{const k=+g.dataset.c;if(k<step||step>=P.length)return;
+  const choose=k=>{if(k<step||step>=P.length)return;$('.mpick')&&$('.mpick').remove();
    if(k===step){step++;draw();if(step>=P.length){const pts=Math.max(0,P.length*5-miss*3);addRetoPts(pts);
     $('#rfoot').innerHTML=`<div class="fb" role="status"><b>${esc(qt('right')+' · '+qt('points',{n:pts}))}</b></div><div style="display:flex;gap:10px"><button class="btn ghost" id="mList" style="flex:1">${esc(qt('map'))}</button><button class="btn" id="rAgain" style="flex:1">${esc(qt('again'))}</button></div>`;
     $('#rAgain').onclick=()=>startMap(ji);$('#mList').onclick=()=>startMap()}}
-   else{miss++;g.classList.add('shake');setTimeout(()=>g.classList.remove('shake'),400);
-    const nx=P[step];$('#rfoot').innerHTML=`<p class="note">➡️ ${esc(nm(nx))}?</p>`}});
+   else{miss++;const g=view.querySelector(`.city[data-c="${k}"]`);if(g){g.classList.add('shake');setTimeout(()=>g.classList.remove('shake'),400)}
+    const nx=P[step];$('#rfoot').innerHTML=`<p class="note">➡️ ${esc(nm(nx))}?</p>`}};
+  view.querySelectorAll('.mchip').forEach(b=>b.onclick=()=>choose(+b.dataset.c));
+  // Toque en el mapa: si hay varias ciudades cerca del dedo, se abre una lista para elegir
+  const svg=view.querySelector('.bmap');svg.onclick=e=>{const r=svg.getBoundingClientRect(),sx=W/r.width,px=(e.clientX-r.left)*sx,py=(e.clientY-r.top)*sx,rad=30*sx;
+   const near=P.map((p,k)=>({k,d:Math.hypot(X(p[3])-px,Y(p[2])-py)})).filter(o=>o.k>=step&&o.d<rad).sort((a,b)=>a.d-b.d);
+   if(!near.length)return;if(near.length===1||near[1].d-near[0].d>18*sx){choose(near[0].k);return}
+   $('.mpick')&&$('.mpick').remove();const m=document.createElement('div');m.className='mpick';m.setAttribute('role','dialog');
+   m.innerHTML=`<p class="note">${esc(qt('mapPick'))}</p>${near.map(o=>`<button class="opt" data-c="${o.k}">📍 ${esc(nm(P[o.k]))}</button>`).join('')}`;
+   const host=svg.parentElement;host.style.position='relative';svg.after(m);m.style.top=(svg.offsetTop+Math.min(r.height-40,(e.clientY-r.top)+12))+'px';
+   m.querySelectorAll('[data-c]').forEach(b=>b.onclick=ev=>{ev.stopPropagation();choose(+b.dataset.c)})};
  };draw();
 }
 
@@ -3211,6 +3222,10 @@ function renderRetos(){
  <div class="card off rcard"><div class="t"><span class="rico">👥</span>${esc(qt('group'))}<span class="pill soft">${esc(qt('soon'))}</span></div><div class="s">${esc(qt('groupLead'))}</div></div>`;
  view.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>go(b.dataset.r));
 }
+// Lista para elegir cuando hay varias ciudades juntas en el mapa
+(function(){const M={es:"Hay varias ciudades aquí. ¿Cuál quieres?",en:"There are several cities here. Which one?",pt:"Há várias cidades aqui. Qual quer?",fr:"Il y a plusieurs villes ici. Laquelle ?",it:"Qui ci sono più città. Quale vuoi?",de:"Hier liegen mehrere Städte. Welche meinst du?",el:"Εδώ υπάρχουν αρκετές πόλεις. Ποια θέλεις;",ru:"Здесь несколько городов. Какой выбрать?",ro:"Aici sunt mai multe orașe. Pe care îl alegi?"};
+ for(const l in M)if(QX[l])QX[l].mapPick=M[l];
+ const st=document.createElement('style');st.textContent=`.mpick{position:absolute;left:12px;right:12px;z-index:5;background:var(--card,#fff);border-radius:16px;padding:12px;box-shadow:0 10px 30px rgba(0,0,0,.25);display:flex;flex-direction:column;gap:8px}.mpick .note{margin:0 0 4px}.mchip{cursor:pointer;border:0;font:inherit}`;document.head.appendChild(st)})();
 
 // ---------- Phos «plus»: portada Hoy, racha, compartir, Mi Phos, voz alta y cuenta ----------
 const API_BASE='https://phosbiblias.com/api/';
@@ -3701,7 +3716,7 @@ function fichaText(){
  const v=vida()||{},a=store.get('acct',null),acc=v.acc||{};const F=k=>vt('f_'+k);
  const fd=x=>{try{return new Date(x).toLocaleString(LANG,{dateStyle:'short',timeStyle:'medium'})+' ('+x+')'}catch(e){return x}};
  const L=[`PHOS · ${vt('ficha').toUpperCase()}`,`${vt('clientId')}: ${cid()}`];
- if(v.name)L.push(`${F('name')}: ${v.name}`);if(a&&a.email)L.push(`${F('acct')}: ${a.email}`);
+ if(v.name&&(typeof docName!=='function'||docName(v.name)))L.push(`${F('name')}: ${v.name}`);if(a&&a.email)L.push(`${F('acct')}: ${a.email}`);
  L.push(`${vt('started')}: ${v.started||'—'}`,`${F('adult')}: ${v.adult?F('yes'):F('no')}`,
   `${F('goals')}: ${(v.goals||[]).map(g=>vt('g_'+g)).join(', ')}`,`${vt('level')}: ${vt('l_'+['soft','steady','hard'][v.level||0])}`,
   `${F('hour')}: ${v.hour||'—'}`);
@@ -3726,7 +3741,7 @@ function drawFicha(){
 }
 // Condiciones con los datos de cada cliente rellenados automáticamente (versión en español e inglés)
 function termsHTML(){
- const v=vida()||{},a=store.get('acct',null),acc=v.acc||{},es=LANG==='es';const who=v.name||(a&&a.email)||cid();
+ const v=vida()||{},a=store.get('acct',null),acc=v.acc||{},es=LANG==='es';const who=(typeof docName==='function'?docName(v.name):v.name)||(a&&a.email)||cid();
  const TT=trGet('TERMS');const S1=TT?TT.map(([h,p])=>[h,p.replace('{who}',who).replace('{cid}',cid()).replace('{acct}',a&&a.email?trGet('termsAcct').replace('{e}',a.email):'').replace('{ver}',TERMS_VERSION).replace('{disc}',vt('disc')+' '+vt('discHealth'))]):es?[
   ['1. Partes',`Estas condiciones se aceptan entre el titular de Phos (sus datos de contacto figuran en phosbiblias.com › Aviso legal y en la ficha de la app en Google Play) y ${who}, con código de cliente ${cid()}${a&&a.email?' y cuenta '+a.email:''}.`],
   ['2. Qué es Phos Premium',`Una suscripción de la app de Phos para Android, gestionada y cobrada por Google Play, que da acceso a recordatorios personalizados, aprendizaje completo, Retos bíblicos, Regla de vida y otras funciones descritas en la app. Phos es y seguirá siendo gratis en phosbiblias.com.`],
@@ -3795,7 +3810,7 @@ window.phosBack=()=>{if(S.sec==='vida'&&S.view!=='vida'&&!PVIEWS[S.view]){go('vi
 .wchart{display:flex;gap:8px;align-items:flex-end;height:110px;padding:8px;background:var(--paper);border-radius:14px}.wb{flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end}
 .wb i{display:block;width:100%;background:#C9B48A;border-radius:6px 6px 2px 2px}.wb i.full{background:var(--wine)}.wb span{font-size:12px;color:var(--muted);margin-top:4px}
 .vin{width:100%;box-sizing:border-box;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff}
-.chip[disabled],.seg button[disabled]{opacity:.4}
+.chip[disabled],.seg button[disabled]{opacity:.4}#view .chips .chip{border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:9px 14px;font:inherit;font-weight:600;font-size:15px;min-height:44px;cursor:pointer}#view .chips .chip.on{background:var(--wine);border-color:var(--wine);color:#FBF3E2}[data-theme=dark] #view .chips .chip{background:var(--paper);color:var(--ink);border-color:var(--line)}[data-theme=dark] #view .chips .chip.on{background:#B5574C;border-color:#B5574C;color:#fff}[data-theme=dark] .btn:not(.ghost){color:#FBF3E2}
 .ficha{white-space:pre-wrap;font:14px/1.5 ui-monospace,Menlo,monospace;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px}
 .paycons{margin:12px 0}.paycons .nrow{align-items:flex-start;margin-bottom:8px}
 [data-theme=dark] .disc{background:#3A2C17;color:#F1DDA9}[data-theme=dark] .vtask{background:#241B18}[data-theme=dark] .vtask.on{background:#1E3A24}`;document.head.appendChild(st)})();
@@ -5528,6 +5543,91 @@ const jourT=j=>{const J=trGet('JOUR'),i=JOURNEYS.indexOf(j);return LANG==='es'?j
 const jourP=(j,k)=>{const J=trGet('JOUR'),i=JOURNEYS.indexOf(j);return LANG==='es'?j.pts[k][0]:(J&&J[i]&&J[i][1][k])||j.pts[k][1]};
 const rtx=(k,o)=>{const R=trGet('R')||{};const D={es:{clue1:'Apareces en el libro de {b}',clue3:'Tu nombre empieza por «{c}»',places:'lugares'},en:{clue1:'You appear in the book of {b}',clue3:'Your name begins with “{c}”',places:'places'}};
  let s=R[k]||(D[LANG]||D.en)[k];if(o)for(const x in o)s=s.replace('{'+x+'}',o[x]);return s};
+
+// ---------- Símbolo de cada Iglesia en la cabecera, la pantalla de carga y la bienvenida ----------
+// Ortodoxa: cruz de tres travesaños. Católica: cruz latina con las llaves de san Pedro. Protestante: cruz sobre la Biblia abierta (sola Scriptura).
+// «Todas»: el símbolo cambia al azar cada vez que se cambia de sección.
+const SYM={
+ ortodoxa:'<path d="M15 3v34M10 8h10M5 16h20M9 29l12-5"/>',
+ catolica:'<path d="M15 3v19M8 10h14"/><g stroke-width="2"><circle cx="7.5" cy="25" r="2.6"/><circle cx="22.5" cy="25" r="2.6"/><path d="M9.5 27l12 11M20.5 27l-12 11M18.5 35.5l-2 2M11.5 35.5l2 2"/></g>',
+ protestante:'<path d="M15 3v20M9 9h12"/><path d="M3 28c4-2 8-2 12 0c4-2 8-2 12 0v8c-4-2-8-2-12 0c-4-2-8-2-12 0z" stroke-width="2.2" stroke-linejoin="round"/><path d="M15 28v8" stroke-width="2.2"/>'};
+const SYM_ALL={es:"Todas",en:"All of them",pt:"Todas",fr:"Toutes",it:"Tutte",de:"Alle",el:"Όλες",ru:"Все",ro:"Toate"};
+const SYM_ALLD={es:"Me interesan las tres tradiciones",en:"I'm interested in all three traditions",pt:"Interessam-me as três tradições",fr:"Les trois traditions m’intéressent",it:"Mi interessano tutte e tre le tradizioni",de:"Mich interessieren alle drei Traditionen",el:"Με ενδιαφέρουν και οι τρεις παραδόσεις",ru:"Мне интересны все три традиции",ro:"Mă interesează toate cele trei tradiții"};
+let symCur=null;
+const symMine=()=>store.get('symAll',false)?'all':tdBr();
+function symPick(){const m=symMine();if(m!=='all')return m;const k=Object.keys(SYM).filter(x=>x!==symCur);return k[Math.floor(Math.random()*k.length)]}
+function symPaint(k){symCur=k||symPick();
+ document.querySelectorAll('.brandx,#splash svg,.wlogo').forEach(s=>{s.innerHTML=SYM[symCur];s.setAttribute('data-sym',symCur)})}
+try{symPaint()}catch(e){}
+// Al cambiar de sección
+const _goSym=go;go=function(v,o){const before=S.sec;const r=_goSym.apply(this,arguments);if(symMine()==='all'&&S.sec!==before)symPaint();return r};
+// Bienvenida: cada Iglesia con su símbolo, y la opción «Todas»
+const _showWelcomeS=showWelcome;
+showWelcome=function(step){_showWelcomeS.apply(this,arguments);symPaint(symMine()==='all'?symCur:undefined);
+ const box=document.querySelector('#welcome .wchurch');if(!box)return;
+ const L=LANG,all=store.get('symAll',false),br=store.get('todayBr',null);
+ const ic=k=>`<svg viewBox="0 0 30 40" fill="none" stroke="#E2C27A" stroke-width="2.6" stroke-linecap="round" aria-hidden="true">${SYM[k]}</svg>`;
+ box.innerHTML=[['ortodoxa','ort'],['catolica','cat'],['protestante','prot']].map(([k,l])=>`<button class="wc${!all&&br===k?' on':''}" data-b="${k}"><span>${ic(k)}</span>${esc(wt(l))}</button>`).join('')
+  +`<button class="wc${all?' on':''}" data-b="all"><span class="wall">${ic('ortodoxa')}${ic('catolica')}${ic('protestante')}</span><div>${esc(SYM_ALL[L]||SYM_ALL.en)}<small>${esc(SYM_ALLD[L]||SYM_ALLD.en)}</small></div></button>`;
+ box.querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>{const k=b.dataset.b;
+  if(k==='all'){store.set('symAll',true);if(!store.get('todayBr',null))store.set('todayBr','ortodoxa')}else{store.set('symAll',false);store.set('todayBr',k)}
+  box.querySelectorAll('[data-b]').forEach(x=>x.classList.toggle('on',x===b));symPaint(k==='all'?undefined:k)})};
+(function(){const st=document.createElement('style');st.textContent=`.wc span svg{width:26px;height:34px;display:block;margin:auto}.wc span.wall{display:flex;width:auto;gap:2px}.wc span.wall svg{width:16px;height:22px}.wc div small{display:block;font-size:13px;opacity:.75;margin-top:2px}.brandx{transition:opacity .25s}.wc.on svg{stroke:#4A1416}[data-theme=dark] header.top{color:#FBF3E2}.city:focus{outline:none}.city:focus-visible circle:first-child{stroke:#B5574C;stroke-width:3}`;document.head.appendChild(st)})();
+
+// ---------- Mi Phos › Mis documentos: justificante cada vez que se aceptan las condiciones antes de pagar ----------
+// Recoge la aceptación, la versión de las condiciones y los datos que la persona ha querido vincular (sobre todo la cuenta).
+// Nunca incluye direcciones ni documentos de identidad: si el nombre los parece contener, se omite.
+const DX={
+es:{docs:"Mis documentos",docsLead:"Justificantes de lo que has aceptado en Phos. Puedes guardarlos o enviarlos cuando quieras.",none:"Todavía no tienes documentos.",made:"📄 Listo: tu justificante está en Mi Phos › Mis documentos.",title:"Justificante de aceptación",date:"Fecha y hora",ver:"Versión de las condiciones",accepted:"Has aceptado",linked:"Datos vinculados",acct:"Cuenta",noAcct:"sin cuenta (no has iniciado sesión)",name:"Nombre",church:"Iglesia",lang:"Idioma",copy:"Copia guardada por Phos",yes:"sí",no:"no",buy:"Compra en Google Play",pending:"pendiente de confirmar",order:"Pedido",priv:"Por tu privacidad, este documento no incluye direcciones ni documentos de identidad.",share:"Guardar o enviar",read:"Leer las condiciones completas",client:"Código de cliente"},
+en:{docs:"My documents",docsLead:"Receipts of what you have accepted in Phos. You can save or send them whenever you like.",none:"You have no documents yet.",made:"📄 Done: your receipt is in My Phos › My documents.",title:"Acceptance receipt",date:"Date and time",ver:"Terms version",accepted:"You accepted",linked:"Linked data",acct:"Account",noAcct:"no account (not signed in)",name:"Name",church:"Church",lang:"Language",copy:"Copy kept by Phos",yes:"yes",no:"no",buy:"Google Play purchase",pending:"awaiting confirmation",order:"Order",priv:"For your privacy, this document contains no addresses or identity documents.",share:"Save or send",read:"Read the full terms",client:"Customer code"},
+pt:{docs:"Os meus documentos",docsLead:"Comprovativos do que aceitou no Phos. Pode guardá-los ou enviá-los quando quiser.",none:"Ainda não tem documentos.",made:"📄 Pronto: o seu comprovativo está em Meu Phos › Os meus documentos.",title:"Comprovativo de aceitação",date:"Data e hora",ver:"Versão das condições",accepted:"Aceitou",linked:"Dados associados",acct:"Conta",noAcct:"sem conta (sessão não iniciada)",name:"Nome",church:"Igreja",lang:"Idioma",copy:"Cópia guardada pelo Phos",yes:"sim",no:"não",buy:"Compra no Google Play",pending:"a aguardar confirmação",order:"Pedido",priv:"Pela sua privacidade, este documento não inclui moradas nem documentos de identificação.",share:"Guardar ou enviar",read:"Ler as condições completas",client:"Código de cliente"},
+fr:{docs:"Mes documents",docsLead:"Les justificatifs de ce que vous avez accepté dans Phos. Vous pouvez les enregistrer ou les envoyer quand vous voulez.",none:"Vous n’avez encore aucun document.",made:"📄 C’est fait : votre justificatif est dans Mon Phos › Mes documents.",title:"Justificatif d’acceptation",date:"Date et heure",ver:"Version des conditions",accepted:"Vous avez accepté",linked:"Données associées",acct:"Compte",noAcct:"aucun compte (non connecté)",name:"Prénom",church:"Église",lang:"Langue",copy:"Copie conservée par Phos",yes:"oui",no:"non",buy:"Achat sur Google Play",pending:"en attente de confirmation",order:"Commande",priv:"Pour protéger votre vie privée, ce document ne contient ni adresse ni pièce d’identité.",share:"Enregistrer ou envoyer",read:"Lire les conditions complètes",client:"Code client"},
+it:{docs:"I miei documenti",docsLead:"Le ricevute di ciò che hai accettato in Phos. Puoi salvarle o inviarle quando vuoi.",none:"Non hai ancora documenti.",made:"📄 Fatto: la tua ricevuta è in Il mio Phos › I miei documenti.",title:"Ricevuta di accettazione",date:"Data e ora",ver:"Versione delle condizioni",accepted:"Hai accettato",linked:"Dati collegati",acct:"Account",noAcct:"nessun account (accesso non effettuato)",name:"Nome",church:"Chiesa",lang:"Lingua",copy:"Copia conservata da Phos",yes:"sì",no:"no",buy:"Acquisto su Google Play",pending:"in attesa di conferma",order:"Ordine",priv:"Per la tua privacy, questo documento non contiene indirizzi né documenti d’identità.",share:"Salva o invia",read:"Leggi le condizioni complete",client:"Codice cliente"},
+de:{docs:"Meine Dokumente",docsLead:"Belege über das, was du in Phos akzeptiert hast. Du kannst sie jederzeit speichern oder senden.",none:"Du hast noch keine Dokumente.",made:"📄 Fertig: Dein Beleg liegt unter Mein Phos › Meine Dokumente.",title:"Zustimmungsbeleg",date:"Datum und Uhrzeit",ver:"Version der Bedingungen",accepted:"Du hast akzeptiert",linked:"Verknüpfte Daten",acct:"Konto",noAcct:"kein Konto (nicht angemeldet)",name:"Name",church:"Kirche",lang:"Sprache",copy:"Kopie bei Phos gespeichert",yes:"ja",no:"nein",buy:"Kauf bei Google Play",pending:"Bestätigung ausstehend",order:"Bestellung",priv:"Zum Schutz deiner Privatsphäre enthält dieses Dokument weder Adressen noch Ausweisdaten.",share:"Speichern oder senden",read:"Vollständige Bedingungen lesen",client:"Kundennummer"},
+el:{docs:"Τα έγγραφά μου",docsLead:"Αποδεικτικά όσων αποδέχτηκες στο Phos. Μπορείς να τα αποθηκεύσεις ή να τα στείλεις όποτε θέλεις.",none:"Δεν έχεις ακόμη έγγραφα.",made:"📄 Έτοιμο: το αποδεικτικό σου βρίσκεται στο Phos μου › Τα έγγραφά μου.",title:"Αποδεικτικό αποδοχής",date:"Ημερομηνία και ώρα",ver:"Έκδοση των όρων",accepted:"Αποδέχτηκες",linked:"Συνδεδεμένα στοιχεία",acct:"Λογαριασμός",noAcct:"χωρίς λογαριασμό (δεν έχεις συνδεθεί)",name:"Όνομα",church:"Εκκλησία",lang:"Γλώσσα",copy:"Αντίγραφο στο Phos",yes:"ναι",no:"όχι",buy:"Αγορά στο Google Play",pending:"σε αναμονή επιβεβαίωσης",order:"Παραγγελία",priv:"Για την ιδιωτικότητά σου, αυτό το έγγραφο δεν περιέχει διευθύνσεις ούτε έγγραφα ταυτότητας.",share:"Αποθήκευση ή αποστολή",read:"Διάβασε όλους τους όρους",client:"Κωδικός πελάτη"},
+ru:{docs:"Мои документы",docsLead:"Подтверждения того, что вы приняли в Phos. Их можно сохранить или отправить в любой момент.",none:"У вас пока нет документов.",made:"📄 Готово: подтверждение сохранено в разделе «Мой Phos» › «Мои документы».",title:"Подтверждение согласия",date:"Дата и время",ver:"Версия условий",accepted:"Вы приняли",linked:"Привязанные данные",acct:"Аккаунт",noAcct:"без аккаунта (вход не выполнен)",name:"Имя",church:"Церковь",lang:"Язык",copy:"Копия хранится в Phos",yes:"да",no:"нет",buy:"Покупка в Google Play",pending:"ожидает подтверждения",order:"Заказ",priv:"Ради вашей конфиденциальности в документе нет адресов и удостоверений личности.",share:"Сохранить или отправить",read:"Прочитать условия полностью",client:"Код клиента"},
+ro:{docs:"Documentele mele",docsLead:"Dovezi pentru ce ai acceptat în Phos. Le poți salva sau trimite oricând.",none:"Încă nu ai documente.",made:"📄 Gata: dovada ta se află în Phos-ul meu › Documentele mele.",title:"Dovadă de acceptare",date:"Data și ora",ver:"Versiunea condițiilor",accepted:"Ai acceptat",linked:"Date asociate",acct:"Cont",noAcct:"fără cont (nu te-ai conectat)",name:"Nume",church:"Biserica",lang:"Limba",copy:"Copie păstrată de Phos",yes:"da",no:"nu",buy:"Cumpărare în Google Play",pending:"în așteptarea confirmării",order:"Comanda",priv:"Pentru confidențialitatea ta, acest document nu conține adrese sau acte de identitate.",share:"Salvează sau trimite",read:"Citește condițiile complete",client:"Cod de client"}};
+const dx=k=>(DX[LANG]&&DX[LANG][k])||DX.en[k]||k;
+// Nombre sin datos muy personales: fuera si lleva cifras (DNI, NIE, teléfono, número de calle) o parece una dirección
+const DOC_ADDR=/\b(c\/|calle|avda|avenida|plaza|pza|paseo|carrer|camino|piso|puerta|n[ºo°]|rua|rue|via|viale|straße|strasse|str\.|street|st\.|road|ave|ул\.|улица|str\b|odos|οδός|bulevardul|strada)\b/i;
+const docName=n=>{n=(n||'').trim();if(!n||/\d/.test(n)||DOC_ADDR.test(n)||n.length>40)return'';return n};
+const docsL=()=>store.get('docs',[]);
+function docMake(){
+ const v=(typeof vida==='function'&&vida())||{},a=store.get('acct',null),acc=v.acc||{},L=docsL(),now=new Date().toISOString();
+ const brs={ortodoxa:'ort',catolica:'cat',protestante:'prot'},br=store.get('symAll',false)?null:store.get('todayBr',null);
+ const d={id:'D'+Date.now().toString(36).toUpperCase(),at:now,ver:TERMS_VERSION,lang:LANG,cid:cid(),acct:a&&a.email||'',name:docName(v.name),
+  church:br?wt(brs[br]):(store.get('symAll',false)?(SYM_ALL[LANG]||SYM_ALL.en):''),copy:!!v.copy,order:'',product:'',pay1:acc.pay1||now,pay2:acc.pay2||now};
+ // Si en el mismo día ya hay uno sin compra confirmada con la misma versión, se actualiza en lugar de duplicar
+ const last=L[0];if(last&&!last.order&&last.ver===d.ver&&last.at.slice(0,10)===now.slice(0,10)){Object.assign(last,d,{id:last.id})}else L.unshift(d);
+ store.set('docs',L.slice(0,30));return d}
+function docText(d){
+ const fd=x=>{try{return new Date(x).toLocaleString(LANG,{dateStyle:'long',timeStyle:'short'})}catch(e){return x}};
+ const rows=[`PHOS · ${dx('title').toUpperCase()}`,`${dx('date')}: ${fd(d.at)}`,`${dx('client')}: ${d.cid}`,`${dx('ver')}: ${d.ver}`,'',`${dx('accepted')}:`,`✓ ${vt('pay1')}`,`✓ ${vt('pay2')}`,'',`${dx('linked')}:`,
+  `· ${dx('acct')}: ${d.acct||dx('noAcct')}`];
+ if(d.name)rows.push(`· ${dx('name')}: ${d.name}`);if(d.church)rows.push(`· ${dx('church')}: ${d.church}`);
+ rows.push(`· ${dx('lang')}: ${(typeof LNAMES!=='undefined'&&LNAMES[d.lang])||d.lang}`,`· ${dx('copy')}: ${d.copy?dx('yes'):dx('no')}`,'',
+  `${dx('buy')}: ${d.order?(d.product+' · '+dx('order')+' '+d.order):dx('pending')}`,'',dx('priv'),'phosbiblias.com');
+ return rows.join('\n')}
+// Al marcar las dos casillas antes de pagar: se crea el justificante y se avisa
+const _payConsentD=payConsentOK;
+payConsentOK=function(){const ok=_payConsentD.apply(this,arguments);if(ok){docMake();setTimeout(()=>toast(dx('made')),400)}return ok};
+// Cuando Google Play confirma la compra, se añade el número de pedido al justificante
+const _vidaPurchaseD=window.vidaPurchase;
+window.vidaPurchase=p=>{if(_vidaPurchaseD)_vidaPurchaseD(p);const L=docsL();const d=L.find(x=>!x.order);if(d){d.order=p.order||'';d.product=(p.products||[]).join(', ');store.set('docs',L)}};
+// Mi Phos › Mis documentos
+function drawDocs(){const L=docsL();
+ view.innerHTML=`<h1>📄 ${esc(dx('docs'))}</h1><p class="lead">${esc(dx('docsLead'))}</p>${L.length?L.map((d,i)=>`<button class="card rcard" data-doc="${i}"><div class="t">📄 ${esc(dx('title'))}</div><div class="s">${esc(new Date(d.at).toLocaleDateString(LANG,{dateStyle:'long'}))}${d.order?' · Google Play ✓':''}</div></button>`).join(''):`<p class="note">${esc(dx('none'))}</p>`}`;
+ view.querySelectorAll('[data-doc]').forEach(b=>b.onclick=()=>{S.doc=+b.dataset.doc;go('m_doc')})}
+function drawDoc(){const d=docsL()[S.doc||0];if(!d)return drawDocs();
+ view.innerHTML=`<h1>📄 ${esc(dx('title'))}</h1><pre class="ficha">${esc(docText(d))}</pre><button class="btn" id="dShare" style="width:100%">${esc(dx('share'))}</button><button class="btn ghost" id="dTerms" style="width:100%;margin-top:10px">${esc(dx('read'))}</button>`;
+ $('#dShare').onclick=()=>shareText(docText(d));$('#dTerms').onclick=()=>openTermsP()}
+const _renderMineD=renderMine;
+renderMine=function(){if(S.view==='m_docs')return drawDocs();if(S.view==='m_doc')return drawDoc();_renderMineD.apply(this,arguments);if(S.view!=='mine')return;
+ const n=docsL().length;const c=document.createElement('button');c.className='card rcard';
+ c.innerHTML=`<div class="t"><span class="rico">📄</span>${esc(dx('docs'))}${n?`<span class="pill">${n}</span>`:''}</div><div class="s">${esc(dx('docsLead'))}</div>`;
+ c.onclick=()=>go('m_docs');const ref=view.querySelector('[data-p="premium"]');if(ref)ref.before(c);else view.appendChild(c)};
+// Volver atrás desde un documento
+const _phosBackD=window.phosBack;window.phosBack=()=>{if(S.view==='m_doc'){go('m_docs');return true}if(S.view==='m_docs'){go('mine');return true}return _phosBackD?_phosBackD():false};
 
 applyLang();
 render();

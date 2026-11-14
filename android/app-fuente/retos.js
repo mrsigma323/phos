@@ -148,16 +148,27 @@ function startMap(ji){
   view.innerHTML=`<h1 class="qp">${esc(jourT(J))}</h1><p class="note">${esc(qt('tapCity'))} · ${esc(bname(J.ref.split(' ')[0]))} ${J.ref.split(' ')[1].replace(':',', ')}</p>
   <svg class="bmap" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(qt('map'))}"><g class="grid">${grid}</g>
    <polyline points="${route}" class="route"/>
-   ${P.map((p,k)=>{const vis=k<step;return `<g class="city ${vis?'on':''} ${k===0?'start':''}" data-c="${k}" tabindex="0" role="button" aria-label="${esc(nm(p))}"><circle cx="${X(p[3])}" cy="${Y(p[2])}" r="${vis?7:9}"/><circle class="hit" cx="${X(p[3])}" cy="${Y(p[2])}" r="20"/>${vis?`<text x="${X(p[3])>W-90?X(p[3])-10:X(p[3])+10}" text-anchor="${X(p[3])>W-90?'end':'start'}" y="${Y(p[2])-8}">${k+1}. ${esc(nm(p))}</text>`:''}</g>`}).join('')}
+   ${(()=>{const lab=[];return P.map((p,k)=>{const vis=k<step;let ty=Y(p[2])-8;const tx=X(p[3]);
+    if(vis){while(lab.some(([x,y])=>Math.abs(x-tx)<70&&Math.abs(y-ty)<13))ty+=15;lab.push([tx,ty])}
+    return `<g class="city ${vis?'on':''} ${k===0?'start':''}" data-c="${k}" tabindex="0" role="button" aria-label="${esc(nm(p))}"><circle cx="${tx}" cy="${Y(p[2])}" r="${vis?7:9}"/><circle class="hit" cx="${tx}" cy="${Y(p[2])}" r="20"/>${vis?`<text x="${tx>W-90?tx-10:tx+10}" text-anchor="${tx>W-90?'end':'start'}" y="${ty}">${k+1}. ${esc(nm(p))}</text>`:''}</g>`}).join('')})()}
   </svg>
-  <div class="chips" style="margin-top:10px">${rshuf(seeded(J.id),P.map((p,k)=>k)).filter(k=>k>=step).map(k=>`<span class="pill soft">${esc(nm(P[k]))}</span>`).join(' ')}</div>
+  <div class="chips" style="margin-top:10px">${rshuf(seeded(J.id),P.map((p,k)=>k)).filter(k=>k>=step).map(k=>`<button class="pill soft mchip" data-c="${k}">${esc(nm(P[k]))}</button>`).join(' ')}</div>
   <div id="rfoot" style="margin-top:14px"></div>`;
-  view.querySelectorAll('.city').forEach(g=>g.onclick=()=>{const k=+g.dataset.c;if(k<step||step>=P.length)return;
+  const choose=k=>{if(k<step||step>=P.length)return;$('.mpick')&&$('.mpick').remove();
    if(k===step){step++;draw();if(step>=P.length){const pts=Math.max(0,P.length*5-miss*3);addRetoPts(pts);
     $('#rfoot').innerHTML=`<div class="fb" role="status"><b>${esc(qt('right')+' · '+qt('points',{n:pts}))}</b></div><div style="display:flex;gap:10px"><button class="btn ghost" id="mList" style="flex:1">${esc(qt('map'))}</button><button class="btn" id="rAgain" style="flex:1">${esc(qt('again'))}</button></div>`;
     $('#rAgain').onclick=()=>startMap(ji);$('#mList').onclick=()=>startMap()}}
-   else{miss++;g.classList.add('shake');setTimeout(()=>g.classList.remove('shake'),400);
-    const nx=P[step];$('#rfoot').innerHTML=`<p class="note">➡️ ${esc(nm(nx))}?</p>`}});
+   else{miss++;const g=view.querySelector(`.city[data-c="${k}"]`);if(g){g.classList.add('shake');setTimeout(()=>g.classList.remove('shake'),400)}
+    const nx=P[step];$('#rfoot').innerHTML=`<p class="note">➡️ ${esc(nm(nx))}?</p>`}};
+  view.querySelectorAll('.mchip').forEach(b=>b.onclick=()=>choose(+b.dataset.c));
+  // Toque en el mapa: si hay varias ciudades cerca del dedo, se abre una lista para elegir
+  const svg=view.querySelector('.bmap');svg.onclick=e=>{const r=svg.getBoundingClientRect(),sx=W/r.width,px=(e.clientX-r.left)*sx,py=(e.clientY-r.top)*sx,rad=30*sx;
+   const near=P.map((p,k)=>({k,d:Math.hypot(X(p[3])-px,Y(p[2])-py)})).filter(o=>o.k>=step&&o.d<rad).sort((a,b)=>a.d-b.d);
+   if(!near.length)return;if(near.length===1||near[1].d-near[0].d>18*sx){choose(near[0].k);return}
+   $('.mpick')&&$('.mpick').remove();const m=document.createElement('div');m.className='mpick';m.setAttribute('role','dialog');
+   m.innerHTML=`<p class="note">${esc(qt('mapPick'))}</p>${near.map(o=>`<button class="opt" data-c="${o.k}">📍 ${esc(nm(P[o.k]))}</button>`).join('')}`;
+   const host=svg.parentElement;host.style.position='relative';svg.after(m);m.style.top=(svg.offsetTop+Math.min(r.height-40,(e.clientY-r.top)+12))+'px';
+   m.querySelectorAll('[data-c]').forEach(b=>b.onclick=ev=>{ev.stopPropagation();choose(+b.dataset.c)})};
  };draw();
 }
 
@@ -176,3 +187,7 @@ function renderRetos(){
  <div class="card off rcard"><div class="t"><span class="rico">👥</span>${esc(qt('group'))}<span class="pill soft">${esc(qt('soon'))}</span></div><div class="s">${esc(qt('groupLead'))}</div></div>`;
  view.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>go(b.dataset.r));
 }
+// Lista para elegir cuando hay varias ciudades juntas en el mapa
+(function(){const M={es:"Hay varias ciudades aquí. ¿Cuál quieres?",en:"There are several cities here. Which one?",pt:"Há várias cidades aqui. Qual quer?",fr:"Il y a plusieurs villes ici. Laquelle ?",it:"Qui ci sono più città. Quale vuoi?",de:"Hier liegen mehrere Städte. Welche meinst du?",el:"Εδώ υπάρχουν αρκετές πόλεις. Ποια θέλεις;",ru:"Здесь несколько городов. Какой выбрать?",ro:"Aici sunt mai multe orașe. Pe care îl alegi?"};
+ for(const l in M)if(QX[l])QX[l].mapPick=M[l];
+ const st=document.createElement('style');st.textContent=`.mpick{position:absolute;left:12px;right:12px;z-index:5;background:var(--card,#fff);border-radius:16px;padding:12px;box-shadow:0 10px 30px rgba(0,0,0,.25);display:flex;flex-direction:column;gap:8px}.mpick .note{margin:0 0 4px}.mchip{cursor:pointer;border:0;font:inherit}`;document.head.appendChild(st)})();

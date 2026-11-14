@@ -162,7 +162,7 @@ function fichaText(){
  const v=vida()||{},a=store.get('acct',null),acc=v.acc||{};const F=k=>vt('f_'+k);
  const fd=x=>{try{return new Date(x).toLocaleString(LANG,{dateStyle:'short',timeStyle:'medium'})+' ('+x+')'}catch(e){return x}};
  const L=[`PHOS · ${vt('ficha').toUpperCase()}`,`${vt('clientId')}: ${cid()}`];
- if(v.name)L.push(`${F('name')}: ${v.name}`);if(a&&a.email)L.push(`${F('acct')}: ${a.email}`);
+ if(v.name&&(typeof docName!=='function'||docName(v.name)))L.push(`${F('name')}: ${v.name}`);if(a&&a.email)L.push(`${F('acct')}: ${a.email}`);
  L.push(`${vt('started')}: ${v.started||'—'}`,`${F('adult')}: ${v.adult?F('yes'):F('no')}`,
   `${F('goals')}: ${(v.goals||[]).map(g=>vt('g_'+g)).join(', ')}`,`${vt('level')}: ${vt('l_'+['soft','steady','hard'][v.level||0])}`,
   `${F('hour')}: ${v.hour||'—'}`);
@@ -187,7 +187,7 @@ function drawFicha(){
 }
 // Condiciones con los datos de cada cliente rellenados automáticamente (versión en español e inglés)
 function termsHTML(){
- const v=vida()||{},a=store.get('acct',null),acc=v.acc||{},es=LANG==='es';const who=v.name||(a&&a.email)||cid();
+ const v=vida()||{},a=store.get('acct',null),acc=v.acc||{},es=LANG==='es';const who=(typeof docName==='function'?docName(v.name):v.name)||(a&&a.email)||cid();
  const TT=trGet('TERMS');const S1=TT?TT.map(([h,p])=>[h,p.replace('{who}',who).replace('{cid}',cid()).replace('{acct}',a&&a.email?trGet('termsAcct').replace('{e}',a.email):'').replace('{ver}',TERMS_VERSION).replace('{disc}',vt('disc')+' '+vt('discHealth'))]):es?[
   ['1. Partes',`Estas condiciones se aceptan entre el titular de Phos (sus datos de contacto figuran en phosbiblias.com › Aviso legal y en la ficha de la app en Google Play) y ${who}, con código de cliente ${cid()}${a&&a.email?' y cuenta '+a.email:''}.`],
   ['2. Qué es Phos Premium',`Una suscripción de la app de Phos para Android, gestionada y cobrada por Google Play, que da acceso a recordatorios personalizados, aprendizaje completo, Retos bíblicos, Regla de vida y otras funciones descritas en la app. Phos es y seguirá siendo gratis en phosbiblias.com.`],
@@ -256,7 +256,7 @@ window.phosBack=()=>{if(S.sec==='vida'&&S.view!=='vida'&&!PVIEWS[S.view]){go('vi
 .wchart{display:flex;gap:8px;align-items:flex-end;height:110px;padding:8px;background:var(--paper);border-radius:14px}.wb{flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end}
 .wb i{display:block;width:100%;background:#C9B48A;border-radius:6px 6px 2px 2px}.wb i.full{background:var(--wine)}.wb span{font-size:12px;color:var(--muted);margin-top:4px}
 .vin{width:100%;box-sizing:border-box;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff}
-.chip[disabled],.seg button[disabled]{opacity:.4}
+.chip[disabled],.seg button[disabled]{opacity:.4}#view .chips .chip{border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:9px 14px;font:inherit;font-weight:600;font-size:15px;min-height:44px;cursor:pointer}#view .chips .chip.on{background:var(--wine);border-color:var(--wine);color:#FBF3E2}[data-theme=dark] #view .chips .chip{background:var(--paper);color:var(--ink);border-color:var(--line)}[data-theme=dark] #view .chips .chip.on{background:#B5574C;border-color:#B5574C;color:#fff}[data-theme=dark] .btn:not(.ghost){color:#FBF3E2}
 .ficha{white-space:pre-wrap;font:14px/1.5 ui-monospace,Menlo,monospace;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px}
 .paycons{margin:12px 0}.paycons .nrow{align-items:flex-start;margin-bottom:8px}
 [data-theme=dark] .disc{background:#3A2C17;color:#F1DDA9}[data-theme=dark] .vtask{background:#241B18}[data-theme=dark] .vtask.on{background:#1E3A24}`;document.head.appendChild(st)})();
