@@ -3,40 +3,40 @@
 // Textos en español e inglés (los demás idiomas muestran el inglés hasta revisar su traducción).
 const TERMS_VERSION='1.0 · 2026-11-13';
 const VX={
-es:{vida:"Regla de vida",vidaLead:"Tu entrenamiento diario de fe, cuerpo y hábitos: oración, Biblia, ejercicio, descanso, ayuno y silencio.",
+es:{vida:"Camino de la Verdad",vidaLead:"Tu entrenamiento diario de fe, cuerpo y hábitos: oración, Biblia, ejercicio, descanso, ayuno y silencio.",
 disc:"Phos no es un servicio médico, de nutrición, de entrenamiento deportivo ni de dirección espiritual profesional. Sus propuestas son orientativas y NO sustituyen en ningún caso a un médico, a un sacerdote o pastor, a un entrenador personal ni a un nutricionista. Ante cualquier duda, te recomendamos encarecidamente que consultes con tu especialista.",
 discHealth:"Si tienes alguna enfermedad, estás embarazada, tomas medicación o has tenido problemas con la alimentación, consulta con tu médico antes de ayunar o de cambiar tu actividad física.",
 discShort:"Orientativo. No sustituye a tu médico, sacerdote o pastor, entrenador personal ni nutricionista. Ante cualquier duda, consulta con tu especialista.",
 accDisc:"He leído y entiendo este aviso.",adult:"Soy mayor de 18 años.",minorNote:"Si eres menor de edad, los retos de ayuno y el nivel exigente no están disponibles. Habla con tus padres antes de cambiar tus hábitos.",
-setup:"Crea tu regla",name:"Tu nombre (opcional)",goals:"Elige de 3 a 5 metas",level:"Nivel",hour:"¿A qué hora quieres el mensaje de la mañana?",save:"Guardar mi regla",need3:"Elige al menos 3 metas.",
+setup:"Traza tu camino",name:"Tu nombre (opcional)",goals:"Elige de 3 a 5 metas",level:"Nivel",hour:"¿A qué hora quieres el mensaje de la mañana?",save:"Guardar mi camino",need3:"Elige al menos 3 metas.",
 g_pray:"Oración",g_read:"Lectura de la Biblia",g_move:"Ejercicio",g_rest:"Descanso",g_fast:"Ayuno",g_screen:"Menos pantallas",g_silence:"Silencio y meditación",
 l_soft:"Suave",l_steady:"Constante",l_hard:"Exigente",coach:"Tu entrenador hoy",todayTasks:"Retos de hoy",week:"Tu semana",weekLead:"Días cumplidos en los últimos 7 días.",
-programs:"Programas guiados",progDay:"Día {n} de {t}",progStart:"Empezar programa",progActive:"En curso",ficha:"Mi ficha",fichaLead:"Tu regla de vida y lo que has aceptado. Puedes guardarla o compartirla cuando quieras.",
-edit:"Cambiar mi regla",shareFicha:"Guardar o enviar mi ficha",copyConsent:"Quiero que Phos guarde una copia de mi ficha y de mis aceptaciones, por si la necesito más adelante.",copyNote:"La copia no incluye datos de salud: Phos no te pregunta por enfermedades ni medicación.",
+programs:"Programas guiados",progDay:"Día {n} de {t}",progStart:"Empezar programa",progActive:"En curso",ficha:"Mi ficha",fichaLead:"Tu Camino de la Verdad y lo que has aceptado. Puedes guardarla o compartirla cuando quieras.",
+edit:"Cambiar mi camino",shareFicha:"Guardar o enviar mi ficha",copyConsent:"Quiero que Phos guarde una copia de mi ficha y de mis aceptaciones, por si la necesito más adelante.",copyNote:"La copia no incluye datos de salud: Phos no te pregunta por enfermedades ni medicación.",
 clientId:"Código de cliente",started:"Inicio",accepted:"Aceptaciones",termsT:"Condiciones de Phos Premium",readTerms:"Leer las condiciones",
 pay1:"He leído y acepto las Condiciones de Phos Premium, incluido el aviso de que Phos no sustituye a ningún profesional.",
 pay2:"Pido que el servicio empiece ahora mismo y entiendo que, una vez empezado, pierdo el derecho de desistimiento de 14 días, sin perjuicio de las devoluciones que permita Google Play.",
 payNeed:"Para continuar, marca las dos casillas.",
 p_disc:"40 días de disciplina",p_discL:"Oración, Biblia, ejercicio y descanso cada día, a ritmo constante.",p_body:"El cuerpo, templo del Espíritu",p_bodyL:"21 días de ejercicio suave y buen descanso, con un versículo cada día.",
 p_fast:"Ayuno con sentido",p_fastL:"40 días siguiendo el ayuno de tu Iglesia, con oración y limosna. Solo para mayores de edad.",p_sil:"Silencio y oración",p_silL:"30 días de silencio y oración, empezando por 3 minutos.",
-onlyEsEn:"Esta sección está en español y en inglés.",f_name:"Nombre",f_acct:"Cuenta",f_adult:"Mayor de edad",f_yes:"sí",f_no:"no",f_goals:"Metas",f_hour:"Mensaje de la mañana",f_prog:"Programa",f_ver:"Versión de las condiciones",done:"Hecho",allDone:"¡Regla cumplida hoy! 🙏",fastToday:"Hoy toca ayuno en tu Iglesia: {f}",noTask:"Hoy descansa de este reto."},
-en:{vida:"Rule of life",vidaLead:"Your daily training in faith, body and habits: prayer, Bible, exercise, rest, fasting and silence.",
+onlyEsEn:"Esta sección está en español y en inglés.",f_name:"Nombre",f_acct:"Cuenta",f_adult:"Mayor de edad",f_yes:"sí",f_no:"no",f_goals:"Metas",f_hour:"Mensaje de la mañana",f_prog:"Programa",f_ver:"Versión de las condiciones",done:"Hecho",allDone:"¡Camino de hoy cumplido! 🙏",fastToday:"Hoy toca ayuno en tu Iglesia: {f}",noTask:"Hoy descansa de este reto."},
+en:{vida:"The Way of Truth",vidaLead:"Your daily training in faith, body and habits: prayer, Bible, exercise, rest, fasting and silence.",
 disc:"Phos is not a medical, nutrition, sports training or professional spiritual direction service. Its suggestions are for guidance only and in NO case replace a doctor, a priest or pastor, a personal trainer or a nutritionist. If in any doubt, we strongly recommend that you consult your specialist.",
 discHealth:"If you have an illness, are pregnant, take medication or have had eating problems, talk to your doctor before fasting or changing your physical activity.",
 discShort:"For guidance only. It does not replace your doctor, priest or pastor, personal trainer or nutritionist. If in doubt, consult your specialist.",
 accDisc:"I have read and understand this notice.",adult:"I am over 18.",minorNote:"If you are under 18, fasting challenges and the demanding level are not available. Talk to your parents before changing your habits.",
-setup:"Create your rule",name:"Your name (optional)",goals:"Choose 3 to 5 goals",level:"Level",hour:"What time would you like your morning message?",save:"Save my rule",need3:"Choose at least 3 goals.",
+setup:"Map out your way",name:"Your name (optional)",goals:"Choose 3 to 5 goals",level:"Level",hour:"What time would you like your morning message?",save:"Save my way",need3:"Choose at least 3 goals.",
 g_pray:"Prayer",g_read:"Bible reading",g_move:"Exercise",g_rest:"Rest",g_fast:"Fasting",g_screen:"Less screen time",g_silence:"Silence and meditation",
 l_soft:"Gentle",l_steady:"Steady",l_hard:"Demanding",coach:"Your coach today",todayTasks:"Today's challenges",week:"Your week",weekLead:"Days completed in the last 7 days.",
-programs:"Guided programmes",progDay:"Day {n} of {t}",progStart:"Start programme",progActive:"In progress",ficha:"My profile",fichaLead:"Your rule of life and what you have accepted. You can save or share it whenever you like.",
-edit:"Change my rule",shareFicha:"Save or send my profile",copyConsent:"I want Phos to keep a copy of my profile and my acceptances, in case I need it later.",copyNote:"The copy contains no health data: Phos does not ask about illnesses or medication.",
+programs:"Guided programmes",progDay:"Day {n} of {t}",progStart:"Start programme",progActive:"In progress",ficha:"My profile",fichaLead:"Your Way of Truth and what you have accepted. You can save or share it whenever you like.",
+edit:"Change my way",shareFicha:"Save or send my profile",copyConsent:"I want Phos to keep a copy of my profile and my acceptances, in case I need it later.",copyNote:"The copy contains no health data: Phos does not ask about illnesses or medication.",
 clientId:"Customer code",started:"Started",accepted:"Acceptances",termsT:"Phos Premium terms",readTerms:"Read the terms",
 pay1:"I have read and accept the Phos Premium terms, including the notice that Phos does not replace any professional.",
 pay2:"I ask for the service to start right away and understand that, once started, I lose the 14-day right of withdrawal, without prejudice to any refunds allowed by Google Play.",
 payNeed:"To continue, tick both boxes.",
 p_disc:"40 days of discipline",p_discL:"Prayer, Bible, exercise and rest every day, at a steady pace.",p_body:"The body, temple of the Spirit",p_bodyL:"21 days of gentle exercise and good rest, with a verse each day.",
 p_fast:"Fasting with meaning",p_fastL:"40 days following your Church's fast, with prayer and almsgiving. Adults only.",p_sil:"Silence and prayer",p_silL:"30 days of silence and prayer, starting with 3 minutes.",
-onlyEsEn:"This section is available in Spanish and English.",f_name:"Name",f_acct:"Account",f_adult:"Adult",f_yes:"yes",f_no:"no",f_goals:"Goals",f_hour:"Morning message",f_prog:"Programme",f_ver:"Terms version",done:"Done",allDone:"Rule completed today! 🙏",fastToday:"Today is a fasting day in your Church: {f}",noTask:"Rest from this challenge today."}};
+onlyEsEn:"This section is available in Spanish and English.",f_name:"Name",f_acct:"Account",f_adult:"Adult",f_yes:"yes",f_no:"no",f_goals:"Goals",f_hour:"Morning message",f_prog:"Programme",f_ver:"Terms version",done:"Done",allDone:"Today's way completed! 🙏",fastToday:"Today is a fasting day in your Church: {f}",noTask:"Rest from this challenge today."}};
 const vt=(k,o)=>{let s=(VX[LANG]&&VX[LANG][k])||VX.en[k]||k;if(o)for(const x in o)s=s.replace('{'+x+'}',o[x]);return s};
 const GOALS=['pray','read','move','rest','fast','screen','silence'],GICO={pray:'🙏',read:'📖',move:'🚶',rest:'🌙',fast:'🍞',screen:'📵',silence:'🕯️'};
 // Retos por meta y nivel [suave, constante, exigente]
@@ -190,7 +190,7 @@ function termsHTML(){
  const v=vida()||{},a=store.get('acct',null),acc=v.acc||{},es=LANG==='es';const who=(typeof docName==='function'?docName(v.name):v.name)||(a&&a.email)||cid();
  const TT=trGet('TERMS');const S1=TT?TT.map(([h,p])=>[h,p.replace('{who}',who).replace('{cid}',cid()).replace('{acct}',a&&a.email?trGet('termsAcct').replace('{e}',a.email):'').replace('{ver}',TERMS_VERSION).replace('{disc}',vt('disc')+' '+vt('discHealth'))]):es?[
   ['1. Partes',`Estas condiciones se aceptan entre el titular de Phos (sus datos de contacto figuran en phosbiblias.com › Aviso legal y en la ficha de la app en Google Play) y ${who}, con código de cliente ${cid()}${a&&a.email?' y cuenta '+a.email:''}.`],
-  ['2. Qué es Phos Premium',`Una suscripción de la app de Phos para Android, gestionada y cobrada por Google Play, que da acceso a recordatorios personalizados, aprendizaje completo, Retos bíblicos, Regla de vida y otras funciones descritas en la app. Phos es y seguirá siendo gratis en phosbiblias.com.`],
+  ['2. Qué es Phos Premium',`Una suscripción de la app de Phos para Android, gestionada y cobrada por Google Play, que da acceso a recordatorios personalizados, aprendizaje completo, Retos bíblicos, Camino de la Verdad y otras funciones descritas en la app. Phos es y seguirá siendo gratis en phosbiblias.com.`],
   ['3. Aviso importante',vt('disc')+' '+vt('discHealth')],
   ['4. Uso responsable',`Las propuestas de oración, lectura, ejercicio, descanso, ayuno y hábitos son orientativas. Cada persona decide si las sigue y cómo, según su salud y su situación, y es responsable de consultar con su especialista. Phos no responde de los daños derivados de seguirlas sin la debida consulta profesional.`],
   ['5. Pago, renovación y cancelación',`El precio y la moneda son los que muestra Google Play antes de pagar. La suscripción se renueva automáticamente hasta que la canceles en Google Play › Pagos y suscripciones. Las devoluciones se rigen por las normas de Google Play.`],
@@ -198,7 +198,7 @@ function termsHTML(){
   ['7. Tus datos',`Tu ficha se guarda en tu móvil. Solo si lo marcas, Phos guarda una copia junto con el registro de tus aceptaciones (fecha, hora, versión de estas condiciones y número de pedido de Google Play), para atender tus consultas o reclamaciones. No se recogen datos de salud. Más información en phosbiblias.com/privacidad.`],
   ['8. Cambios',`Si estas condiciones cambian, la app te pedirá aceptarlas de nuevo. Versión: ${TERMS_VERSION}.`]]:[
   ['1. Parties',`These terms are accepted between the owner of Phos (contact details at phosbiblias.com › Legal notice and on the app's Google Play listing) and ${who}, customer code ${cid()}${a&&a.email?', account '+a.email:''}.`],
-  ['2. What Phos Premium is',`A subscription for the Phos app for Android, managed and charged by Google Play, giving access to personal reminders, full learning, Bible challenges, Rule of life and other features described in the app. Phos is and will remain free at phosbiblias.com.`],
+  ['2. What Phos Premium is',`A subscription for the Phos app for Android, managed and charged by Google Play, giving access to personal reminders, full learning, Bible challenges, the Way of Truth and other features described in the app. Phos is and will remain free at phosbiblias.com.`],
   ['3. Important notice',vt('disc')+' '+vt('discHealth')],
   ['4. Responsible use',`The suggestions on prayer, reading, exercise, rest, fasting and habits are for guidance only. Each person decides whether and how to follow them, according to their health and situation, and is responsible for consulting their specialist. Phos is not liable for harm arising from following them without proper professional advice.`],
   ['5. Payment, renewal and cancellation',`The price and currency are those shown by Google Play before payment. The subscription renews automatically until you cancel it in Google Play › Payments & subscriptions. Refunds follow Google Play's rules.`],
