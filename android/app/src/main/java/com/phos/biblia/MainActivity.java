@@ -171,6 +171,12 @@ public class MainActivity extends Activity {
         @JavascriptInterface public void setWallpaper(String b64) { Extras.setWallpaper(MainActivity.this, b64); }
         @JavascriptInterface public void widgetSet(String json) { Extras.widgetSet(MainActivity.this, json); }
         /** «Entrar con Google» solo se muestra cuando el ID de cliente está configurado. */
+        // ---------- Modo lectura: «No molestar» con permiso del usuario ----------
+        @JavascriptInterface public boolean dndAllowed() { return Dnd.allowed(MainActivity.this); }
+        @JavascriptInterface public void dndAsk() { Dnd.ask(MainActivity.this); }
+        @JavascriptInterface public boolean dndOn(int minutes) { return Dnd.on(MainActivity.this, minutes); }
+        @JavascriptInterface public void dndOff() { Dnd.off(MainActivity.this); }
+        @JavascriptInterface public void vibrate() { try { android.os.Vibrator v = (android.os.Vibrator) getSystemService(VIBRATOR_SERVICE); if (v == null) return; if (android.os.Build.VERSION.SDK_INT >= 26) v.vibrate(android.os.VibrationEffect.createWaveform(new long[]{0, 120, 120, 120}, -1)); else v.vibrate(new long[]{0, 120, 120, 120}, -1); } catch (Exception e) { } }
         @JavascriptInterface public boolean googleReady() { return !getString(R.string.google_web_client_id).isEmpty(); }
         @JavascriptInterface public void googleSignIn() { runOnUiThread(() -> Extras.googleSignIn(MainActivity.this, MainActivity.this::toJs)); }
     }
@@ -182,7 +188,7 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    protected void onResume() { super.onResume(); if (billing != null) billing.refresh(); }
+    protected void onResume() { super.onResume(); if (billing != null) billing.refresh(); toJs("window.PhosFocus&&PhosFocus.onResume()"); }
 
     @Override
     protected void onSaveInstanceState(Bundle o) { super.onSaveInstanceState(o); web.saveState(o); }
