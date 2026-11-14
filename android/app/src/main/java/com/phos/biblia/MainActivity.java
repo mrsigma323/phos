@@ -170,6 +170,8 @@ public class MainActivity extends Activity {
         @JavascriptInterface public void shareImage(String b64, String txt) { Extras.shareImage(MainActivity.this, b64, txt); }
         @JavascriptInterface public void setWallpaper(String b64) { Extras.setWallpaper(MainActivity.this, b64); }
         @JavascriptInterface public void widgetSet(String json) { Extras.widgetSet(MainActivity.this, json); }
+        @JavascriptInterface public void ruleWidgetSet(String json) { RuleWidget.set(MainActivity.this, json); }
+        @JavascriptInterface public String ruleWidgetGet() { return RuleWidget.get(MainActivity.this); }
         /** «Entrar con Google» solo se muestra cuando el ID de cliente está configurado. */
         // ---------- Modo lectura: «No molestar» con permiso del usuario ----------
         @JavascriptInterface public boolean dndAllowed() { return Dnd.allowed(MainActivity.this); }
@@ -188,7 +190,7 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    protected void onResume() { super.onResume(); if (billing != null) billing.refresh(); toJs("window.PhosFocus&&PhosFocus.onResume()"); }
+    protected void onResume() { super.onResume(); if (billing != null) billing.refresh(); toJs("window.PhosFocus&&PhosFocus.onResume()"); toJs("window.PhosRule&&PhosRule.sync()"); }
 
     @Override
     protected void onSaveInstanceState(Bundle o) { super.onSaveInstanceState(o); web.saveState(o); }

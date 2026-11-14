@@ -15,8 +15,20 @@ const bsrc=(ed,c)=>(BOOKSRC[ed]||{})[c]||((ALIAS[c]||[]).map(x=>(BOOKSRC[ed]||{}
 // Libros que Phos ha traducido para el idioma actual
 function phosBooksFor(l){const eds=new Set(['ortodoxa','catolica','protestante'].map(b=>TRMAP[b][l]).filter(Boolean));const out=new Set();
  eds.forEach(e=>Object.entries(BOOKSRC[e]||{}).forEach(([c,v])=>{if(v[1]==='phos')out.add(c)}));return [...out]}
+const FBX={es:"Este libro aparece de momento en inglés. Todavía no tenemos una traducción a tu idioma que podamos usar con todos los permisos; la estamos buscando con cariño o preparando la nuestra. Gracias por tu paciencia. ¡Que Dios te bendiga!",
+en:"This book is shown in English for now. We don't yet have a translation in your language that we can use with full permission; we are lovingly looking for one or preparing our own. Thank you for your patience. God bless you!",
+pt:"Este livro aparece por enquanto em inglês. Ainda não temos uma tradução no seu idioma que possamos usar com todas as permissões; estamos procurando-a com carinho ou preparando a nossa. Obrigado pela paciência. Deus o abençoe!",
+fr:"Ce livre s’affiche pour l’instant en anglais. Nous n’avons pas encore de traduction dans votre langue utilisable avec toutes les autorisations ; nous en cherchons une avec soin ou préparons la nôtre. Merci de votre patience. Que Dieu vous bénisse !",
+it:"Per ora questo libro è mostrato in inglese. Non abbiamo ancora una traduzione nella tua lingua che possiamo usare con tutti i permessi; la stiamo cercando con cura o stiamo preparando la nostra. Grazie per la pazienza. Dio ti benedica!",
+de:"Dieses Buch wird vorerst auf Englisch angezeigt. Wir haben noch keine Übersetzung in deiner Sprache, die wir mit allen Rechten nutzen dürfen; wir suchen mit Sorgfalt danach oder bereiten unsere eigene vor. Danke für deine Geduld. Gott segne dich!",
+el:"Αυτό το βιβλίο εμφανίζεται προς το παρόν στα αγγλικά. Δεν έχουμε ακόμη μετάφραση στη γλώσσα σου που να μπορούμε να χρησιμοποιήσουμε με όλες τις άδειες· την αναζητούμε με αγάπη ή ετοιμάζουμε τη δική μας. Ευχαριστούμε για την υπομονή. Ο Θεός να σε ευλογεί!",
+ru:"Пока эта книга показана на английском. У нас ещё нет перевода на ваш язык, который можно использовать со всеми разрешениями; мы с заботой ищем его или готовим свой. Спасибо за терпение. Храни вас Бог!",
+ro:"Deocamdată această carte apare în engleză. Încă nu avem o traducere în limba ta pe care să o putem folosi cu toate permisiunile; o căutăm cu grijă sau o pregătim pe a noastră. Mulțumim pentru răbdare. Dumnezeu să te binecuvânteze!"};
 const _renderReadP=renderRead;
 renderRead=async function(){await _renderReadP.apply(this,arguments);
+ try{const fbn=[...view.querySelectorAll('.reader > p.note')].find(p=>p.textContent.includes(t('fbEn')));
+  if(fbn&&LANG!=='en'){fbn.textContent=fbn.textContent.replace(' · '+t('fbEn'),'');const bx=document.createElement('div');bx.className='disc phnote';bx.setAttribute('role','note');bx.innerHTML=`<b>🇬🇧 ${esc(t('fbEn'))}</b><p>${esc(FBX[LANG]||FBX.en)}</p>`;fbn.after(bx)}
+ }catch(e){}
  try{const tr=trFor(S.ed);if(!tr||store.get('mode','both')==='orig')return;const s=bsrc(tr,S.book);if(!s)return;
   const note=[...view.querySelectorAll('.reader > p.note')].find(p=>p.textContent.startsWith(t('mTrans')));
   if(s[1]==='pd'&&s[0]&&note){note.textContent=t('mTrans')+': '+s[0];return}

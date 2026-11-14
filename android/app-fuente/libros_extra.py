@@ -86,7 +86,8 @@ def merge(*ds):
     return o
 ADD = {
  "ru-syn": (merge(sm("RusSynodal.json", {"TOB","JDT","WIS","SIR","BAR","1MA","2MA","3MA","1ES","4ES","EPJ"}, synodal_extra), dan3("RusSynodal.json")), "Синодальный перевод (1876)"),
- "ro-bl": (usfx_ot("ron-rccv.usfx.xml"), "Cornilescu (VT)"),
+ # "ro-bl": Cornilescu corregida (VT) EN ESPERA hasta confirmar los derechos de la Sociedad Bíblica. Mientras, el VT rumano se muestra en inglés.
+ # "ro-bl": (usfx_ot("ron-rccv.usfx.xml"), "Cornilescu (VT)"),
  "de-1912": (sm("GerMenge.json", {"TOB","JDT","WIS","SIR","BAR","1MA","2MA"}), "Menge-Bibel 1939"),
  "fr-sbl": (merge(sm("FreLXXGiguet.json", {"EPJ","SUS","BEL"}), {"PRA": dan3("FreCrampon.json")["PRA"]}), "Giguet 1872 (LXX) · Crampon 1923"),
  "en-ortho": (merge(sm("KJVA.json", {"4ES"}), kjva_pra()), "King James Version (1769)"),
