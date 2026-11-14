@@ -65,8 +65,12 @@ function drawApoyo(){
 }
 
 // ---------- Recordatorios ----------
-const NDEF={morning:[1,'07:30'],evening:[1,'21:30'],fast:[1,'07:00'],saint:[0,'08:00'],plan:[0,'20:00']};
+const NDEF={fast:[1,'07:00'],feast:[1,'08:00'],morning:[1,'07:30'],evening:[1,'21:30'],saint:[0,'08:00'],plan:[0,'20:00']};
 const NLAB={morning:'rMorning',evening:'rEvening',fast:'rFast',saint:'rSaint',plan:'rPlan'};
+// Gratis para todos: aviso de ayuno y de fiesta mayor. El resto, con Phos Premium.
+const NFREE=new Set(['fast','feast']);
+const nlab=k=>k==='feast'?mx('rFeast'):pt(NLAB[k]);
+const majSet=br=>br==='ortodoxa'?O_MAJ:br==='catolica'?C_MAJ:P_MAJ;
 const nset=()=>Object.assign({},Object.fromEntries(Object.entries(NDEF).map(([k,v])=>[k,{on:!!v[0],at:v[1]}])),store.get('notif',{}));
 const FASTDAYS=new Set(['o_strict','o_wo','o_fish','o_dairy','o_holyfri','c_fastabst','c_abst','p_goodfri']);
 function drawNotif(){
@@ -74,27 +78,30 @@ function drawNotif(){
  let h=`<h1>🔔 ${esc(pt('reminders'))}</h1><p class="lead">${esc(pt('remLead'))}</p>`;
  if(!IN_APP)h+=`<div class="card"><div class="s">${esc(pt('notApp'))}</div></div>`;
  if(IN_APP&&!allowed)h+=`<div class="card"><div class="s">${esc(pt('permNeeded'))}</div><button class="btn" id="nAsk" style="margin-top:10px;width:100%">${esc(pt('allow'))}</button></div>`;
- h+=`<div class="nlist">${Object.keys(NDEF).map(k=>`<label class="nrow"><input type="checkbox" data-k="${k}" ${s[k].on?'checked':''}><span>${esc(pt(NLAB[k]))}</span><input type="time" data-t="${k}" value="${esc(s[k].at)}"></label>`).join('')}</div>
+ const pr=isPremium(),lock=k=>!pr&&!NFREE.has(k);
+ h+=`${!pr?`<p class="note">${esc(mx('remFree'))}</p>`:''}<div class="nlist">${Object.keys(NDEF).map(k=>`<label class="nrow${lock(k)?' nlock':''}"><input type="checkbox" data-k="${k}" ${s[k].on&&!lock(k)?'checked':''} ${lock(k)?'disabled':''}><span>${esc(nlab(k))}${lock(k)?' <span class="pill">👑 Premium</span>':''}</span><input type="time" data-t="${k}" value="${esc(s[k].at)}" ${lock(k)?'disabled':''}></label>`).join('')}</div>
+ ${!pr?`<button class="card rcard" id="nPrem"><div class="t"><span class="rico">👑</span>${esc(pt('prem'))}</div><div class="s">${esc(mx('remPrem'))}</div></button>`:''}
  <button class="btn" id="nSave" style="width:100%;margin-top:14px" ${IN_APP?'':'disabled'}>${esc(pt('save'))}</button>`;
  view.innerHTML=h;
- const a=$('#nAsk');if(a)a.onclick=()=>PhosApp.notificationsAsk();
- $('#nSave').onclick=()=>{const o={};Object.keys(NDEF).forEach(k=>o[k]={on:view.querySelector(`[data-k="${k}"]`).checked,at:view.querySelector(`[data-t="${k}"]`).value||NDEF[k][1]});
+ const a=$('#nAsk');if(a)a.onclick=()=>PhosApp.notificationsAsk();const np=$('#nPrem');if(np)np.onclick=()=>openP('premium');
+ $('#nSave').onclick=()=>{const o={};Object.keys(NDEF).forEach(k=>o[k]={on:lock(k)?s[k].on:view.querySelector(`[data-k="${k}"]`).checked,at:view.querySelector(`[data-t="${k}"]`).value||NDEF[k][1]});
   store.set('notif',o);scheduleReminders();toast(pt('saved'));if(!PhosApp.notificationsAllowed())PhosApp.notificationsAsk()};
 }
 function scheduleReminders(){
  if(!IN_APP)return;
- if(!isPremium()){try{PhosApp.remindersClear()}catch(e){}return}
- const s=nset(),br=tdBr(),now=Date.now(),out=[];
+ const s=nset(),br=tdBr(),now=Date.now(),out=[],pr=isPremium();
  const nm=k=>{try{return prName(k)||''}catch(e){return ''}};
  for(let i=0;i<14;i++){
   const d=new Date();d.setDate(d.getDate()+i);
   const y=d.getFullYear(),m=d.getMonth()+1,dd=d.getDate(),td=utc(y,m,dd);
   const at=k=>{const [hh,mi]=(s[k].at||NDEF[k][1]).split(':').map(Number);return new Date(y,m-1,dd,hh||0,mi||0).getTime()};
-  const add=(k,title,body,open)=>{const ts=at(k);if(s[k].on&&ts>now+30e3)out.push({id:k+'-'+y+m+dd,at:ts,title,body,open})};
+  const add=(k,title,body,open)=>{const ts=at(k);if(s[k].on&&(pr||NFREE.has(k))&&ts>now+30e3)out.push({id:k+'-'+y+m+dd,at:ts,title,body,open})};
   let info=null;try{info=dayInfo(br,td)}catch(e){}
   try{const p=prayerFor(br,7);add('morning',pt('rMorning'),(nm(p.k)||pt('rMorning'))+' · '+pt('nOpen'),'hoy')}catch(e){}
   try{const p=prayerFor(br,20);add('evening',pt('rEvening'),(nm(p.k)||pt('rEvening'))+' · '+pt('nOpen'),'hoy')}catch(e){}
   if(info&&FASTDAYS.has(info.f))try{add('fast',pt('nFast'),ftText(info.f),'hoy')}catch(e){}
+  try{const mj=info?info.cel.filter(c=>majSet(br).has(c)).map(celName).filter(Boolean):[];if(mj.length)add('feast',mx('nFeast'),mj.join(' · '),'hoy')}catch(e){}
+  if(!pr)continue;
   try{const c=(typeof celebsOn==='function'?celebsOn(br,td).map(celName).filter(Boolean):[]).concat(LANG==='es'?daySaints(br,td):[]);
    if(c.length)add('saint',pt('nSaint'),c.slice(0,2).join(' · '),'hoy')}catch(e){}
   if(typeof vidaReminder==='function'){const r=vidaReminder(y,m,dd);if(r&&r.at>now+30e3)out.push(r)}
@@ -152,7 +159,7 @@ window.phosOpen=k=>{P_BACK=null;if(k==='premium'||k==='apoyo'||k==='notif')retur
 .plans{display:grid;gap:10px;margin:12px 0}.card.plan{text-align:left;width:100%}.pprice{margin-top:6px;font-size:18px}.pprice b{font-size:24px;color:var(--wine)}
 .perr{color:#B3261E}.plinks a,.linkbtn{color:var(--wine);background:none;border:0;padding:0;font:inherit;text-decoration:underline;cursor:pointer}
 .nlist{display:grid;gap:8px;margin-top:10px}.nrow{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--paper)}
-.nrow span{flex:1}.nrow input[type=checkbox]{width:22px;height:22px;accent-color:var(--wine)}.nrow input[type=time]{font:inherit;padding:6px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.nrow span{flex:1}.nrow.nlock{opacity:.6}.nrow input[type=checkbox]{width:22px;height:22px;accent-color:var(--wine)}.nrow input[type=time]{font:inherit;padding:6px;border:1px solid var(--line);border-radius:8px;background:#fff}
 header.top{gap:4px;padding-left:8px;padding-right:8px}header.top .iconbtn{width:38px;flex:0 0 38px}#searchBtn[style*="hidden"]{display:none}
 .brand>div{min-width:0}.brand small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card.main .pprice b{color:var(--gold)}.card.main .pprice{color:var(--ground)}.card.main .btn.ghost{border-color:var(--gold);color:var(--gold)}

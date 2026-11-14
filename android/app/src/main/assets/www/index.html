@@ -2608,6 +2608,134 @@ function renderHabits(){
 const _renderArticlesH2=renderArticles;
 renderArticles=async function(sec){if(sec==='sport'&&S.view!=='topic')return renderHabits();return _renderArticlesH2(sec)};
 
+// ---------- Mejoras de la tarea 3 · textos (9 idiomas de la app) ----------
+// Aviso gratuito de ayuno y fiesta, widget gratuito, lecturas de hoy, Rosario y komboskini, retos de temporada.
+// Las traducciones distintas del español y el inglés conviene que las revise un hablante nativo.
+const MX={
+es:{freeTag:"Gratis",remFree:"Gratis: aviso de los días de ayuno y de las fiestas mayores de tu Iglesia. Con Phos Premium (Google Play): oración de la mañana y de la noche, santo del día, plan de lectura y más.",remPrem:"Todos los recordatorios con Phos Premium, en Google Play.",rFeast:"Fiestas mayores de mi Iglesia",nFeast:"Fiesta de hoy",
+widgetLead:"Gratis en la pantalla de inicio: mantén pulsado › Widgets › Phos. Muestra la fiesta o el santo y el versículo del día.",
+rdTitle:"Lecturas de hoy",rdFeast:"Evangelio de la fiesta",rdGospel:"Evangelio",rdPsalm:"Salmo",rdNote:"Lectura continua de los Evangelios y los Salmos que propone Phos: no sustituye al leccionario oficial de tu Iglesia.",rdOpen:"Leer completo",rdPrev:"‹ Día anterior",rdNext:"Día siguiente ›",rdToday:"Hoy",rdOther:"Lecturas de otros días: Phos Premium",
+roTitle:"Santo Rosario",roLead:"Toca la cuenta grande cada vez que termines una oración. Los misterios cambian según el día de la semana.",roSets:"Misterios gozosos|Misterios luminosos|Misterios dolorosos|Misterios gloriosos",
+roM:"La Anunciación del ángel a María|La Visitación de María a su prima Isabel|El Nacimiento de Jesús en Belén|La Presentación de Jesús en el Templo|El Niño Jesús perdido y hallado en el Templo|El Bautismo de Jesús en el Jordán|Las bodas de Caná|El anuncio del Reino de Dios|La Transfiguración del Señor|La institución de la Eucaristía|La oración de Jesús en el huerto|La flagelación del Señor|La coronación de espinas|Jesús con la cruz a cuestas|La crucifixión y muerte de Jesús|La Resurrección del Señor|La Ascensión del Señor|La venida del Espíritu Santo|La Asunción de María|La coronación de María",
+roStart:"Inicio",roMyst:"{n}.º misterio",roOurF:"Padrenuestro",roHail:"Avemaría",roGlory:"Gloria",roStep:"{a} · {n} de {t}",roTap:"Toca para avanzar",roDone:"Has terminado el Rosario. ¡Amén!",roAgain:"Empezar de nuevo",roListen:"Escuchar",roHist:"Rosarios rezados: {n} · esta semana: {w}",roHistLock:"Historial y escuchar en voz alta: Phos Premium",
+gloria:"Gloria al Padre, y al Hijo, y al Espíritu Santo. Como era en el principio, ahora y siempre, por los siglos de los siglos. Amén.",
+koTitle:"Komboskini (cuerda de oración)",koLead:"En cada nudo, reza despacio la Oración de Jesús. Toca el círculo para pasar al siguiente.",koKnots:"{n} nudos",koCount:"{n} de {t}",koDone:"Has terminado la cuerda. ¡Gloria a Dios!",
+prayRo:"Rezar el Rosario",prayKo:"Cuerda de oración",
+seTitle:"Reto de temporada",seLentO:"Gran Cuaresma",seNatO:"Ayuno de Navidad",seLent:"Cuaresma",seAdv:"Adviento",seDay:"Día {n} de {t}",seSunday:"Domingo: no cuenta en los 40 días de Cuaresma. Descansa y celebra la Resurrección.",seRead:"Lectura de hoy",sePractice:"Práctica de hoy",seMark:"Hecho hoy",seMarked:"✓ Hecho",seNext:"Próximo reto: {s}, en {n} días.",seAll:"Todos los días del reto",seAllLock:"Todos los días del reto y ponerte al día: Phos Premium",seProg:"{n} días hechos",
+seHealth:"Si ayunas, sigue la norma de tu Iglesia adaptada a tu salud. Si tienes alguna enfermedad, estás embarazada o tomas medicación, consulta antes con tu médico. Phos no da consejo médico.",
+sePr:"Dedica diez minutos a orar en silencio.|Haz una obra de misericordia: ayuda a alguien que lo necesite.|Pide perdón o perdona a alguien.|Comparte algo tuyo o da una limosna.|Apaga el móvil una hora y dedícala a Dios o a tu familia.|Da gracias a Dios por tres cosas de hoy.|Llama o visita a alguien que esté solo o enfermo.|Lee despacio la lectura de hoy y quédate con una frase.",
+sePrO:"Reza la Oración de Jesús con la cuerda de oración.",sePrC:"Reza un misterio del Rosario.",sePrP:"Aprende de memoria un versículo de la lectura de hoy."},
+en:{freeTag:"Free",remFree:"Free: reminders for the fasting days and major feasts of your Church. With Phos Premium (Google Play): morning and evening prayer, saint of the day, reading plan and more.",remPrem:"All reminders with Phos Premium, on Google Play.",rFeast:"Major feasts of my Church",nFeast:"Today's feast",
+widgetLead:"Free on your home screen: press and hold › Widgets › Phos. It shows the feast or saint and the verse of the day.",
+rdTitle:"Today's readings",rdFeast:"Gospel of the feast",rdGospel:"Gospel",rdPsalm:"Psalm",rdNote:"A continuous reading of the Gospels and Psalms suggested by Phos: it does not replace the official lectionary of your Church.",rdOpen:"Read in full",rdPrev:"‹ Previous day",rdNext:"Next day ›",rdToday:"Today",rdOther:"Readings for other days: Phos Premium",
+roTitle:"Holy Rosary",roLead:"Tap the large bead each time you finish a prayer. The mysteries change with the day of the week.",roSets:"Joyful Mysteries|Luminous Mysteries|Sorrowful Mysteries|Glorious Mysteries",
+roM:"The Annunciation|The Visitation|The Nativity of Jesus|The Presentation in the Temple|The Finding of Jesus in the Temple|The Baptism of Jesus in the Jordan|The Wedding at Cana|The Proclamation of the Kingdom|The Transfiguration|The Institution of the Eucharist|The Agony in the Garden|The Scourging at the Pillar|The Crowning with Thorns|The Carrying of the Cross|The Crucifixion and Death of Jesus|The Resurrection|The Ascension|The Descent of the Holy Spirit|The Assumption of Mary|The Coronation of Mary",
+roStart:"Opening",roMyst:"Mystery {n}",roOurF:"Our Father",roHail:"Hail Mary",roGlory:"Glory Be",roStep:"{a} · {n} of {t}",roTap:"Tap to continue",roDone:"You have finished the Rosary. Amen!",roAgain:"Start again",roListen:"Listen",roHist:"Rosaries prayed: {n} · this week: {w}",roHistLock:"History and listening aloud: Phos Premium",
+gloria:"Glory be to the Father, and to the Son, and to the Holy Spirit, as it was in the beginning, is now, and ever shall be, world without end. Amen.",
+koTitle:"Prayer rope (komboskini)",koLead:"On each knot, slowly pray the Jesus Prayer. Tap the circle to move to the next one.",koKnots:"{n} knots",koCount:"{n} of {t}",koDone:"You have finished the prayer rope. Glory to God!",
+prayRo:"Pray the Rosary",prayKo:"Prayer rope",
+seTitle:"Seasonal challenge",seLentO:"Great Lent",seNatO:"Nativity Fast",seLent:"Lent",seAdv:"Advent",seDay:"Day {n} of {t}",seSunday:"Sunday: it does not count among the 40 days of Lent. Rest and celebrate the Resurrection.",seRead:"Today's reading",sePractice:"Today's practice",seMark:"Done today",seMarked:"✓ Done",seNext:"Next challenge: {s}, in {n} days.",seAll:"All days of the challenge",seAllLock:"All days of the challenge and catching up: Phos Premium",seProg:"{n} days done",
+seHealth:"If you fast, follow the rule of your Church adapted to your health. If you have an illness, are pregnant or take medication, ask your doctor first. Phos does not give medical advice.",
+sePr:"Spend ten minutes in silent prayer.|Do a work of mercy: help someone in need.|Ask for forgiveness or forgive someone.|Share something of yours or give alms.|Switch off your phone for an hour and give it to God or your family.|Thank God for three things from today.|Call or visit someone who is lonely or ill.|Read today's reading slowly and keep one phrase with you.",
+sePrO:"Pray the Jesus Prayer with the prayer rope.",sePrC:"Pray one mystery of the Rosary.",sePrP:"Learn one verse of today's reading by heart."},
+pt:{freeTag:"Grátis",remFree:"Grátis: aviso dos dias de jejum e das grandes festas da sua Igreja. Com o Phos Premium (Google Play): oração da manhã e da noite, santo do dia, plano de leitura e mais.",remPrem:"Todos os lembretes com o Phos Premium, no Google Play.",rFeast:"Grandes festas da minha Igreja",nFeast:"Festa de hoje",
+widgetLead:"Grátis no ecrã inicial: mantenha premido › Widgets › Phos. Mostra a festa ou o santo e o versículo do dia.",
+rdTitle:"Leituras de hoje",rdFeast:"Evangelho da festa",rdGospel:"Evangelho",rdPsalm:"Salmo",rdNote:"Leitura contínua dos Evangelhos e dos Salmos proposta pelo Phos: não substitui o lecionário oficial da sua Igreja.",rdOpen:"Ler tudo",rdPrev:"‹ Dia anterior",rdNext:"Dia seguinte ›",rdToday:"Hoje",rdOther:"Leituras de outros dias: Phos Premium",
+roTitle:"Santo Terço",roLead:"Toque na conta grande sempre que terminar uma oração. Os mistérios mudam conforme o dia da semana.",roSets:"Mistérios gozosos|Mistérios luminosos|Mistérios dolorosos|Mistérios gloriosos",
+roM:"A Anunciação do Anjo a Maria|A Visitação de Maria a Isabel|O Nascimento de Jesus em Belém|A Apresentação de Jesus no Templo|A perda e o encontro de Jesus no Templo|O Batismo de Jesus no Jordão|As bodas de Caná|O anúncio do Reino de Deus|A Transfiguração do Senhor|A instituição da Eucaristia|A agonia de Jesus no horto|A flagelação de Jesus|A coroação de espinhos|Jesus carrega a cruz|A crucifixão e morte de Jesus|A Ressurreição do Senhor|A Ascensão do Senhor|A vinda do Espírito Santo|A Assunção de Maria|A coroação de Maria",
+roStart:"Início",roMyst:"{n}.º mistério",roOurF:"Pai-Nosso",roHail:"Ave-Maria",roGlory:"Glória",roStep:"{a} · {n} de {t}",roTap:"Toque para avançar",roDone:"Terminou o Terço. Ámen!",roAgain:"Começar de novo",roListen:"Ouvir",roHist:"Terços rezados: {n} · esta semana: {w}",roHistLock:"Histórico e ouvir em voz alta: Phos Premium",
+gloria:"Glória ao Pai, ao Filho e ao Espírito Santo. Como era no princípio, agora e sempre. Ámen.",
+koTitle:"Komboskini (corda de oração)",koLead:"Em cada nó, reze devagar a Oração de Jesus. Toque no círculo para passar ao seguinte.",koKnots:"{n} nós",koCount:"{n} de {t}",koDone:"Terminou a corda. Glória a Deus!",
+prayRo:"Rezar o Terço",prayKo:"Corda de oração",
+seTitle:"Desafio do tempo litúrgico",seLentO:"Grande Quaresma",seNatO:"Jejum de Natal",seLent:"Quaresma",seAdv:"Advento",seDay:"Dia {n} de {t}",seSunday:"Domingo: não conta nos 40 dias da Quaresma. Descanse e celebre a Ressurreição.",seRead:"Leitura de hoje",sePractice:"Prática de hoje",seMark:"Feito hoje",seMarked:"✓ Feito",seNext:"Próximo desafio: {s}, daqui a {n} dias.",seAll:"Todos os dias do desafio",seAllLock:"Todos os dias do desafio e pôr-se em dia: Phos Premium",seProg:"{n} dias feitos",
+seHealth:"Se jejuar, siga a norma da sua Igreja adaptada à sua saúde. Se tem alguma doença, está grávida ou toma medicação, consulte primeiro o seu médico. O Phos não dá conselhos médicos.",
+sePr:"Dedique dez minutos à oração em silêncio.|Faça uma obra de misericórdia: ajude alguém que precise.|Peça perdão ou perdoe alguém.|Partilhe algo seu ou dê uma esmola.|Desligue o telemóvel durante uma hora e dedique-a a Deus ou à família.|Agradeça a Deus por três coisas de hoje.|Telefone ou visite alguém que esteja só ou doente.|Leia devagar a leitura de hoje e guarde uma frase.",
+sePrO:"Reze a Oração de Jesus com a corda de oração.",sePrC:"Reze um mistério do Terço.",sePrP:"Aprenda de cor um versículo da leitura de hoje."},
+fr:{freeTag:"Gratuit",remFree:"Gratuit : rappel des jours de jeûne et des grandes fêtes de votre Église. Avec Phos Premium (Google Play) : prière du matin et du soir, saint du jour, plan de lecture et plus.",remPrem:"Tous les rappels avec Phos Premium, sur Google Play.",rFeast:"Grandes fêtes de mon Église",nFeast:"Fête du jour",
+widgetLead:"Gratuit sur l’écran d’accueil : appui long › Widgets › Phos. Il affiche la fête ou le saint et le verset du jour.",
+rdTitle:"Lectures du jour",rdFeast:"Évangile de la fête",rdGospel:"Évangile",rdPsalm:"Psaume",rdNote:"Lecture continue des Évangiles et des Psaumes proposée par Phos : elle ne remplace pas le lectionnaire officiel de votre Église.",rdOpen:"Lire en entier",rdPrev:"‹ Jour précédent",rdNext:"Jour suivant ›",rdToday:"Aujourd’hui",rdOther:"Lectures des autres jours : Phos Premium",
+roTitle:"Saint Rosaire",roLead:"Touchez le grand grain à la fin de chaque prière. Les mystères changent selon le jour de la semaine.",roSets:"Mystères joyeux|Mystères lumineux|Mystères douloureux|Mystères glorieux",
+roM:"L’Annonciation|La Visitation|La Nativité de Jésus|La Présentation au Temple|Le Recouvrement de Jésus au Temple|Le Baptême de Jésus au Jourdain|Les noces de Cana|L’annonce du Royaume|La Transfiguration|L’institution de l’Eucharistie|L’agonie au jardin des Oliviers|La flagellation|Le couronnement d’épines|Le portement de la croix|La crucifixion et la mort de Jésus|La Résurrection|L’Ascension|La Pentecôte|L’Assomption de Marie|Le couronnement de Marie",
+roStart:"Ouverture",roMyst:"{n}e mystère",roOurF:"Notre Père",roHail:"Je vous salue, Marie",roGlory:"Gloire au Père",roStep:"{a} · {n} sur {t}",roTap:"Touchez pour avancer",roDone:"Vous avez terminé le Rosaire. Amen !",roAgain:"Recommencer",roListen:"Écouter",roHist:"Rosaires priés : {n} · cette semaine : {w}",roHistLock:"Historique et écoute à voix haute : Phos Premium",
+gloria:"Gloire au Père, et au Fils, et au Saint-Esprit, comme il était au commencement, maintenant et toujours, pour les siècles des siècles. Amen.",
+koTitle:"Komboskini (chapelet de prière)",koLead:"À chaque nœud, priez lentement la prière de Jésus. Touchez le cercle pour passer au suivant.",koKnots:"{n} nœuds",koCount:"{n} sur {t}",koDone:"Vous avez terminé le chapelet. Gloire à Dieu !",
+prayRo:"Prier le Rosaire",prayKo:"Chapelet de prière",
+seTitle:"Défi du temps liturgique",seLentO:"Grand Carême",seNatO:"Jeûne de la Nativité",seLent:"Carême",seAdv:"Avent",seDay:"Jour {n} sur {t}",seSunday:"Dimanche : il ne compte pas dans les 40 jours du Carême. Reposez-vous et célébrez la Résurrection.",seRead:"Lecture du jour",sePractice:"Pratique du jour",seMark:"Fait aujourd’hui",seMarked:"✓ Fait",seNext:"Prochain défi : {s}, dans {n} jours.",seAll:"Tous les jours du défi",seAllLock:"Tous les jours du défi et rattrapage : Phos Premium",seProg:"{n} jours faits",
+seHealth:"Si vous jeûnez, suivez la règle de votre Église adaptée à votre santé. Si vous êtes malade, enceinte ou sous traitement, demandez d’abord l’avis de votre médecin. Phos ne donne pas de conseil médical.",
+sePr:"Consacrez dix minutes à la prière en silence.|Faites une œuvre de miséricorde : aidez quelqu’un dans le besoin.|Demandez pardon ou pardonnez à quelqu’un.|Partagez quelque chose ou faites l’aumône.|Éteignez votre téléphone une heure et donnez-la à Dieu ou à votre famille.|Remerciez Dieu pour trois choses d’aujourd’hui.|Appelez ou visitez une personne seule ou malade.|Lisez lentement la lecture du jour et gardez une phrase.",
+sePrO:"Priez la prière de Jésus avec le chapelet de prière.",sePrC:"Priez un mystère du Rosaire.",sePrP:"Apprenez par cœur un verset de la lecture du jour."},
+it:{freeTag:"Gratis",remFree:"Gratis: avviso dei giorni di digiuno e delle grandi feste della tua Chiesa. Con Phos Premium (Google Play): preghiera del mattino e della sera, santo del giorno, piano di lettura e altro.",remPrem:"Tutti i promemoria con Phos Premium, su Google Play.",rFeast:"Grandi feste della mia Chiesa",nFeast:"Festa di oggi",
+widgetLead:"Gratis nella schermata Home: tieni premuto › Widget › Phos. Mostra la festa o il santo e il versetto del giorno.",
+rdTitle:"Letture del giorno",rdFeast:"Vangelo della festa",rdGospel:"Vangelo",rdPsalm:"Salmo",rdNote:"Lettura continua dei Vangeli e dei Salmi proposta da Phos: non sostituisce il lezionario ufficiale della tua Chiesa.",rdOpen:"Leggi tutto",rdPrev:"‹ Giorno precedente",rdNext:"Giorno seguente ›",rdToday:"Oggi",rdOther:"Letture degli altri giorni: Phos Premium",
+roTitle:"Santo Rosario",roLead:"Tocca il grano grande ogni volta che finisci una preghiera. I misteri cambiano secondo il giorno della settimana.",roSets:"Misteri gaudiosi|Misteri luminosi|Misteri dolorosi|Misteri gloriosi",
+roM:"L’Annunciazione dell’angelo a Maria|La visita di Maria a santa Elisabetta|La nascita di Gesù a Betlemme|La presentazione di Gesù al Tempio|Il ritrovamento di Gesù nel Tempio|Il Battesimo di Gesù nel Giordano|Le nozze di Cana|L’annuncio del Regno di Dio|La Trasfigurazione|L’istituzione dell’Eucaristia|L’agonia di Gesù nell’orto|La flagellazione|La coronazione di spine|Gesù porta la croce|La crocifissione e morte di Gesù|La Risurrezione|L’Ascensione|La discesa dello Spirito Santo|L’Assunzione di Maria|L’incoronazione di Maria",
+roStart:"Inizio",roMyst:"{n}º mistero",roOurF:"Padre nostro",roHail:"Ave Maria",roGlory:"Gloria",roStep:"{a} · {n} di {t}",roTap:"Tocca per avanzare",roDone:"Hai terminato il Rosario. Amen!",roAgain:"Ricomincia",roListen:"Ascolta",roHist:"Rosari pregati: {n} · questa settimana: {w}",roHistLock:"Cronologia e ascolto ad alta voce: Phos Premium",
+gloria:"Gloria al Padre e al Figlio e allo Spirito Santo. Come era nel principio, e ora e sempre, nei secoli dei secoli. Amen.",
+koTitle:"Komboskini (corda di preghiera)",koLead:"A ogni nodo, prega lentamente la Preghiera di Gesù. Tocca il cerchio per passare al successivo.",koKnots:"{n} nodi",koCount:"{n} di {t}",koDone:"Hai terminato la corda. Gloria a Dio!",
+prayRo:"Prega il Rosario",prayKo:"Corda di preghiera",
+seTitle:"Sfida del tempo liturgico",seLentO:"Grande Quaresima",seNatO:"Digiuno di Natale",seLent:"Quaresima",seAdv:"Avvento",seDay:"Giorno {n} di {t}",seSunday:"Domenica: non conta nei 40 giorni di Quaresima. Riposa e celebra la Risurrezione.",seRead:"Lettura di oggi",sePractice:"Pratica di oggi",seMark:"Fatto oggi",seMarked:"✓ Fatto",seNext:"Prossima sfida: {s}, tra {n} giorni.",seAll:"Tutti i giorni della sfida",seAllLock:"Tutti i giorni della sfida e recuperare: Phos Premium",seProg:"{n} giorni fatti",
+seHealth:"Se digiuni, segui la norma della tua Chiesa adattata alla tua salute. Se hai una malattia, sei incinta o prendi farmaci, chiedi prima al tuo medico. Phos non dà consigli medici.",
+sePr:"Dedica dieci minuti alla preghiera in silenzio.|Fai un’opera di misericordia: aiuta qualcuno nel bisogno.|Chiedi perdono o perdona qualcuno.|Condividi qualcosa di tuo o fai l’elemosina.|Spegni il telefono per un’ora e dedicala a Dio o alla tua famiglia.|Ringrazia Dio per tre cose di oggi.|Chiama o visita qualcuno che è solo o malato.|Leggi lentamente la lettura di oggi e tieni con te una frase.",
+sePrO:"Prega la Preghiera di Gesù con la corda di preghiera.",sePrC:"Prega un mistero del Rosario.",sePrP:"Impara a memoria un versetto della lettura di oggi."},
+de:{freeTag:"Kostenlos",remFree:"Kostenlos: Erinnerung an die Fasttage und Hochfeste deiner Kirche. Mit Phos Premium (Google Play): Morgen- und Abendgebet, Tagesheilige, Leseplan und mehr.",remPrem:"Alle Erinnerungen mit Phos Premium, bei Google Play.",rFeast:"Hochfeste meiner Kirche",nFeast:"Fest des Tages",
+widgetLead:"Kostenlos auf dem Startbildschirm: lange drücken › Widgets › Phos. Es zeigt das Fest oder den Heiligen und den Vers des Tages.",
+rdTitle:"Lesungen des Tages",rdFeast:"Evangelium des Festes",rdGospel:"Evangelium",rdPsalm:"Psalm",rdNote:"Fortlaufende Lesung der Evangelien und Psalmen, von Phos vorgeschlagen: Sie ersetzt nicht die offizielle Leseordnung deiner Kirche.",rdOpen:"Ganz lesen",rdPrev:"‹ Vorheriger Tag",rdNext:"Nächster Tag ›",rdToday:"Heute",rdOther:"Lesungen anderer Tage: Phos Premium",
+roTitle:"Rosenkranz",roLead:"Tippe nach jedem Gebet auf die große Perle. Die Geheimnisse wechseln je nach Wochentag.",roSets:"Freudenreiche Geheimnisse|Lichtreiche Geheimnisse|Schmerzhafte Geheimnisse|Glorreiche Geheimnisse",
+roM:"Jesus, den du, o Jungfrau, vom Heiligen Geist empfangen hast|Jesus, den du, o Jungfrau, zu Elisabet getragen hast|Jesus, den du, o Jungfrau, in Betlehem geboren hast|Jesus, den du, o Jungfrau, im Tempel aufgeopfert hast|Jesus, den du, o Jungfrau, im Tempel wiedergefunden hast|Jesus, der von Johannes getauft worden ist|Jesus, der sich bei der Hochzeit in Kana offenbart hat|Jesus, der uns das Reich Gottes verkündet hat|Jesus, der auf dem Berg verklärt worden ist|Jesus, der uns die Eucharistie geschenkt hat|Jesus, der für uns Blut geschwitzt hat|Jesus, der für uns gegeißelt worden ist|Jesus, der für uns mit Dornen gekrönt worden ist|Jesus, der für uns das schwere Kreuz getragen hat|Jesus, der für uns gekreuzigt worden ist|Jesus, der von den Toten auferstanden ist|Jesus, der in den Himmel aufgefahren ist|Jesus, der uns den Heiligen Geist gesandt hat|Jesus, der dich, o Jungfrau, in den Himmel aufgenommen hat|Jesus, der dich, o Jungfrau, im Himmel gekrönt hat",
+roStart:"Eröffnung",roMyst:"{n}. Geheimnis",roOurF:"Vaterunser",roHail:"Gegrüßet seist du, Maria",roGlory:"Ehre sei dem Vater",roStep:"{a} · {n} von {t}",roTap:"Tippen zum Weitergehen",roDone:"Du hast den Rosenkranz beendet. Amen!",roAgain:"Neu beginnen",roListen:"Anhören",roHist:"Gebetete Rosenkränze: {n} · diese Woche: {w}",roHistLock:"Verlauf und Vorlesen: Phos Premium",
+gloria:"Ehre sei dem Vater und dem Sohn und dem Heiligen Geist, wie im Anfang, so auch jetzt und alle Zeit und in Ewigkeit. Amen.",
+koTitle:"Gebetsschnur (Komboskini)",koLead:"Bete bei jedem Knoten langsam das Jesusgebet. Tippe auf den Kreis, um weiterzugehen.",koKnots:"{n} Knoten",koCount:"{n} von {t}",koDone:"Du hast die Gebetsschnur beendet. Ehre sei Gott!",
+prayRo:"Rosenkranz beten",prayKo:"Gebetsschnur",
+seTitle:"Challenge der Festzeit",seLentO:"Große Fastenzeit",seNatO:"Weihnachtsfasten",seLent:"Fastenzeit",seAdv:"Advent",seDay:"Tag {n} von {t}",seSunday:"Sonntag: Er zählt nicht zu den 40 Tagen der Fastenzeit. Ruhe dich aus und feiere die Auferstehung.",seRead:"Lesung von heute",sePractice:"Übung von heute",seMark:"Heute erledigt",seMarked:"✓ Erledigt",seNext:"Nächste Challenge: {s}, in {n} Tagen.",seAll:"Alle Tage der Challenge",seAllLock:"Alle Tage der Challenge und Nachholen: Phos Premium",seProg:"{n} Tage erledigt",
+seHealth:"Wenn du fastest, folge der Regel deiner Kirche, angepasst an deine Gesundheit. Wenn du krank oder schwanger bist oder Medikamente nimmst, frage zuerst deinen Arzt. Phos gibt keinen medizinischen Rat.",
+sePr:"Nimm dir zehn Minuten für stilles Gebet.|Tu ein Werk der Barmherzigkeit: Hilf jemandem, der Hilfe braucht.|Bitte um Vergebung oder vergib jemandem.|Teile etwas von dir oder gib ein Almosen.|Schalte das Handy eine Stunde aus und schenke sie Gott oder deiner Familie.|Danke Gott für drei Dinge von heute.|Ruf jemanden an oder besuche jemanden, der allein oder krank ist.|Lies die heutige Lesung langsam und behalte einen Satz.",
+sePrO:"Bete das Jesusgebet mit der Gebetsschnur.",sePrC:"Bete ein Gesätz des Rosenkranzes.",sePrP:"Lerne einen Vers der heutigen Lesung auswendig."},
+el:{freeTag:"Δωρεάν",remFree:"Δωρεάν: υπενθύμιση για τις ημέρες νηστείας και τις μεγάλες εορτές της Εκκλησίας σου. Με το Phos Premium (Google Play): πρωινή και βραδινή προσευχή, άγιος της ημέρας, πρόγραμμα ανάγνωσης και άλλα.",remPrem:"Όλες οι υπενθυμίσεις με το Phos Premium, στο Google Play.",rFeast:"Μεγάλες εορτές της Εκκλησίας μου",nFeast:"Η εορτή της ημέρας",
+widgetLead:"Δωρεάν στην αρχική οθόνη: πάτησε παρατεταμένα › Widgets › Phos. Δείχνει την εορτή ή τον άγιο και τον στίχο της ημέρας.",
+rdTitle:"Αναγνώσματα της ημέρας",rdFeast:"Ευαγγέλιο της εορτής",rdGospel:"Ευαγγέλιο",rdPsalm:"Ψαλμός",rdNote:"Συνεχής ανάγνωση των Ευαγγελίων και των Ψαλμών που προτείνει το Phos: δεν αντικαθιστά το επίσημο τυπικό αναγνωσμάτων της Εκκλησίας σου.",rdOpen:"Διάβασε ολόκληρο",rdPrev:"‹ Προηγούμενη ημέρα",rdNext:"Επόμενη ημέρα ›",rdToday:"Σήμερα",rdOther:"Αναγνώσματα άλλων ημερών: Phos Premium",
+roTitle:"Άγιο Ροδάριο",roLead:"Πάτησε τη μεγάλη χάντρα κάθε φορά που τελειώνεις μια προσευχή. Τα μυστήρια αλλάζουν ανάλογα με την ημέρα.",roSets:"Χαρμόσυνα μυστήρια|Φωτεινά μυστήρια|Θλιβερά μυστήρια|Ένδοξα μυστήρια",
+roM:"Ο Ευαγγελισμός|Η επίσκεψη της Μαρίας στην Ελισάβετ|Η Γέννηση του Ιησού|Η Υπαπαντή στον Ναό|Η εύρεση του Ιησού στον Ναό|Η Βάπτιση του Ιησού στον Ιορδάνη|Ο γάμος της Κανά|Το κήρυγμα της Βασιλείας|Η Μεταμόρφωση|Η σύσταση της Θείας Ευχαριστίας|Η αγωνία στον κήπο|Η μαστίγωση|Ο ακάνθινος στέφανος|Ο Ιησούς σηκώνει τον σταυρό|Η Σταύρωση και ο θάνατος του Ιησού|Η Ανάσταση|Η Ανάληψη|Η κάθοδος του Αγίου Πνεύματος|Η Κοίμηση και Ανάληψη της Μαρίας|Η στέψη της Μαρίας",
+roStart:"Αρχή",roMyst:"{n}ο μυστήριο",roOurF:"Πάτερ ημών",roHail:"Χαίρε, Μαρία",roGlory:"Δόξα",roStep:"{a} · {n} από {t}",roTap:"Πάτησε για να συνεχίσεις",roDone:"Τελείωσες το Ροδάριο. Αμήν!",roAgain:"Ξανά από την αρχή",roListen:"Άκουσε",roHist:"Ροδάρια: {n} · αυτή την εβδομάδα: {w}",roHistLock:"Ιστορικό και ανάγνωση φωναχτά: Phos Premium",
+gloria:"Δόξα Πατρὶ καὶ Υἱῷ καὶ Ἁγίῳ Πνεύματι, καὶ νῦν καὶ ἀεὶ καὶ εἰς τοὺς αἰῶνας τῶν αἰώνων. Ἀμήν.",
+koTitle:"Κομποσκοίνι",koLead:"Σε κάθε κόμπο, πες αργά την Ευχή του Ιησού. Πάτησε τον κύκλο για τον επόμενο.",koKnots:"{n} κόμποι",koCount:"{n} από {t}",koDone:"Τελείωσες το κομποσκοίνι. Δόξα τῷ Θεῷ!",
+prayRo:"Προσευχή του Ροδαρίου",prayKo:"Κομποσκοίνι",
+seTitle:"Πρόκληση της περιόδου",seLentO:"Μεγάλη Τεσσαρακοστή",seNatO:"Σαρανταήμερο των Χριστουγέννων",seLent:"Τεσσαρακοστή",seAdv:"Περίοδος της Παρουσίας (Advent)",seDay:"Ημέρα {n} από {t}",seSunday:"Κυριακή: δεν μετρά στις 40 ημέρες. Ξεκουράσου και γιόρτασε την Ανάσταση.",seRead:"Ανάγνωσμα της ημέρας",sePractice:"Άσκηση της ημέρας",seMark:"Έγινε σήμερα",seMarked:"✓ Έγινε",seNext:"Επόμενη πρόκληση: {s}, σε {n} ημέρες.",seAll:"Όλες οι ημέρες της πρόκλησης",seAllLock:"Όλες οι ημέρες της πρόκλησης: Phos Premium",seProg:"{n} ημέρες",
+seHealth:"Αν νηστεύεις, ακολούθησε τον κανόνα της Εκκλησίας σου προσαρμοσμένο στην υγεία σου. Αν έχεις κάποια ασθένεια, είσαι έγκυος ή παίρνεις φάρμακα, ρώτησε πρώτα τον γιατρό σου. Το Phos δεν δίνει ιατρικές συμβουλές.",
+sePr:"Αφιέρωσε δέκα λεπτά σε σιωπηλή προσευχή.|Κάνε ένα έργο αγάπης: βοήθησε κάποιον που το χρειάζεται.|Ζήτα συγγνώμη ή συγχώρεσε κάποιον.|Μοιράσου κάτι δικό σου ή δώσε ελεημοσύνη.|Κλείσε το κινητό για μία ώρα και αφιέρωσέ την στον Θεό ή στην οικογένειά σου.|Ευχαρίστησε τον Θεό για τρία πράγματα της ημέρας.|Τηλεφώνησε ή επισκέψου κάποιον μόνο ή άρρωστο.|Διάβασε αργά το σημερινό ανάγνωσμα και κράτησε μία φράση.",
+sePrO:"Πες την Ευχή του Ιησού με το κομποσκοίνι.",sePrC:"Πες ένα μυστήριο του Ροδαρίου.",sePrP:"Μάθε απέξω έναν στίχο από το σημερινό ανάγνωσμα."},
+ru:{freeTag:"Бесплатно",remFree:"Бесплатно: напоминания о постных днях и великих праздниках вашей Церкви. С Phos Premium (Google Play): утренняя и вечерняя молитва, святой дня, план чтения и другое.",remPrem:"Все напоминания — с Phos Premium в Google Play.",rFeast:"Великие праздники моей Церкви",nFeast:"Праздник дня",
+widgetLead:"Бесплатно на главном экране: нажмите и удерживайте › Виджеты › Phos. Показывает праздник или святого и стих дня.",
+rdTitle:"Чтения дня",rdFeast:"Евангелие праздника",rdGospel:"Евангелие",rdPsalm:"Псалом",rdNote:"Последовательное чтение Евангелий и Псалтири, которое предлагает Phos: оно не заменяет официальный круг чтений вашей Церкви.",rdOpen:"Читать полностью",rdPrev:"‹ Предыдущий день",rdNext:"Следующий день ›",rdToday:"Сегодня",rdOther:"Чтения других дней: Phos Premium",
+roTitle:"Святой Розарий",roLead:"Нажимайте на большую бусину после каждой молитвы. Тайны меняются в зависимости от дня недели.",roSets:"Радостные тайны|Тайны света|Скорбные тайны|Славные тайны",
+roM:"Благовещение|Посещение Марией Елизаветы|Рождество Иисуса|Принесение Иисуса во храм|Обретение Иисуса в храме|Крещение Иисуса в Иордане|Брак в Кане|Провозглашение Царства Божия|Преображение|Установление Евхаристии|Моление в саду|Бичевание|Увенчание тернием|Несение креста|Распятие и смерть Иисуса|Воскресение|Вознесение|Сошествие Святого Духа|Взятие Марии на небо|Увенчание Марии",
+roStart:"Начало",roMyst:"{n}-я тайна",roOurF:"Отче наш",roHail:"Радуйся, Мария",roGlory:"Слава",roStep:"{a} · {n} из {t}",roTap:"Нажмите, чтобы продолжить",roDone:"Вы закончили Розарий. Аминь!",roAgain:"Начать заново",roListen:"Слушать",roHist:"Прочитано розариев: {n} · на этой неделе: {w}",roHistLock:"История и чтение вслух: Phos Premium",
+gloria:"Слава Отцу и Сыну и Святому Духу, как было в начале, ныне и присно и во веки веков. Аминь.",
+koTitle:"Чётки",koLead:"На каждом узелке медленно произносите Иисусову молитву. Нажмите на круг, чтобы перейти к следующему.",koKnots:"{n} узелков",koCount:"{n} из {t}",koDone:"Вы прошли все чётки. Слава Богу!",
+prayRo:"Молиться Розарием",prayKo:"Чётки",
+seTitle:"Испытание поста",seLentO:"Великий пост",seNatO:"Рождественский пост",seLent:"Великий пост",seAdv:"Адвент",seDay:"День {n} из {t}",seSunday:"Воскресенье не входит в 40 дней поста. Отдохните и празднуйте Воскресение.",seRead:"Чтение дня",sePractice:"Дело дня",seMark:"Сделано сегодня",seMarked:"✓ Сделано",seNext:"Следующее испытание: {s}, через {n} дн.",seAll:"Все дни испытания",seAllLock:"Все дни испытания: Phos Premium",seProg:"Сделано дней: {n}",
+seHealth:"Если вы поститесь, соблюдайте устав своей Церкви с учётом здоровья. Если вы больны, беременны или принимаете лекарства, сначала посоветуйтесь с врачом. Phos не даёт медицинских советов.",
+sePr:"Уделите десять минут молитве в тишине.|Сделайте дело милосердия: помогите тому, кто нуждается.|Попросите прощения или простите кого-нибудь.|Поделитесь чем-то своим или подайте милостыню.|Выключите телефон на час и посвятите его Богу или семье.|Поблагодарите Бога за три вещи сегодняшнего дня.|Позвоните или навестите одинокого или больного.|Медленно прочитайте сегодняшнее чтение и запомните одну фразу.",
+sePrO:"Помолитесь Иисусовой молитвой по чёткам.",sePrC:"Прочитайте одну тайну Розария.",sePrP:"Выучите наизусть стих из сегодняшнего чтения."},
+ro:{freeTag:"Gratuit",remFree:"Gratuit: aviz pentru zilele de post și marile sărbători ale Bisericii tale. Cu Phos Premium (Google Play): rugăciunea de dimineață și de seară, sfântul zilei, planul de lectură și altele.",remPrem:"Toate mementourile cu Phos Premium, în Google Play.",rFeast:"Marile sărbători ale Bisericii mele",nFeast:"Sărbătoarea zilei",
+widgetLead:"Gratuit pe ecranul principal: ține apăsat › Widgeturi › Phos. Arată sărbătoarea sau sfântul și versetul zilei.",
+rdTitle:"Citirile zilei",rdFeast:"Evanghelia sărbătorii",rdGospel:"Evanghelia",rdPsalm:"Psalmul",rdNote:"Citire continuă a Evangheliilor și a Psalmilor propusă de Phos: nu înlocuiește rânduiala oficială a citirilor Bisericii tale.",rdOpen:"Citește tot",rdPrev:"‹ Ziua anterioară",rdNext:"Ziua următoare ›",rdToday:"Azi",rdOther:"Citirile altor zile: Phos Premium",
+roTitle:"Sfântul Rozariu",roLead:"Atinge mărgeaua mare de fiecare dată când termini o rugăciune. Misterele se schimbă după ziua săptămânii.",roSets:"Misterele de bucurie|Misterele de lumină|Misterele de durere|Misterele de slavă",
+roM:"Bunavestire|Vizita Mariei la Elisabeta|Nașterea lui Isus|Prezentarea lui Isus la Templu|Regăsirea lui Isus în Templu|Botezul lui Isus în Iordan|Nunta din Cana|Vestirea Împărăției lui Dumnezeu|Schimbarea la Față|Instituirea Euharistiei|Agonia lui Isus în grădină|Biciuirea|Încoronarea cu spini|Purtarea crucii|Răstignirea și moartea lui Isus|Învierea|Înălțarea|Coborârea Duhului Sfânt|Ridicarea Mariei la cer|Încoronarea Mariei",
+roStart:"Început",roMyst:"Misterul {n}",roOurF:"Tatăl nostru",roHail:"Bucură-te, Marie",roGlory:"Slavă",roStep:"{a} · {n} din {t}",roTap:"Atinge pentru a continua",roDone:"Ai terminat Rozariul. Amin!",roAgain:"Începe din nou",roListen:"Ascultă",roHist:"Rozarii rugate: {n} · săptămâna aceasta: {w}",roHistLock:"Istoric și ascultare cu voce tare: Phos Premium",
+gloria:"Slavă Tatălui și Fiului și Sfântului Duh, precum era la început, acum și pururea și în vecii vecilor. Amin.",
+koTitle:"Metanier (komboskini)",koLead:"La fiecare nod, spune încet Rugăciunea lui Iisus. Atinge cercul pentru a trece la următorul.",koKnots:"{n} noduri",koCount:"{n} din {t}",koDone:"Ai terminat metanierul. Slavă lui Dumnezeu!",
+prayRo:"Roagă Rozariul",prayKo:"Metanier",
+seTitle:"Provocarea postului",seLentO:"Postul Mare",seNatO:"Postul Nașterii Domnului",seLent:"Postul Mare",seAdv:"Advent",seDay:"Ziua {n} din {t}",seSunday:"Duminica nu se numără între cele 40 de zile ale postului. Odihnește-te și sărbătorește Învierea.",seRead:"Citirea de azi",sePractice:"Fapta de azi",seMark:"Făcut azi",seMarked:"✓ Făcut",seNext:"Următoarea provocare: {s}, peste {n} zile.",seAll:"Toate zilele provocării",seAllLock:"Toate zilele provocării: Phos Premium",seProg:"{n} zile făcute",
+seHealth:"Dacă postești, urmează rânduiala Bisericii tale adaptată sănătății tale. Dacă ai o boală, ești însărcinată sau iei medicamente, întreabă mai întâi medicul. Phos nu oferă sfaturi medicale.",
+sePr:"Dăruiește zece minute rugăciunii în tăcere.|Fă o faptă de milostenie: ajută pe cineva care are nevoie.|Cere iertare sau iartă pe cineva.|Împarte ceva al tău sau dă milostenie.|Închide telefonul o oră și dăruiește-o lui Dumnezeu sau familiei.|Mulțumește-I lui Dumnezeu pentru trei lucruri de azi.|Sună sau vizitează pe cineva singur sau bolnav.|Citește încet citirea de azi și păstrează o frază.",
+sePrO:"Spune Rugăciunea lui Iisus cu metanierul.",sePrC:"Roagă un mister al Rozariului.",sePrP:"Învață pe de rost un verset din citirea de azi."}
+};
+const mx=(k,o)=>{let s=(MX[LANG]&&MX[LANG][k])||MX.en[k]||MX.es[k]||k;if(o)for(const x in o)s=s.split('{'+x+'}').join(o[x]);return s};
+// Padrenuestro de los católicos en griego, ruso y rumano (en los demás idiomas, el texto tradicional de OURF ya es el católico)
+const OURF_C={el:"Πάτερ ἡμῶν ὁ ἐν τοῖς οὐρανοῖς, ἁγιασθήτω τὸ ὄνομά σου, ἐλθέτω ἡ βασιλεία σου, γενηθήτω τὸ θέλημά σου, ὡς ἐν οὐρανῷ καὶ ἐπὶ τῆς γῆς. Τὸν ἄρτον ἡμῶν τὸν ἐπιούσιον δὸς ἡμῖν σήμερον· καὶ ἄφες ἡμῖν τὰ ὀφειλήματα ἡμῶν, ὡς καὶ ἡμεῖς ἀφίεμεν τοῖς ὀφειλέταις ἡμῶν· καὶ μὴ εἰσενέγκῃς ἡμᾶς εἰς πειρασμόν, ἀλλὰ ῥῦσαι ἡμᾶς ἀπὸ τοῦ πονηροῦ. Ἀμήν.",
+ru:"Отче наш, сущий на небесах! Да святится имя Твоё; да придёт Царствие Твоё; да будет воля Твоя и на земле, как на небе. Хлеб наш насущный дай нам на сей день; и прости нам долги наши, как и мы прощаем должникам нашим; и не введи нас в искушение, но избавь нас от лукавого. Аминь.",
+ro:"Tatăl nostru, care ești în ceruri, sfințească-se numele tău, vie împărăția ta, facă-se voia ta, precum în cer așa și pe pământ. Pâinea noastră cea de toate zilele dă-ne-o nouă astăzi și ne iartă nouă greșelile noastre, precum și noi iertăm greșiților noștri, și nu ne duce pe noi în ispită, ci ne mântuiește de cel rău. Amin."};
+
 // ---------- Phos Premium · textos (9 idiomas de la app) ----------
 // Orden de las claves en PK; cada idioma es una lista en el mismo orden.
 const PK=['prem','premLead','f1','f2','f3','active','manage','monthly','yearly','perMonth','perYear','trial','loading','notApp','legal','restore','terms','privacy','support','supportLead','supportNote','thanksTip','thanksSub','payErr','locked','lockedLead','seePlans','reminders','remLead','rMorning','rEvening','rFast','rSaint','rVerse','rPlan','save','saved','permNeeded','allow','nOpen','nFast','nPlan','nSaint','premOnly','tip1','tip2','tip3'];
@@ -2692,8 +2820,12 @@ function drawApoyo(){
 }
 
 // ---------- Recordatorios ----------
-const NDEF={morning:[1,'07:30'],evening:[1,'21:30'],fast:[1,'07:00'],saint:[0,'08:00'],plan:[0,'20:00']};
+const NDEF={fast:[1,'07:00'],feast:[1,'08:00'],morning:[1,'07:30'],evening:[1,'21:30'],saint:[0,'08:00'],plan:[0,'20:00']};
 const NLAB={morning:'rMorning',evening:'rEvening',fast:'rFast',saint:'rSaint',plan:'rPlan'};
+// Gratis para todos: aviso de ayuno y de fiesta mayor. El resto, con Phos Premium.
+const NFREE=new Set(['fast','feast']);
+const nlab=k=>k==='feast'?mx('rFeast'):pt(NLAB[k]);
+const majSet=br=>br==='ortodoxa'?O_MAJ:br==='catolica'?C_MAJ:P_MAJ;
 const nset=()=>Object.assign({},Object.fromEntries(Object.entries(NDEF).map(([k,v])=>[k,{on:!!v[0],at:v[1]}])),store.get('notif',{}));
 const FASTDAYS=new Set(['o_strict','o_wo','o_fish','o_dairy','o_holyfri','c_fastabst','c_abst','p_goodfri']);
 function drawNotif(){
@@ -2701,27 +2833,30 @@ function drawNotif(){
  let h=`<h1>🔔 ${esc(pt('reminders'))}</h1><p class="lead">${esc(pt('remLead'))}</p>`;
  if(!IN_APP)h+=`<div class="card"><div class="s">${esc(pt('notApp'))}</div></div>`;
  if(IN_APP&&!allowed)h+=`<div class="card"><div class="s">${esc(pt('permNeeded'))}</div><button class="btn" id="nAsk" style="margin-top:10px;width:100%">${esc(pt('allow'))}</button></div>`;
- h+=`<div class="nlist">${Object.keys(NDEF).map(k=>`<label class="nrow"><input type="checkbox" data-k="${k}" ${s[k].on?'checked':''}><span>${esc(pt(NLAB[k]))}</span><input type="time" data-t="${k}" value="${esc(s[k].at)}"></label>`).join('')}</div>
+ const pr=isPremium(),lock=k=>!pr&&!NFREE.has(k);
+ h+=`${!pr?`<p class="note">${esc(mx('remFree'))}</p>`:''}<div class="nlist">${Object.keys(NDEF).map(k=>`<label class="nrow${lock(k)?' nlock':''}"><input type="checkbox" data-k="${k}" ${s[k].on&&!lock(k)?'checked':''} ${lock(k)?'disabled':''}><span>${esc(nlab(k))}${lock(k)?' <span class="pill">👑 Premium</span>':''}</span><input type="time" data-t="${k}" value="${esc(s[k].at)}" ${lock(k)?'disabled':''}></label>`).join('')}</div>
+ ${!pr?`<button class="card rcard" id="nPrem"><div class="t"><span class="rico">👑</span>${esc(pt('prem'))}</div><div class="s">${esc(mx('remPrem'))}</div></button>`:''}
  <button class="btn" id="nSave" style="width:100%;margin-top:14px" ${IN_APP?'':'disabled'}>${esc(pt('save'))}</button>`;
  view.innerHTML=h;
- const a=$('#nAsk');if(a)a.onclick=()=>PhosApp.notificationsAsk();
- $('#nSave').onclick=()=>{const o={};Object.keys(NDEF).forEach(k=>o[k]={on:view.querySelector(`[data-k="${k}"]`).checked,at:view.querySelector(`[data-t="${k}"]`).value||NDEF[k][1]});
+ const a=$('#nAsk');if(a)a.onclick=()=>PhosApp.notificationsAsk();const np=$('#nPrem');if(np)np.onclick=()=>openP('premium');
+ $('#nSave').onclick=()=>{const o={};Object.keys(NDEF).forEach(k=>o[k]={on:lock(k)?s[k].on:view.querySelector(`[data-k="${k}"]`).checked,at:view.querySelector(`[data-t="${k}"]`).value||NDEF[k][1]});
   store.set('notif',o);scheduleReminders();toast(pt('saved'));if(!PhosApp.notificationsAllowed())PhosApp.notificationsAsk()};
 }
 function scheduleReminders(){
  if(!IN_APP)return;
- if(!isPremium()){try{PhosApp.remindersClear()}catch(e){}return}
- const s=nset(),br=tdBr(),now=Date.now(),out=[];
+ const s=nset(),br=tdBr(),now=Date.now(),out=[],pr=isPremium();
  const nm=k=>{try{return prName(k)||''}catch(e){return ''}};
  for(let i=0;i<14;i++){
   const d=new Date();d.setDate(d.getDate()+i);
   const y=d.getFullYear(),m=d.getMonth()+1,dd=d.getDate(),td=utc(y,m,dd);
   const at=k=>{const [hh,mi]=(s[k].at||NDEF[k][1]).split(':').map(Number);return new Date(y,m-1,dd,hh||0,mi||0).getTime()};
-  const add=(k,title,body,open)=>{const ts=at(k);if(s[k].on&&ts>now+30e3)out.push({id:k+'-'+y+m+dd,at:ts,title,body,open})};
+  const add=(k,title,body,open)=>{const ts=at(k);if(s[k].on&&(pr||NFREE.has(k))&&ts>now+30e3)out.push({id:k+'-'+y+m+dd,at:ts,title,body,open})};
   let info=null;try{info=dayInfo(br,td)}catch(e){}
   try{const p=prayerFor(br,7);add('morning',pt('rMorning'),(nm(p.k)||pt('rMorning'))+' · '+pt('nOpen'),'hoy')}catch(e){}
   try{const p=prayerFor(br,20);add('evening',pt('rEvening'),(nm(p.k)||pt('rEvening'))+' · '+pt('nOpen'),'hoy')}catch(e){}
   if(info&&FASTDAYS.has(info.f))try{add('fast',pt('nFast'),ftText(info.f),'hoy')}catch(e){}
+  try{const mj=info?info.cel.filter(c=>majSet(br).has(c)).map(celName).filter(Boolean):[];if(mj.length)add('feast',mx('nFeast'),mj.join(' · '),'hoy')}catch(e){}
+  if(!pr)continue;
   try{const c=(typeof celebsOn==='function'?celebsOn(br,td).map(celName).filter(Boolean):[]).concat(LANG==='es'?daySaints(br,td):[]);
    if(c.length)add('saint',pt('nSaint'),c.slice(0,2).join(' · '),'hoy')}catch(e){}
   if(typeof vidaReminder==='function'){const r=vidaReminder(y,m,dd);if(r&&r.at>now+30e3)out.push(r)}
@@ -2779,7 +2914,7 @@ window.phosOpen=k=>{P_BACK=null;if(k==='premium'||k==='apoyo'||k==='notif')retur
 .plans{display:grid;gap:10px;margin:12px 0}.card.plan{text-align:left;width:100%}.pprice{margin-top:6px;font-size:18px}.pprice b{font-size:24px;color:var(--wine)}
 .perr{color:#B3261E}.plinks a,.linkbtn{color:var(--wine);background:none;border:0;padding:0;font:inherit;text-decoration:underline;cursor:pointer}
 .nlist{display:grid;gap:8px;margin-top:10px}.nrow{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--paper)}
-.nrow span{flex:1}.nrow input[type=checkbox]{width:22px;height:22px;accent-color:var(--wine)}.nrow input[type=time]{font:inherit;padding:6px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.nrow span{flex:1}.nrow.nlock{opacity:.6}.nrow input[type=checkbox]{width:22px;height:22px;accent-color:var(--wine)}.nrow input[type=time]{font:inherit;padding:6px;border:1px solid var(--line);border-radius:8px;background:#fff}
 header.top{gap:4px;padding-left:8px;padding-right:8px}header.top .iconbtn{width:38px;flex:0 0 38px}#searchBtn[style*="hidden"]{display:none}
 .brand>div{min-width:0}.brand small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card.main .pprice b{color:var(--gold)}.card.main .pprice{color:var(--ground)}.card.main .btn.ghost{border-color:var(--gold);color:var(--gold)}
@@ -3195,8 +3330,8 @@ function renderMine(){
  ${item('m_account','👤','account',a?qt('signed',{e:a.email}):qt('googleLead'),0)}
  ${item('m_plans','📖','plans',qt('plansLead'),1)}${item('m_rule','🕯️','rule',qt('ruleLead'),1)}${item('m_diary','✍️','diary',qt('diaryLead'),1)}
  ${item('m_walls','🖼️','walls',qt('wallsLead'),1)}
- <button class="card rcard" data-p="notif"><div class="t"><span class="rico">🔔</span>${esc(pt('reminders'))}${!prem2()?'<span class="pill">👑 Premium</span>':''}</div><div class="s">${esc(pt('remLead'))}</div></button>
- <div class="card rcard"><div class="t"><span class="rico">📱</span>${esc(qt('widget'))}${!prem2()?'<span class="pill">👑 Premium</span>':''}</div><div class="s">${esc(qt('widgetLead'))}</div></div>
+ <button class="card rcard" data-p="notif"><div class="t"><span class="rico">🔔</span>${esc(pt('reminders'))}<span class="pill">${esc(prem2()?'✓':mx('freeTag'))}</span></div><div class="s">${esc(prem2()?pt('remLead'):mx('remFree'))}</div></button>
+ <div class="card rcard"><div class="t"><span class="rico">📱</span>${esc(qt('widget'))}<span class="pill">${esc(mx('freeTag'))}</span></div><div class="s">${esc(mx('widgetLead'))}</div></div>
  <button class="card main rcard" data-p="premium"><div class="t"><span class="rico">👑</span>${esc(pt('prem'))}</div><div class="s">${esc(isPremium&&IN_APP&&isPremium()?pt('active'):pt('premLead'))}</div></button>
  <button class="card rcard" data-p="apoyo"><div class="t"><span class="rico">🙏</span>${esc(pt('support'))}</div><div class="s">${esc(pt('supportLead'))}</div></button>`;
  view.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>go(b.dataset.m));
@@ -3306,7 +3441,6 @@ async function drawWalls(){
 // ---- Widget: se le pasan los próximos 14 días ----
 async function feedWidget(){
  if(!(window.PhosApp&&PhosApp.widgetSet))return;
- if(!prem2()){try{PhosApp.widgetSet('[]')}catch(e){}return}
  const out=[],br=tdBr();
  for(let i=0;i<14;i++){const d=new Date();d.setDate(d.getDate()+i);const td=utc(d.getFullYear(),d.getMonth()+1,d.getDate());
   let top='';try{const info=dayInfo(br,td);top=info.cel.map(celName).filter(Boolean)[0]||(LANG==='es'?daySaints(br,td)[0]:'')||snName(info.s)}catch(e){}
@@ -3763,6 +3897,171 @@ renderMine=function(){if(S.view==='m_msgs')return drawMsgs();_renderMineW();if(S
  setTimeout(()=>{if(first)showWelcome(0);hideSplash()},first?900:1300);
  setTimeout(()=>loadMsgs(true),3000);
 })();
+
+// ---------- Mejoras de la tarea 3: lecturas de hoy, Rosario y komboskini, retos de temporada ----------
+// (El aviso gratuito de ayuno y fiesta está en premium.js y el widget gratuito en plus.js.)
+// Gratis: lo del día. Phos Premium (Google Play): otros días, historial y escuchar en voz alta.
+// Cada Iglesia ve solo lo suyo: Rosario para católicos, komboskini para ortodoxos, y cada reto con las fechas de su calendario.
+const MJ_VIEWS=new Set(['rosario','kombo','temporada']);
+const tdNow=()=>{const n=new Date();return utc(n.getFullYear(),n.getMonth()+1,n.getDate())};
+const refTxt=p=>bname(p[0])+' '+p[1][0][0]+', '+p[1][0][1]+(p[1][0][2]!==p[1][0][1]?'–'+p[1][0][2]:'');
+const mjSpeak=txt=>{try{if(window.PhosApp&&PhosApp.speakSeq)return PhosApp.speakSeq(JSON.stringify([txt]),LANG);if(window.speechSynthesis){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(txt);u.lang=LANG;u.rate=.95;speechSynthesis.speak(u)}}catch(e){}};
+const mjBack=()=>{$('#back').style.visibility='visible'};
+
+// ===== 1) Lecturas de hoy =====
+// Evangelio de la fiesta (según la Iglesia elegida) o lectura continua de los cuatro Evangelios, y un Salmo.
+const GOSP=[['MAT',28],['MAR',16],['LUK',24],['JOH',21]];
+function rdFor(br,td){
+ const k=Math.floor(td/DAY),out=[];let info=null;try{info=dayInfo(br,td)}catch(e){}
+ const f=info&&FEASTS.find(x=>x[3]&&info.cel.includes(x[0]));
+ if(f)out.push({h:mx('rdFeast')+' · '+celName(f[0]),p:[f[3][0],[[f[3][1],f[3][2],f[3][3]]]]});
+ else{let n=k%89;for(const [b,c] of GOSP){if(n<c){out.push({h:mx('rdGospel'),p:[b,[[n+1,1,5]]],more:true});break}n-=c}}
+ const ps=k%150+1;out.push({h:mx('rdPsalm'),p:['PSA',[[ps,1,6]]],more:true});
+ return out}
+let RD_OFF=0;
+async function drawReadings(box){
+ const br=tdBr(),td=tdNow()+RD_OFF*DAY,L=rdFor(br,td),pr=prem2();
+ box.innerHTML=`<h2 class="tdh">📖 ${esc(mx('rdTitle'))}${RD_OFF?` · <span class="note">${esc(fmtD(new Date(td)))}</span>`:''}</h2>
+ ${L.map((r,i)=>`<div class="rdit"><p class="tdper"><b>${esc(r.h)}</b> · ${esc(refTxt(r.p))}</p><blockquote class="vq" id="rdT${i}"><span>…</span></blockquote>
+  <button class="btn ghost rdopen" data-i="${i}">${esc(mx('rdOpen'))}</button></div>`).join('')}
+ <div class="rdnav"><button class="chip" id="rdPrev">${esc(mx('rdPrev'))}${pr?'':' 👑'}</button>${RD_OFF?`<button class="chip" id="rdNow">${esc(mx('rdToday'))}</button>`:''}<button class="chip" id="rdNext">${esc(mx('rdNext'))}${pr?'':' 👑'}</button></div>
+ ${pr?'':`<p class="note">${esc(mx('rdOther'))}</p>`}<p class="note">${esc(mx('rdNote'))}</p>`;
+ const mv=d=>{if(!prem2())return openP('premium');RD_OFF+=d;drawReadings(box)};
+ box.querySelector('#rdPrev').onclick=()=>mv(-1);box.querySelector('#rdNext').onclick=()=>mv(1);
+ const nw=box.querySelector('#rdNow');if(nw)nw.onclick=()=>{RD_OFF=0;drawReadings(box)};
+ box.querySelectorAll('.rdopen').forEach(b=>b.onclick=()=>fOpenBible(L[+b.dataset.i].p));
+ L.forEach((r,i)=>fVerses(r.p).then(x=>{const el=box.querySelector('#rdT'+i);if(!el)return;
+  if(!x){el.innerHTML='<span>—</span>';return}const lg=TRLANG[x.id]||(x.id==='ortodoxa-griega'?'el':'en');el.lang=lg;
+  el.innerHTML=`<span>${esc(x.segs.map(s=>s.txt).join(' '))}${r.more?' …':''}</span><cite>${esc(TRNAME[x.id]||edName(x.id))}</cite>`}).catch(()=>{}));
+}
+
+// ===== 2) Santo Rosario (católicos) y komboskini (ortodoxos) =====
+const RO_DAY=[3,0,2,3,1,2,0];// domingo..sábado → gozosos 0, luminosos 1, dolorosos 2, gloriosos 3
+const RO={set:null,i:0};
+const ourfC=()=>OURF_C[LANG]||OURF[LANG]||OURF.en;
+function roSteps(){const s=[{p:'ourf',m:-1},{p:'ave',m:-1,n:1},{p:'ave',m:-1,n:2},{p:'ave',m:-1,n:3},{p:'glory',m:-1}];
+ for(let m=0;m<5;m++){s.push({p:'ourf',m});for(let n=1;n<=10;n++)s.push({p:'ave',m,n});s.push({p:'glory',m})}return s}
+const roTxt=p=>p==='ourf'?ourfC():p==='ave'?prText('ave'):mx('gloria');
+const roLab=p=>mx(p==='ourf'?'roOurF':p==='ave'?'roHail':'roGlory');
+const roLog=()=>store.get('rosaryLog',[]);
+function drawRosario(){
+ mjBack();if(RO.set===null)RO.set=RO_DAY[new Date().getDay()];
+ const S2=roSteps(),st=S2[Math.min(RO.i,S2.length-1)],done=RO.i>=S2.length,sets=mx('roSets').split('|'),M=mx('roM').split('|'),pr=prem2();
+ const myst=st.m<0?mx('roStart'):mx('roMyst',{n:st.m+1})+': '+M[RO.set*5+st.m];
+ const beads=st.m<0?[1,2,3]:[1,2,3,4,5,6,7,8,9,10];
+ const L=roLog(),wk=L.filter(d=>Date.now()-new Date(d).getTime()<7*DAY).length;
+ view.innerHTML=`<h1>📿 ${esc(mx('roTitle'))}</h1><p class="lead">${esc(mx('roLead'))}</p>
+ <div class="tdchips" role="group">${sets.map((n,i)=>`<button class="chip${i===RO.set?' on':''}" data-set="${i}" aria-pressed="${i===RO.set}">${esc(n)}</button>`).join('')}</div>
+ ${done?`<div class="lcard"><div style="font-size:44px">🙏</div><h2>${esc(mx('roDone'))}</h2><button class="btn" id="roAgain" style="width:100%">${esc(mx('roAgain'))}</button></div>`:
+ `<div class="lcard"><p class="tdper"><b>${esc(myst)}</b></p>
+  <div class="rdots robeads">${beads.map(b=>`<i class="${st.p==='ave'&&b<=st.n?'on':''}${st.p!=='ave'&&st.p==='glory'?' on':''}"></i>`).join('')}</div>
+  <h2 style="margin:8px 0">${esc(roLab(st.p))}${st.p==='ave'?' · '+st.n+'/'+beads.length:''}</h2>
+  <blockquote class="vq tdprayer"><span>${esc(roTxt(st.p))}</span></blockquote>
+  <button class="robig" id="roTap" aria-label="${esc(mx('roTap'))}">${esc(mx('roTap'))}</button>
+  <div class="rdnav"><button class="chip" id="roListen">🔊 ${esc(mx('roListen'))}${pr?'':' 👑'}</button></div>
+  <p class="note">${esc(mx('roStep',{a:sets[RO.set],n:RO.i+1,t:S2.length}))}</p></div>`}
+ <p class="note">${pr?esc(mx('roHist',{n:L.length,w:wk})):esc(mx('roHistLock'))}</p>`;
+ view.querySelectorAll('[data-set]').forEach(b=>b.onclick=()=>{RO.set=+b.dataset.set;RO.i=0;drawRosario()});
+ const tap=$('#roTap');if(tap)tap.onclick=()=>{try{navigator.vibrate&&navigator.vibrate(20)}catch(e){}RO.i++;
+  if(RO.i>=S2.length){const l=roLog();l.push(new Date().toISOString());store.set('rosaryLog',l.slice(-500))}drawRosario()};
+ const ls=$('#roListen');if(ls)ls.onclick=()=>pr?mjSpeak(roTxt(st.p)):openP('premium');
+ const ag=$('#roAgain');if(ag)ag.onclick=()=>{RO.i=0;drawRosario()};
+}
+const KO={n:0};
+function drawKombo(){
+ mjBack();const tot=store.get('koKnots',33),done=KO.n>=tot;
+ view.innerHTML=`<h1>☦️ ${esc(mx('koTitle'))}</h1><p class="lead">${esc(mx('koLead'))}</p>
+ <div class="tdchips" role="group">${[33,50,100].map(n=>`<button class="chip${n===tot?' on':''}" data-kn="${n}" aria-pressed="${n===tot}">${esc(mx('koKnots',{n}))}</button>`).join('')}</div>
+ <div class="lcard"><blockquote class="vq tdprayer"><span>${esc(prText('jesus'))}</span></blockquote>
+ ${done?`<h2>${esc(mx('koDone'))}</h2><button class="btn" id="koAgain" style="width:100%">${esc(mx('roAgain'))}</button>`:
+ `<button class="robig koring" id="koTap" style="--p:${Math.round(KO.n/tot*360)}deg"><b>${KO.n}</b><small>${esc(mx('koCount',{n:KO.n,t:tot}))}</small></button>`}</div>`;
+ view.querySelectorAll('[data-kn]').forEach(b=>b.onclick=()=>{store.set('koKnots',+b.dataset.kn);KO.n=0;drawKombo()});
+ const tp=$('#koTap');if(tp)tp.onclick=()=>{try{navigator.vibrate&&navigator.vibrate(KO.n+1>=tot?[40,60,40]:15)}catch(e){}KO.n++;drawKombo()};
+ const ag=$('#koAgain');if(ag)ag.onclick=()=>{KO.n=0;drawKombo()};
+}
+
+// ===== 3) Retos de temporada =====
+// Ortodoxos: Ayuno de Navidad (15 nov–24 dic; 28 nov–6 ene con el calendario juliano) y Gran Cuaresma (Lunes Puro, 40 días).
+// Católicos y protestantes: Adviento (1.er domingo de Adviento–24 dic) y Cuaresma (Miércoles de Ceniza–Sábado Santo, 40 días sin contar los domingos).
+const SE_LENT=[['JOE',2,12,18],['MAT',6,1,6],['MAT',6,16,21],['PSA',51,1,12],['ISA',58,6,11],['LUK',9,22,25],['MAT',4,1,11],['MAT',25,31,46],['ISA',55,6,11],['MAT',6,7,15],['JON',3,1,10],['MAT',7,7,12],['EZE',18,21,28],['MAT',5,20,26],['MAT',5,43,48],['LUK',6,36,38],['MAT',23,1,12],['JER',17,5,10],['LUK',16,19,31],['MAT',21,33,43],['LUK',15,11,32],['JOH',4,5,26],['LUK',4,24,30],['MAT',18,21,35],['MAT',5,17,19],['LUK',11,14,23],['MAR',12,28,34],['LUK',18,9,14],['JOH',9,1,12],['JOH',4,46,54],['JOH',5,1,16],['ISA',49,8,15],['JOH',5,31,47],['JOH',7,25,30],['JOH',11,17,44],['JOH',8,1,11],['JOH',8,21,30],['JOH',8,31,42],['JOH',10,31,42],['JOH',11,45,56]];
+const SE_NAT=[['ISA',2,1,5],['ISA',11,1,10],['ISA',40,1,11],['ISA',7,10,14],['ISA',9,2,7],['ISA',35,1,10],['ISA',40,25,31],['ISA',41,13,20],['ISA',45,6,8],['ISA',54,1,10],['ISA',61,1,3],['JER',23,5,8],['JER',33,14,16],['MIC',5,2,5],['ZEP',3,14,18],['MAL',3,1,4],['GEN',3,9,15],['GEN',12,1,4],['GEN',22,15,18],['2SA',7,8,16],['NUM',24,15,17],['PSA',72,1,11],['PSA',80,1,7],['PSA',85,8,13],['PSA',24,1,6],['MAT',1,1,17],['MAT',3,1,12],['MAT',11,2,11],['MAR',1,1,8],['ROM',13,11,14],['PHI',4,4,7],['JAM',5,7,10],['HEB',10,5,10],['LUK',3,1,6],['JOH',1,19,28],['LUK',1,5,25],['LUK',1,26,38],['LUK',1,39,45],['LUK',1,46,56],['LUK',1,57,66],['LUK',1,67,79],['MAT',1,18,25]];
+function seWindows(br,y){
+ if(br==='ortodoxa'){const sh=tdOld()?13*DAY:0;return [{id:'natO'+y,k:'seNatO',a:utc(y,11,15)+sh,t:40,R:SE_NAT},{id:'lentO'+y,k:'seLentO',a:oPascha(y)-48*DAY,t:40,R:SE_LENT}]}
+ const ad=advent1(y);return [{id:'adv'+y,k:'seAdv',a:ad,t:Math.round((utc(y,12,24)-ad)/DAY)+1,R:SE_NAT,adv:1},{id:'lent'+y,k:'seLent',a:gEaster(y)-46*DAY,t:40,R:SE_LENT,lent:1}]}
+function seDayN(w,td){// número del día dentro del reto (0 = domingo de Cuaresma, que no cuenta)
+ if(!w.lent)return Math.round((td-w.a)/DAY)+1;if(wday(td)===0)return 0;
+ let n=0;for(let x=w.a;x<=td;x+=DAY)if(wday(x)!==0)n++;return n}
+function seEnd(w){if(!w.lent)return w.a+(w.t-1)*DAY;return w.a+45*DAY}// Cuaresma: hasta el Sábado Santo
+function season(br,td){
+ const y=new Date(td).getUTCFullYear(),W=seWindows(br,y-1).concat(seWindows(br,y),seWindows(br,y+1));
+ const cur=W.find(w=>td>=w.a&&td<=seEnd(w));if(cur)return Object.assign({n:seDayN(cur,td)},cur);
+ const nx=W.filter(w=>w.a>td).sort((a,b)=>a.a-b.a)[0];return nx?Object.assign({next:Math.round((nx.a-td)/DAY)},nx):null}
+const sePractice=(br,n)=>{const L=mx('sePr').split('|').concat(mx(br==='ortodoxa'?'sePrO':br==='catolica'?'sePrC':'sePrP'));return L[(n-1)%L.length]};
+const seRef=(w,n)=>{const r=w.R[(n-1)%w.R.length];return [r[0],[[r[1],r[2],r[3]]]]};
+const seLog=()=>store.get('seasonLog',{});
+function seDayHTML(br,w,n,big){
+ if(n===0)return `<p>${esc(mx('seSunday'))}</p>`;
+ const p=seRef(w,n),done=(seLog()[w.id]||[]).includes(n);
+ return `<p class="tdper">📖 <b>${esc(mx('seRead'))}</b> · ${esc(refTxt(p))}</p>${big?`<blockquote class="vq" data-se="${n}"><span>…</span></blockquote>`:''}
+ <p class="tdper">🕯️ <b>${esc(mx('sePractice'))}</b></p><p>${esc(sePractice(br,n))}</p>
+ <div class="rdnav"><button class="btn ghost" data-seopen="${n}">${esc(mx('rdOpen'))}</button><button class="btn${done?' ghost':''}" data-semark="${n}" ${done?'disabled':''}>${esc(mx(done?'seMarked':'seMark'))}</button></div>`}
+function seWire(box,br,w,again){
+ box.querySelectorAll('[data-seopen]').forEach(b=>b.onclick=()=>fOpenBible(seRef(w,+b.dataset.seopen)));
+ box.querySelectorAll('[data-semark]').forEach(b=>b.onclick=()=>{const l=seLog();l[w.id]=[...new Set((l[w.id]||[]).concat(+b.dataset.semark))];store.set('seasonLog',l);
+  try{navigator.vibrate&&navigator.vibrate(20)}catch(e){}toast('🙏 '+mx('seMarked'));again()});
+ box.querySelectorAll('[data-se]').forEach(el=>fVerses(seRef(w,+el.dataset.se)).then(x=>{if(x){el.lang=TRLANG[x.id]||(x.id==='ortodoxa-griega'?'el':'en');el.innerHTML=`<span>${esc(x.segs.map(s=>s.txt).join(' '))}</span>`}}).catch(()=>{}));
+}
+function drawSeasonCard(box){
+ const br=tdBr(),w=season(br,tdNow());if(!w){box.remove();return}
+ if(w.next!=null){box.innerHTML=`<h2 class="tdh">🕯️ ${esc(mx('seTitle'))}</h2><p>${esc(mx('seNext',{s:mx(w.k),n:w.next}))}</p>`;return}
+ const ndone=(seLog()[w.id]||[]).length;
+ box.innerHTML=`<h2 class="tdh">🕯️ ${esc(mx('seTitle'))} · ${esc(mx(w.k))}</h2>
+ <p class="tdseason"><span class="pill soft">${esc(w.n?mx('seDay',{n:w.n,t:w.t}):mx(w.k))}</span><span class="note">${esc(mx('seProg',{n:ndone}))}</span></p>
+ ${seDayHTML(br,w,w.n,true)}
+ <button class="card rcard" id="seAll"><div class="t"><span class="rico">🗓️</span>${esc(mx('seAll'))}${prem2()?'':'<span class="pill">👑 Premium</span>'}</div>${prem2()?'':`<div class="s">${esc(mx('seAllLock'))}</div>`}</button>
+ <p class="note">${esc(mx('seHealth'))}</p>`;
+ seWire(box,br,w,()=>drawSeasonCard(box));
+ box.querySelector('#seAll').onclick=()=>prem2()?go('temporada'):openP('premium');
+}
+function drawSeasonAll(){
+ mjBack();if(!prem2())return paywallCard();
+ const br=tdBr(),td=tdNow(),w=season(br,td);if(!w)return go('today');
+ const cur=w.next!=null?0:w.n;
+ // Durante el reto: los días ya pasados y el de hoy (para ponerse al día). Antes de empezar: vista previa del reto completo.
+ const upto=w.next!=null?w.t:(cur||seDayN(w,td-DAY)),N=[];for(let n=1;n<=upto;n++)N.push(n);
+ view.innerHTML=`<h1>🕯️ ${esc(mx(w.k))}</h1><p class="lead">${esc(w.next!=null?mx('seNext',{s:mx(w.k),n:w.next}):mx('seDay',{n:cur||'—',t:w.t}))}</p><p class="note">${esc(mx('seHealth'))}</p>
+ ${N.reverse().map(n=>`<section class="art tdcard"><h2 class="tdh">${esc(mx('seDay',{n,t:w.t}))}</h2>${seDayHTML(br,w,n,false)}</section>`).join('')}`;
+ seWire(view,br,w,drawSeasonAll);
+}
+
+// ===== Tarjetas en «Hoy» y navegación =====
+const _renderTodayMJ=renderToday;
+renderToday=function(){
+ _renderTodayMJ();
+ const br=tdBr(),hero=$('#votd');if(!hero)return;let at=hero;
+ const add=(id,fn)=>{const c=document.createElement('section');c.className='art tdcard';c.id=id;at.after(c);at=c;fn(c)};
+ add('tdSeason',drawSeasonCard);
+ add('tdRead',drawReadings);
+ if(br!=='protestante')add('tdBeads',c=>{const ro=br==='catolica';
+  c.innerHTML=`<button class="card rcard" id="beadGo" style="margin:0"><div class="t"><span class="rico">${ro?'📿':'☦️'}</span>${esc(mx(ro?'prayRo':'prayKo'))}<span class="pill">${esc(mx('freeTag'))}</span></div><div class="s">${esc(ro?mx('roSets').split('|')[RO_DAY[new Date().getDay()]]:prName('jesus'))}</div></button>`;
+  c.querySelector('#beadGo').onclick=()=>{if(ro){RO.set=null;RO.i=0;go('rosario')}else{KO.n=0;go('kombo')}}});
+};
+const _renderArticlesMJ=renderArticles;
+renderArticles=async function(sec){
+ if(sec==='today'&&S.view==='rosario')return drawRosario();
+ if(sec==='today'&&S.view==='kombo')return drawKombo();
+ if(sec==='today'&&S.view==='temporada')return drawSeasonAll();
+ if(sec==='today')RD_OFF=0;
+ return _renderArticlesMJ(sec)};
+const _phosBackMJ=window.phosBack;
+window.phosBack=()=>{if(_phosBackMJ&&_phosBackMJ())return true;if(S.sec==='today'&&MJ_VIEWS.has(S.view)){go('today');return true}return false};
+(function(){const st=document.createElement('style');st.textContent=`
+.rdit{margin-bottom:12px}.rdit .btn.ghost{padding:8px 14px}.rdnav .chip{border:1px solid var(--line);background:var(--paper);color:inherit;border-radius:999px;padding:9px 14px;font:inherit;font-weight:600;min-height:44px}.rdnav{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.rdnav .btn{flex:1}
+.robig{display:block;width:100%;min-height:76px;margin:14px 0 6px;border:0;border-radius:22px;background:var(--wine);color:#FBF6EA;font:700 19px Inter,sans-serif;box-shadow:0 6px 18px rgba(74,20,22,.3)}
+.robig:active{transform:scale(.98)}.robeads i{width:14px;height:14px}
+.koring{width:200px;height:200px;margin:18px auto;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+ background:radial-gradient(closest-side,var(--wine) 78%,transparent 80%),conic-gradient(#E2C27A var(--p),rgba(226,194,122,.2) 0)}
+.koring b{font:600 54px 'Cormorant Garamond',serif}.koring small{font-size:14px;opacity:.85}`;document.head.appendChild(st)})();
 
 applyLang();
 render();

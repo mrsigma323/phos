@@ -120,8 +120,8 @@ function renderMine(){
  ${item('m_account','👤','account',a?qt('signed',{e:a.email}):qt('googleLead'),0)}
  ${item('m_plans','📖','plans',qt('plansLead'),1)}${item('m_rule','🕯️','rule',qt('ruleLead'),1)}${item('m_diary','✍️','diary',qt('diaryLead'),1)}
  ${item('m_walls','🖼️','walls',qt('wallsLead'),1)}
- <button class="card rcard" data-p="notif"><div class="t"><span class="rico">🔔</span>${esc(pt('reminders'))}${!prem2()?'<span class="pill">👑 Premium</span>':''}</div><div class="s">${esc(pt('remLead'))}</div></button>
- <div class="card rcard"><div class="t"><span class="rico">📱</span>${esc(qt('widget'))}${!prem2()?'<span class="pill">👑 Premium</span>':''}</div><div class="s">${esc(qt('widgetLead'))}</div></div>
+ <button class="card rcard" data-p="notif"><div class="t"><span class="rico">🔔</span>${esc(pt('reminders'))}<span class="pill">${esc(prem2()?'✓':mx('freeTag'))}</span></div><div class="s">${esc(prem2()?pt('remLead'):mx('remFree'))}</div></button>
+ <div class="card rcard"><div class="t"><span class="rico">📱</span>${esc(qt('widget'))}<span class="pill">${esc(mx('freeTag'))}</span></div><div class="s">${esc(mx('widgetLead'))}</div></div>
  <button class="card main rcard" data-p="premium"><div class="t"><span class="rico">👑</span>${esc(pt('prem'))}</div><div class="s">${esc(isPremium&&IN_APP&&isPremium()?pt('active'):pt('premLead'))}</div></button>
  <button class="card rcard" data-p="apoyo"><div class="t"><span class="rico">🙏</span>${esc(pt('support'))}</div><div class="s">${esc(pt('supportLead'))}</div></button>`;
  view.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>go(b.dataset.m));
@@ -231,7 +231,6 @@ async function drawWalls(){
 // ---- Widget: se le pasan los próximos 14 días ----
 async function feedWidget(){
  if(!(window.PhosApp&&PhosApp.widgetSet))return;
- if(!prem2()){try{PhosApp.widgetSet('[]')}catch(e){}return}
  const out=[],br=tdBr();
  for(let i=0;i<14;i++){const d=new Date();d.setDate(d.getDate()+i);const td=utc(d.getFullYear(),d.getMonth()+1,d.getDate());
   let top='';try{const info=dayInfo(br,td);top=info.cel.map(celName).filter(Boolean)[0]||(LANG==='es'?daySaints(br,td)[0]:'')||snName(info.s)}catch(e){}
