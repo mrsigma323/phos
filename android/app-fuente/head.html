@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#4A1416">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Phos">
+<title>Phos · Biblia electrónica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&family=Noto+Serif:wght@400;600&family=Noto+Serif+Hebrew:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--wine:#4A1416;--gold:#E2C27A;--goldtx:#7A5A1C;--ground:#F6F1E7;--paper:#FBF8F2;--line:#E6DCCB;--ink:#231C1A;--muted:#5E5650;--fs:20px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:'Source Sans 3',system-ui,sans-serif}
+button{font:inherit;cursor:pointer}
+a{color:var(--wine)}
+.app{max-width:760px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+header.top{position:sticky;top:0;z-index:5;background:var(--wine);color:var(--ground);padding:12px 16px;display:flex;align-items:center;gap:10px}
+.brand{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.brand b{font-family:'Cormorant Garamond',serif;font-size:26px;letter-spacing:.5px}
+.brand small{display:block;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
+.iconbtn{width:44px;height:44px;border:0;border-radius:999px;background:transparent;color:inherit;display:flex;align-items:center;justify-content:center}
+.iconbtn:hover{background:rgba(255,255,255,.1)}
+main{flex:1;padding:18px 16px 40px}
+h1{font-family:'Cormorant Garamond',serif;color:var(--wine);font-size:34px;margin:4px 0 6px}
+h2{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--goldtx);margin:22px 0 8px}
+p.lead{margin:0 0 16px;color:var(--muted)}
+.card{display:block;width:100%;text-align:left;border:0;background:#fff;border-radius:16px;padding:16px 18px;margin-bottom:12px;box-shadow:0 1px 3px rgba(74,20,22,.08);color:var(--ink)}
+.card.main{background:var(--wine);color:var(--ground)}
+.card .t{font-family:'Cormorant Garamond',serif;font-size:25px;font-weight:700;color:var(--wine);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.card.main .t{color:var(--ground)}
+.card .s{font-size:14px;color:var(--muted);margin-top:4px}
+.card.main .s{color:#EBDCD6}
+.pill{font-family:'Source Sans 3',sans-serif;font-size:12px;font-weight:700;border-radius:999px;padding:3px 10px;background:var(--gold);color:var(--wine);white-space:nowrap}
+.pill.soft{background:#F1E4C4;color:#5C3F0E}
+.card.off{opacity:.7;cursor:default}
+.edlist{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.ed{border:1px solid rgba(255,255,255,.35);background:transparent;color:inherit;border-radius:12px;padding:10px 12px;text-align:left}
+.card:not(.main) .ed{border-color:var(--line)}
+.ed b{display:block}
+.ed span{font-size:13px;opacity:.85}
+.seg{display:flex;gap:6px;background:#E3D9C6;border-radius:999px;padding:4px;margin:6px 0 12px}
+.seg button{flex:1;min-height:40px;border:0;border-radius:999px;background:transparent;color:var(--wine);font-weight:700}
+.seg button[aria-pressed=true]{background:var(--wine);color:var(--ground)}
+.booklist{display:flex;flex-direction:column;gap:3px}
+.book{display:flex;justify-content:space-between;align-items:center;min-height:48px;padding:0 14px;background:#fff;border:0;border-radius:10px;font-weight:600;color:var(--ink);text-align:left}
+.book small{font-weight:400;color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:8px}
+.grid button{min-height:48px;border:0;border-radius:10px;background:#fff;font-weight:700;color:var(--wine)}
+.reader{background:var(--paper);border-radius:14px;padding:22px 20px;box-shadow:0 1px 3px rgba(74,20,22,.06)}
+.txt{font-family:'Noto Serif','Cormorant Garamond',serif;font-size:var(--fs);line-height:1.75;color:#2E2724}
+.txt.he{font-family:'Noto Serif Hebrew','Noto Serif',serif;direction:rtl;text-align:right}
+.txt p{margin:0 0 8px}
+.txt sup{font-family:'Source Sans 3',sans-serif;font-size:12px;color:var(--goldtx);font-weight:700;margin:0 4px}
+.txt p.hl{background:#F1E4C4;border-radius:6px}
+.nav{display:flex;gap:10px;margin-top:16px}
+.nav button,.btn{flex:1;min-height:48px;border:0;border-radius:999px;background:var(--wine);color:var(--ground);font-weight:700;padding:0 18px}
+.btn.ghost{background:transparent;border:2px solid var(--wine);color:var(--wine)}
+.nav button:disabled{opacity:.35;cursor:default}
+.crumb{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.crumb button{border:0;background:transparent;color:var(--wine);font-weight:600;min-height:40px;padding:0 4px;text-decoration:underline}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px}
+.tools button,.tools select{min-height:44px;border:1px solid #C9BDA8;background:#fff;border-radius:999px;padding:0 14px;color:var(--wine);font-weight:600}
+.tools label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+input[type=search]{width:100%;border:1px solid #C9BDA8;border-radius:12px;padding:13px 14px;font:inherit;background:#fff}
+.res{background:#fff;border:0;border-radius:12px;padding:12px 14px;margin-bottom:8px;text-align:left;width:100%;color:var(--ink)}
+.res b{color:var(--wine);display:block;font-size:14px;margin-bottom:2px}
+.res span{font-family:'Noto Serif',serif;font-size:16px}
+.note{font-size:13px;color:var(--muted);line-height:1.5}
+.loading{padding:40px 0;text-align:center;color:var(--muted)}
+.par{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:700px){.par.two{grid-template-columns:1fr 1fr}}
+.vivlos{white-space:pre-line;background:#fff;border-radius:12px;padding:14px;font-size:13px;color:var(--muted)}
+dialog{border:0;border-radius:16px;max-width:520px;width:calc(100% - 32px);padding:20px}
+dialog::backdrop{background:rgba(35,28,26,.45)}
+.tabs{position:sticky;top:68px;z-index:4;display:flex;gap:4px;overflow-x:auto;background:#3A0F11;padding:6px 10px;scrollbar-width:none}
+.tabs button{flex:1 0 auto;min-height:40px;border:0;border-radius:999px;background:transparent;color:#EBDCD6;font-weight:700;padding:0 14px;white-space:nowrap}
+.tabs button[aria-current=page]{background:var(--gold);color:var(--wine)}
+.stats{display:flex;gap:10px;margin:4px 0 12px}.stat{display:flex;align-items:center;gap:6px;background:#fff;border-radius:999px;padding:8px 14px;color:var(--wine);font-size:14px}
+.pbar{position:relative;height:14px;background:#E3D9C6;border-radius:999px;overflow:hidden;margin:6px 0}.pbar i{display:block;height:100%;background:linear-gradient(90deg,#7A5A1C,#E2C27A);border-radius:999px;transition:width .4s}
+.pbar .mark{position:absolute;top:0;bottom:0;width:2px;background:var(--wine)}.pbar.small{flex:1;height:12px;margin:0}
+.path{display:flex;flex-direction:column;align-items:center;gap:14px;padding:6px 0 10px}.node-wrap{display:flex;flex-direction:column;align-items:center;gap:4px}
+.node{width:68px;height:68px;border-radius:50%;border:0;font-weight:700;font-size:16px;box-shadow:0 5px 0 rgba(0,0,0,.18)}
+.node.done{background:var(--gold);color:var(--wine)}.node.cur{background:var(--wine);color:var(--ground);animation:pulse 1.6s infinite}.node.locked{background:#D9D0C0;color:#6E6560;box-shadow:0 5px 0 #BFB4A2}.node.rev{border-radius:20px}
+.node:active:not([disabled]){transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.18)}
+@keyframes pulse{0%,100%{box-shadow:0 5px 0 rgba(0,0,0,.18),0 0 0 0 rgba(226,194,122,.7)}50%{box-shadow:0 5px 0 rgba(0,0,0,.18),0 0 0 10px rgba(226,194,122,0)}}
+@media (prefers-reduced-motion:reduce){.node.cur{animation:none}}
+.nlabel{font-size:12px;color:var(--muted);max-width:110px;text-align:center}
+.lhead{display:flex;align-items:center;gap:10px;margin-bottom:18px}.iconbtn.x{color:var(--muted)}.hearts{display:flex;align-items:center;gap:4px;font-weight:700;color:#C0392B}
+.qp{font-size:28px;line-height:1.2}.qx{font-family:'Noto Serif',serif;font-size:18px;line-height:1.6;background:var(--paper);border-radius:12px;padding:14px;margin:0 0 14px}
+.opts{display:flex;flex-direction:column;gap:10px}.opt{min-height:54px;border:2px solid #D9D0C0;border-bottom-width:4px;border-radius:14px;background:#fff;text-align:left;padding:10px 16px;font-size:17px;color:var(--ink)}
+.opt[aria-pressed=true]{border-color:var(--wine);background:#F6ECEC}.opt.ok{border-color:#2E7D32;background:#E8F5E9}.opt.bad{border-color:#C0392B;background:#FDECEA}
+.lfoot{position:sticky;bottom:0;margin:22px -16px -40px;padding:14px 16px 22px;background:var(--ground);border-top:1px solid var(--line)}.lfoot.good{background:#E8F5E9}.lfoot.nogood{background:#FDECEA}
+.fb{margin-bottom:10px}.fb b{display:block;font-size:19px}.lfoot.good .fb b{color:#1B5E20}.lfoot.nogood .fb b{color:#A12A1E}.fb span{color:var(--ink)}
+.btn:disabled{opacity:.4;cursor:default}.lcard{background:#fff;border-radius:18px;padding:22px;box-shadow:0 1px 3px rgba(74,20,22,.08)}
+.endc{text-align:center;padding:30px 0}.endc .big{font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:700;color:var(--goldtx)}
+.art{background:#fff;border-radius:16px;padding:18px;margin-bottom:14px}.art p{line-height:1.6;margin:0 0 10px}.ah{font-family:'Cormorant Garamond',serif;font-size:26px;letter-spacing:0;text-transform:none;color:var(--wine);margin:0 0 8px}
+.vq{margin:10px 0 0;border-radius:12px;background:var(--paper);padding:12px 14px;font-family:'Noto Serif',serif}.vq cite{display:block;font-family:'Source Sans 3',sans-serif;font-style:normal;font-size:13px;color:var(--goldtx);font-weight:700;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+<button class="iconbtn" id="back" aria-label="Volver" style="visibility:hidden"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+<div class="brand">
+<button class="menubtn" id="menuBtn" aria-haspopup="true" aria-expanded="false" aria-controls="menu" aria-label="Menú"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span id="menuLbl">Menú</span></button>
+<svg class="brandx" aria-hidden="true" width="20" height="27" viewBox="0 0 30 40" fill="none" stroke="#E2C27A" stroke-width="2.6" stroke-linecap="round"><path d="M15 3v34M10 8h10M5 16h20M9 29l12-5"/></svg>
+<div><b>Phos</b><small id="sub"></small></div>
+</div>
+<button class="iconbtn" id="searchBtn" aria-label="Buscar en esta Biblia"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
+<button class="iconbtn" id="langBtn"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/></svg></button>
+<button class="iconbtn" id="infoBtn" aria-label="Fuentes y licencias"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg></button>
+</header>
+<nav id="tabs" class="tabs" aria-label="Secciones" hidden></nav>
+<div id="menu" class="menu" role="menu" hidden><div id="menuList"></div></div><div id="menuShade" class="menushade" hidden></div>
+<main id="view" aria-live="polite"></main>
+</div>
+<dialog id="lang"><h1 style="font-size:28px" id="langTitle"></h1><p class="note" id="langNote"></p><div id="langList" class="booklist"></div><button class="btn" id="langClose" style="width:100%;margin-top:14px"></button></dialog>
+<dialog id="info"><h1 style="font-size:28px" id="infoTitle"></h1><div id="infoBody"></div><button class="btn" id="infoClose" style="width:100%;margin-top:14px"></button></dialog>

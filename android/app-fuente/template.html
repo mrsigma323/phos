@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phos · Biblia electrónica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&family=Noto+Serif:wght@400;600&family=Noto+Serif+Hebrew:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--wine:#4A1416;--gold:#E2C27A;--goldtx:#7A5A1C;--ground:#F6F1E7;--paper:#FBF8F2;--line:#E6DCCB;--ink:#231C1A;--muted:#5E5650;--fs:20px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:'Source Sans 3',system-ui,sans-serif}
+button{font:inherit;cursor:pointer}
+a{color:var(--wine)}
+.app{max-width:760px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+header.top{position:sticky;top:0;z-index:5;background:var(--wine);color:var(--ground);padding:12px 16px;display:flex;align-items:center;gap:10px}
+.brand{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.brand b{font-family:'Cormorant Garamond',serif;font-size:26px;letter-spacing:.5px}
+.brand small{display:block;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
+.iconbtn{width:44px;height:44px;border:0;border-radius:999px;background:transparent;color:inherit;display:flex;align-items:center;justify-content:center}
+.iconbtn:hover{background:rgba(255,255,255,.1)}
+main{flex:1;padding:18px 16px 40px}
+h1{font-family:'Cormorant Garamond',serif;color:var(--wine);font-size:34px;margin:4px 0 6px}
+h2{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--goldtx);margin:22px 0 8px}
+p.lead{margin:0 0 16px;color:var(--muted)}
+.card{display:block;width:100%;text-align:left;border:0;background:#fff;border-radius:16px;padding:16px 18px;margin-bottom:12px;box-shadow:0 1px 3px rgba(74,20,22,.08);color:var(--ink)}
+.card.main{background:var(--wine);color:var(--ground)}
+.card .t{font-family:'Cormorant Garamond',serif;font-size:25px;font-weight:700;color:var(--wine);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.card.main .t{color:var(--ground)}
+.card .s{font-size:14px;color:var(--muted);margin-top:4px}
+.card.main .s{color:#EBDCD6}
+.pill{font-family:'Source Sans 3',sans-serif;font-size:12px;font-weight:700;border-radius:999px;padding:3px 10px;background:var(--gold);color:var(--wine);white-space:nowrap}
+.pill.soft{background:#F1E4C4;color:#5C3F0E}
+.card.off{opacity:.7;cursor:default}
+.edlist{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.ed{border:1px solid rgba(255,255,255,.35);background:transparent;color:inherit;border-radius:12px;padding:10px 12px;text-align:left}
+.card:not(.main) .ed{border-color:var(--line)}
+.ed b{display:block}
+.ed span{font-size:13px;opacity:.85}
+.seg{display:flex;gap:6px;background:#E3D9C6;border-radius:999px;padding:4px;margin:6px 0 12px}
+.seg button{flex:1;min-height:40px;border:0;border-radius:999px;background:transparent;color:var(--wine);font-weight:700}
+.seg button[aria-pressed=true]{background:var(--wine);color:var(--ground)}
+.booklist{display:flex;flex-direction:column;gap:3px}
+.book{display:flex;justify-content:space-between;align-items:center;min-height:48px;padding:0 14px;background:#fff;border:0;border-radius:10px;font-weight:600;color:var(--ink);text-align:left}
+.book small{font-weight:400;color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:8px}
+.grid button{min-height:48px;border:0;border-radius:10px;background:#fff;font-weight:700;color:var(--wine)}
+.reader{background:var(--paper);border-radius:14px;padding:22px 20px;box-shadow:0 1px 3px rgba(74,20,22,.06)}
+.txt{font-family:'Noto Serif','Cormorant Garamond',serif;font-size:var(--fs);line-height:1.75;color:#2E2724}
+.txt.he{font-family:'Noto Serif Hebrew','Noto Serif',serif;direction:rtl;text-align:right}
+.txt p{margin:0 0 8px}
+.txt sup{font-family:'Source Sans 3',sans-serif;font-size:12px;color:var(--goldtx);font-weight:700;margin:0 4px}
+.txt p.hl{background:#F1E4C4;border-radius:6px}
+.nav{display:flex;gap:10px;margin-top:16px}
+.nav button,.btn{flex:1;min-height:48px;border:0;border-radius:999px;background:var(--wine);color:var(--ground);font-weight:700;padding:0 18px}
+.btn.ghost{background:transparent;border:2px solid var(--wine);color:var(--wine)}
+.nav button:disabled{opacity:.35;cursor:default}
+.crumb{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.crumb button{border:0;background:transparent;color:var(--wine);font-weight:600;min-height:40px;padding:0 4px;text-decoration:underline}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px}
+.tools button,.tools select{min-height:44px;border:1px solid #C9BDA8;background:#fff;border-radius:999px;padding:0 14px;color:var(--wine);font-weight:600}
+.tools label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+input[type=search]{width:100%;border:1px solid #C9BDA8;border-radius:12px;padding:13px 14px;font:inherit;background:#fff}
+.res{background:#fff;border:0;border-radius:12px;padding:12px 14px;margin-bottom:8px;text-align:left;width:100%;color:var(--ink)}
+.res b{color:var(--wine);display:block;font-size:14px;margin-bottom:2px}
+.res span{font-family:'Noto Serif',serif;font-size:16px}
+.note{font-size:13px;color:var(--muted);line-height:1.5}
+.loading{padding:40px 0;text-align:center;color:var(--muted)}
+.par{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:700px){.par.two{grid-template-columns:1fr 1fr}}
+.vivlos{white-space:pre-line;background:#fff;border-radius:12px;padding:14px;font-size:13px;color:var(--muted)}
+dialog{border:0;border-radius:16px;max-width:520px;width:calc(100% - 32px);padding:20px}
+dialog::backdrop{background:rgba(35,28,26,.45)}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+<button class="iconbtn" id="back" aria-label="Volver" style="visibility:hidden"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+<div class="brand">
+<svg aria-hidden="true" width="22" height="30" viewBox="0 0 30 40" fill="none" stroke="#E2C27A" stroke-width="2.4" stroke-linecap="round"><path d="M15 3v34M10 8h10M5 16h20M9 29l12-5"/></svg>
+<div><b>Phos</b><small id="sub">Biblia electrónica</small></div>
+</div>
+<button class="iconbtn" id="searchBtn" aria-label="Buscar en esta Biblia"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
+<button class="iconbtn" id="infoBtn" aria-label="Fuentes y licencias"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg></button>
+</header>
+<main id="view" aria-live="polite"></main>
+</div>
+<dialog id="info"><h1 style="font-size:28px">Fuentes</h1><div id="infoBody"></div><button class="btn" id="infoClose" style="width:100%;margin-top:14px">Cerrar</button></dialog>
+<script>
+const VIVLOS = __VIVLOS__;
+const NAMES={GEN:'Génesis',EXO:'Éxodo',LEV:'Levítico',NUM:'Números',DEU:'Deuteronomio',JOS:'Josué',JDG:'Jueces',RUT:'Rut','1SA':'1 Samuel','2SA':'2 Samuel','1KI':'1 Reyes','2KI':'2 Reyes','1CH':'1 Crónicas','2CH':'2 Crónicas',EZR:'Esdras',NEH:'Nehemías',EST:'Ester',JOB:'Job',PSA:'Salmos',PRO:'Proverbios',ECC:'Eclesiastés',SOL:'Cantar de los Cantares',ISA:'Isaías',JER:'Jeremías',LAM:'Lamentaciones',EZE:'Ezequiel',DAN:'Daniel',HOS:'Oseas',JOE:'Joel',AMO:'Amós',OBA:'Abdías',JON:'Jonás',MIC:'Miqueas',NAH:'Nahúm',HAB:'Habacuc',ZEP:'Sofonías',HAG:'Ageo',ZEC:'Zacarías',MAL:'Malaquías',TOB:'Tobías',JDT:'Judit',ESG:'Ester',WIS:'Sabiduría',SIR:'Sirácida (Eclesiástico)',BAR:'Baruc',EPJ:'Carta de Jeremías',PRA:'Oración de Azarías',SUS:'Susana',BEL:'Bel y el dragón','1MA':'1 Macabeos','2MA':'2 Macabeos','3MA':'3 Macabeos','1ES':'1 Esdras','4ES':'Esdras',DNG:'Daniel',MAT:'Mateo',MAR:'Marcos',LUK:'Lucas',JOH:'Juan',ACT:'Hechos',ROM:'Romanos','1CO':'1 Corintios','2CO':'2 Corintios',GAL:'Gálatas',EPH:'Efesios',PHI:'Filipenses',COL:'Colosenses','1TH':'1 Tesalonicenses','2TH':'2 Tesalonicenses','1TI':'1 Timoteo','2TI':'2 Timoteo',TIT:'Tito',PHM:'Filemón',HEB:'Hebreos',JAM:'Santiago','1PE':'1 Pedro','2PE':'2 Pedro','1JO':'1 Juan','2JO':'2 Juan','3JO':'3 Juan',JUD:'Judas',REV:'Apocalipsis'};
+const NT=new Set(['MAT','MAR','LUK','JOH','ACT','ROM','1CO','2CO','GAL','EPH','PHI','COL','1TH','2TH','1TI','2TI','TIT','PHM','HEB','JAM','1PE','2PE','1JO','2JO','3JO','JUD','REV']);
+const DEUTERO=new Set(['TOB','JDT','ESG','WIS','SIR','BAR','EPJ','PRA','SUS','BEL','1MA','2MA','3MA','1ES']);
+const ONLYORTHO=new Set(['1ES','3MA']);
+const BRANCHES=[
+ {id:'ortodoxa',name:'Ortodoxa',main:true,canon:'Unos 76 libros, según la Iglesia local · Antiguo Testamento de la Septuaginta',eds:[
+  {id:'ortodoxa-griega',name:'Biblia ortodoxa griega',info:'AT: Septuaginta (Orthodox Media Network, Monte Athos) · NT: Texto patriarcal de 1904',lang:'el'}]},
+ {id:'catolica',name:'Católica',canon:'73 libros · incluye los deuterocanónicos',eds:[
+  {id:'vulgata-clementina',name:'Vulgata Clementina',info:'Latín · edición clementina, Biblia oficial católica durante siglos',lang:'la'}]},
+ {id:'protestante',name:'Protestante',canon:'66 libros · Antiguo Testamento según el canon hebreo',eds:[
+  {id:'reina-valera-1909',name:'Reina-Valera 1909',info:'Español · traducida del hebreo y del griego',lang:'es'},
+  {id:'original-hebreo-griego',name:'Texto original',info:'AT: hebreo masorético (Códice de Leningrado) · NT: griego Textus Receptus',lang:'he'}]},
+ {id:'etiope',name:'Ortodoxa oriental (etíope)',canon:'81 libros · texto original en ge\'ez',eds:[],soon:true}
+];
+const ED={};BRANCHES.forEach(b=>b.eds.forEach(e=>{e.branch=b;ED[e.id]=e}));
+const cache={};
+const store={get(k,d){try{const v=localStorage.getItem('phos:'+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem('phos:'+k,JSON.stringify(v))}catch(e){}}};
+let S={view:'home',ed:null,book:null,ch:null,tab:'AT',cmp:null,hl:null};
+const $=s=>document.querySelector(s);
+const view=$('#view');
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+document.documentElement.style.setProperty('--fs',store.get('fs',20)+'px');
+
+async function loadEd(id){
+ if(cache[id])return cache[id];
+ const r=await fetch('data/'+id+'.json');
+ if(!r.ok)throw new Error('No se pudo cargar');
+ const d=await r.json();
+ d.map={};d.books.forEach(b=>{b.chs=Object.keys(b.ch).sort((a,c)=>a-c);d.map[b.c]=b});
+ return cache[id]=d;
+}
+function bname(c){return NAMES[c]||c}
+function isHe(edId,book){return edId==='original-hebreo-griego'&&!NT.has(book)}
+function setHeader(){
+ $('#back').style.visibility=S.view==='home'?'hidden':'visible';
+ $('#searchBtn').style.visibility=S.ed?'visible':'hidden';
+ $('#sub').textContent=S.ed?ED[S.ed].name:'Biblia electrónica';
+}
+function go(v,patch){Object.assign(S,patch||{});S.view=v;render();window.scrollTo(0,0)}
+$('#back').onclick=()=>{
+ if(S.view==='read')go('chapters');
+ else if(S.view==='chapters')go('books');
+ else if(S.view==='search')go(S.book?'read':'books');
+ else go('home',{ed:null,book:null,ch:null});
+};
+$('#searchBtn').onclick=()=>go('search');
+$('#infoBtn').onclick=()=>{$('#infoBody').innerHTML=infoHTML();$('#info').showModal()};
+$('#infoClose').onclick=()=>$('#info').close();
+
+function infoHTML(){return `<p class="note">Todos los textos son de dominio público y proceden de eBible.org.</p>
+<p class="note"><b>Septuaginta</b> (griego, AT ortodoxo) · <b>Texto patriarcal de 1904</b> (griego, NT ortodoxo) · <b>Vulgata Clementina</b> (latín) · <b>Reina-Valera 1909</b> (español) · <b>Códice de Leningrado</b> (hebreo) · <b>Textus Receptus</b> (griego).</p>
+<p class="note">La Septuaginta se publica con esta nota, como pide su editor:</p><div class="vivlos">${esc(VIVLOS)}</div>`}
+
+async function render(){
+ setHeader();
+ if(S.view==='home')return renderHome();
+ view.innerHTML='<div class="loading">Cargando la Biblia…</div>';
+ let d;try{d=await loadEd(S.ed)}catch(e){view.innerHTML='<p class="lead">No se ha podido cargar esta Biblia. Vuelve a intentarlo.</p>';return}
+ if(S.view==='books')renderBooks(d);
+ else if(S.view==='chapters')renderChapters(d);
+ else if(S.view==='read')renderRead(d);
+ else if(S.view==='search')renderSearch(d);
+}
+
+function renderHome(){
+ const last=store.get('last',null);
+ let h=`<h1>Elige tu Biblia</h1><p class="lead">El texto original de cada tradición, completo y sin conexión a internet una vez cargado.</p>`;
+ if(last&&ED[last.ed])h+=`<button class="card" id="cont"><div class="t">Seguir leyendo<span class="pill soft">${esc(ED[last.ed].branch.name)}</span></div><div class="s">${esc(bname(last.book))} ${esc(last.ch)} · ${esc(ED[last.ed].name)}</div></button>`;
+ BRANCHES.forEach(b=>{
+  if(b.soon){h+=`<div class="card off"><div class="t">${b.name}<span class="pill soft">Próximamente</span></div><div class="s">${b.canon}</div><div class="s">Aún no hay una edición digital libre de derechos.</div></div>`;return}
+  h+=`<div class="card ${b.main?'main':''}"><div class="t">${b.name}${b.main?'<span class="pill">Principal</span>':''}</div><div class="s">${b.canon}</div><div class="edlist">${b.eds.map(e=>`<button class="ed" data-ed="${e.id}"><b>${e.name}</b><span>${e.info}</span></button>`).join('')}</div></div>`;
+ });
+ view.innerHTML=h;
+ view.querySelectorAll('[data-ed]').forEach(x=>x.onclick=()=>go('books',{ed:x.dataset.ed,book:null,ch:null,tab:'AT'}));
+ const c=$('#cont');if(c)c.onclick=()=>go('read',{ed:last.ed,book:last.book,ch:last.ch});
+}
+
+function renderBooks(d){
+ const list=d.books.filter(b=>S.tab==='NT'?NT.has(b.c):!NT.has(b.c));
+ const ortho=S.ed==='ortodoxa-griega',cat=S.ed==='vulgata-clementina';
+ view.innerHTML=`<h1>${esc(ED[S.ed].name)}</h1><p class="lead">${esc(ED[S.ed].info)}</p>
+ <div class="seg" role="group" aria-label="Testamento"><button aria-pressed="${S.tab==='AT'}" data-tab="AT">Antiguo Testamento</button><button aria-pressed="${S.tab==='NT'}" data-tab="NT">Nuevo Testamento</button></div>
+ <div class="booklist">${list.map(b=>{let tag='';
+  if(ortho&&ONLYORTHO.has(b.c))tag='<span class="pill soft">Solo ortodoxa</span>';
+  else if((ortho||cat)&&DEUTERO.has(b.c))tag='<span class="pill soft">Deuterocanónico</span>';
+  return `<button class="book" data-b="${b.c}">${esc(bname(b.c))}${tag||`<small>${b.chs.length} cap.</small>`}</button>`}).join('')}</div>
+ ${ortho&&S.tab==='AT'?'<p class="note" style="margin-top:14px">Los Salmos siguen la numeración de la Septuaginta: el Salmo 22 aquí es el 23 en las Biblias protestantes. Incluye el Salmo 151.</p>':''}`;
+ view.querySelectorAll('[data-tab]').forEach(x=>x.onclick=()=>{S.tab=x.dataset.tab;renderBooks(d)});
+ view.querySelectorAll('[data-b]').forEach(x=>x.onclick=()=>{const b=d.map[x.dataset.b];if(b.chs.length===1)go('read',{book:b.c,ch:b.chs[0]});else go('chapters',{book:b.c})});
+}
+
+function renderChapters(d){
+ const b=d.map[S.book];
+ view.innerHTML=`<h1>${esc(bname(S.book))}</h1><p class="lead">Elige un capítulo</p><div class="grid">${b.chs.map(c=>`<button data-c="${c}" aria-label="Capítulo ${c}">${c}</button>`).join('')}</div>`;
+ view.querySelectorAll('[data-c]').forEach(x=>x.onclick=()=>go('read',{ch:x.dataset.c}));
+}
+
+function chapterHTML(edId,d,book,ch){
+ const b=d.map[book];
+ if(!b||!b.ch[ch])return `<p class="note">Este capítulo no existe en esta edición.</p>`;
+ return `<div class="txt ${isHe(edId,book)?'he':''}" lang="${isHe(edId,book)?'he':ED[edId].lang==='he'?'el':ED[edId].lang}">${b.ch[ch].map(([v,t])=>`<p id="v${v}" class="${S.hl==v?'hl':''}"><sup>${v}</sup>${esc(t)}</p>`).join('')}</div>`;
+}
+
+async function renderRead(d){
+ const b=d.map[S.book];const i=b.chs.indexOf(S.ch);
+ store.set('last',{ed:S.ed,book:S.book,ch:S.ch});
+ const others=Object.values(ED).filter(e=>e.id!==S.ed);
+ let cmpHTML='';
+ if(S.cmp){
+  try{const d2=await loadEd(S.cmp);cmpHTML=`<section class="reader"><h2 style="margin-top:0">${esc(ED[S.cmp].name)}</h2>${chapterHTML(S.cmp,d2,S.book,S.ch)}</section>`}
+  catch(e){cmpHTML='<p class="note">No se pudo cargar la comparación.</p>'}
+ }
+ view.innerHTML=`<div class="crumb"><button id="cb">${esc(bname(S.book))}</button><span aria-hidden="true">›</span><span>Capítulo ${esc(S.ch)}</span></div>
+ <div class="tools">
+  <button id="fsm" aria-label="Letra más pequeña">A−</button><button id="fsp" aria-label="Letra más grande">A+</button>
+  <label for="cmp">Comparar con</label><select id="cmp"><option value="">Comparar con…</option>${others.map(e=>`<option value="${e.id}" ${S.cmp===e.id?'selected':''}>${esc(e.branch.name)} · ${esc(e.name)}</option>`).join('')}</select>
+ </div>
+ <div class="par ${S.cmp?'two':''}"><section class="reader"><h1 style="margin-top:0">${esc(bname(S.book))} ${esc(S.ch)}</h1>${chapterHTML(S.ed,d,S.book,S.ch)}</section>${cmpHTML}</div>
+ ${S.cmp&&(S.book==='PSA')?'<p class="note">Ojo: la Septuaginta y la Vulgata numeran los Salmos distinto que el texto hebreo, así que el mismo número puede ser otro salmo.</p>':''}
+ <div class="nav"><button id="prev" ${i<=0?'disabled':''}>← Anterior</button><button id="next" ${i>=b.chs.length-1?'disabled':''}>Siguiente →</button></div>`;
+ $('#cb').onclick=()=>go('chapters');
+ $('#prev').onclick=()=>go('read',{ch:b.chs[i-1],hl:null});
+ $('#next').onclick=()=>go('read',{ch:b.chs[i+1],hl:null});
+ const fs=n=>{let v=Math.min(30,Math.max(15,store.get('fs',20)+n));store.set('fs',v);document.documentElement.style.setProperty('--fs',v+'px')};
+ $('#fsm').onclick=()=>fs(-2);$('#fsp').onclick=()=>fs(2);
+ $('#cmp').onchange=e=>{S.cmp=e.target.value||null;renderRead(d)};
+ if(S.hl){const el=document.getElementById('v'+S.hl);if(el)el.scrollIntoView({block:'center'})}
+}
+
+const norm=s=>s.normalize('NFD').replace(/\p{M}/gu,'').toLowerCase();
+function renderSearch(d){
+ view.innerHTML=`<h1>Buscar</h1><p class="lead">En ${esc(ED[S.ed].name)}</p>
+ <form id="sf" role="search"><label for="q" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Palabras a buscar</label><input id="q" type="search" placeholder="${S.ed==='reina-valera-1909'?'p. ej. pastor':S.ed==='vulgata-clementina'?'p. ej. pastor, lux':'p. ej. ποιμαίνει, φῶς'}"></form><div id="out" style="margin-top:14px"></div>`;
+ const q=$('#q');q.focus();
+ $('#sf').onsubmit=e=>{e.preventDefault();const t=norm(q.value.trim());const out=$('#out');if(t.length<2){out.innerHTML='<p class="note">Escribe al menos dos letras.</p>';return}
+  const res=[];for(const b of d.books){for(const c of b.chs){for(const [v,x] of b.ch[c]){if(norm(x).includes(t)){res.push([b.c,c,v,x]);if(res.length>=150)break}}if(res.length>=150)break}if(res.length>=150)break}
+  out.innerHTML=res.length?`<p class="note">${res.length>=150?'Primeros 150 resultados':res.length+' resultados'}</p>`+res.map(r=>`<button class="res" data-r="${r[0]}|${r[1]}|${r[2]}"><b>${esc(bname(r[0]))} ${r[1]}, ${r[2]}</b><span>${esc(r[3])}</span></button>`).join(''):'<p class="note">No se ha encontrado nada.</p>';
+  out.querySelectorAll('[data-r]').forEach(x=>x.onclick=()=>{const [bk,c,v]=x.dataset.r.split('|');go('read',{book:bk,ch:c,hl:+v})});
+ };
+}
+render();
+</script>
+</body>
+</html>
