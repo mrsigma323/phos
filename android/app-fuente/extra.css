@@ -237,3 +237,11 @@
 [data-theme=dark] input[type=time]::-webkit-calendar-picker-indicator,[data-theme=dark] input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.85)}
 [data-theme=dark] option{background:#211916;color:#EDE3D6}
 .shake{animation:phshake .35s}@keyframes phshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.lgdoc h3.lgh{font-size:17px;margin:18px 0 6px}
+.lgdoc p,.lgdoc li{font-size:15px;line-height:1.5}
+.lgdoc .lgl{padding-left:20px;margin:6px 0}
+.lgdoc .lgs{margin-top:20px;padding-top:12px;border-top:1px solid var(--line,#ddd);font-size:14px}
+.lgb{margin-bottom:8px}
+.lgc{width:100%;text-align:left;margin-top:10px}
+.lgwipe.armed{border-color:#C0392B!important}
+.lgwipe.armed .s{color:#C0392B}
