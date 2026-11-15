@@ -245,3 +245,18 @@
 .lgc{width:100%;text-align:left;margin-top:10px}
 .lgwipe.armed{border-color:#C0392B!important}
 .lgwipe.armed .s{color:#C0392B}
+.orarow{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.orarow .chip{border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:8px 14px;font:inherit;font-weight:700;font-size:14px}
+.orarow .chip[aria-pressed="true"]{background:var(--wine);border-color:var(--wine);color:#FBF3E2}
+.orarow .btn{flex:1}
+.oraq{width:100%;box-sizing:border-box;padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);font:inherit;font-size:16px;background:#fff;color:var(--ink)}
+.orasort{display:flex;align-items:center;gap:8px;font-size:14px;margin:4px 0 8px}
+.orasort select{flex:1;padding:8px;border-radius:10px;border:1.5px solid var(--line);font:inherit;background:#fff;color:var(--ink)}
+.orac{width:100%;text-align:left}
+.orap{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.oratxt span{white-space:normal;line-height:1.6}
+.orao{font-size:15px;line-height:1.5;margin:6px 0 0}
+.oram.rec{border-color:var(--gold,#B8913F)}
+.orata{width:100%;box-sizing:border-box;padding:12px;border-radius:12px;border:1.5px solid var(--line);font:inherit;font-size:16px;line-height:1.5;background:#fff;color:var(--ink)}
+[data-theme=dark] .orarow .chip,[data-theme=dark] .oraq,[data-theme=dark] .orasort select,[data-theme=dark] .orata{background:var(--paper);color:var(--ink);border-color:var(--line)}
+[data-theme=dark] .orarow .chip[aria-pressed="true"]{background:#E2C27A;color:#2A0E10;border-color:#E2C27A}

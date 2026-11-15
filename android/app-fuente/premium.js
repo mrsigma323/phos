@@ -105,6 +105,7 @@ function scheduleReminders(){
   if(!pr)continue;
   try{const c=(typeof celebsOn==='function'?celebsOn(br,td).map(celName).filter(Boolean):[]).concat(LANG==='es'?daySaints(br,td):[]);
    if(c.length)add('saint',pt('nSaint'),c.slice(0,2).join(' · '),'hoy')}catch(e){}
+  if(s.saint&&s.saint.on&&typeof prayerReminder==='function'){const r=prayerReminder(y,m,dd,br);if(r&&r.at>now+30e3)out.push(r)}
   if(typeof vidaReminder==='function'){const r=vidaReminder(y,m,dd);if(r&&r.at>now+30e3)out.push(r)}
   add('plan',pt('rPlan'),(typeof planTodayText==='function'&&planTodayText())||pt('nPlan'),'plan');
  }
@@ -171,4 +172,4 @@ header.top{gap:4px;padding-left:8px;padding-right:8px}header.top .iconbtn{width:
 .ptoast.on{opacity:1;transform:translate(-50%,0)}`;document.head.appendChild(st)})();
 if(TEST_BUILD)setTimeout(()=>toast('🧪 Versión de prueba · Premium desbloqueado'),2200);
 if(IN_APP){try{PhosApp.billingRefresh()}catch(e){}setTimeout(scheduleReminders,1500)}
-if(location.hash&&/^#(premium|apoyo|notif|plan|retos|hoy|vida)$/.test(location.hash))setTimeout(()=>phosOpen(location.hash.slice(1)),0);
+if(location.hash&&/^#(premium|apoyo|notif|plan|retos|hoy|vida|ora(:[a-z]+)?)$/.test(location.hash))setTimeout(()=>phosOpen(location.hash.slice(1)),0);
