@@ -3,7 +3,7 @@
 // Si un campo se deja vacío, simplemente no se muestra.
 const LEGAL_ID={
  name:'Andreu Angel Alonso Hernandez',
- nif:'',        // NIF
+ nif:'ES47957287X',        // NIF
  dom:'',        // domicilio profesional (no el de casa)
- mail:''        // correo de contacto
+ mail:'bibles.phoschristou@gmail.com'        // correo de contacto
 };
