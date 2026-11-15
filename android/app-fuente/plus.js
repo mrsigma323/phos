@@ -10,7 +10,7 @@ const _renderArticlesP=renderArticles;
 renderArticles=async function(sec){if(sec==='retos')return renderRetos();if(sec==='mine')return renderMine();return _renderArticlesP(sec)};
 const _setHeaderP=setHeader;
 const fitBrand=()=>{const d=document.querySelector('.brand>div');if(!d)return;d.style.display='';const b=d.querySelector('b');if(b&&b.scrollWidth>b.clientWidth+1)d.style.display='none'};
-addEventListener('resize',fitBrand);
+addEventListener('resize',fitBrand);try{document.fonts.ready.then(()=>setTimeout(fitBrand,50))}catch(e){}
 setHeader=function(){_setHeaderP();setTimeout(fitBrand,0);if((S.sec==='retos'||S.sec==='mine')&&S.view!==S.sec)$('#back').style.visibility='visible'};
 const _phosBackP=window.phosBack;
 window.phosBack=()=>{if(_phosBackP&&_phosBackP())return true;
