@@ -167,7 +167,7 @@ ro:{legal:'Documente legale',legalL:'Confidențialitate, condiții, Cale, sănă
 function lgx(k){const T=LGX[typeof LANG!=='undefined'&&LGX[LANG]?LANG:'en']||LGX.es;return T[k]!=null&&T[k]!==''?T[k]:(LGX.es[k]||'')}
 
 function legalSign(){const I=(typeof LEGAL_ID!=='undefined'&&LEGAL_ID)||{};const p=['Creador de contenido de Phos: '+(I.name||'')];
- if(I.nif)p.push('NIF '+I.nif);if(I.dom)p.push('domicilio profesional '+I.dom);if(I.mail)p.push('contacto '+I.mail);return p.join(' · ')}
+ if(I.nif)p.push('NIF '+I.nif);if(I.dom)p.push('domicilio '+I.dom);if(I.mail)p.push('contacto '+I.mail);return p.join(' · ')}
 function legalHTML(d){let h='',list=null;const close=()=>{if(list){h+=`</${list}>`;list=null}};
  d.b.trim().split('\n').forEach(l=>{l=l.trim();if(!l)return;
   if(l.startsWith('## ')){close();h+=`<h3 class="lgh">${esc(l.slice(3))}</h3>`}
