@@ -333,6 +333,12 @@ dialog::backdrop{background:rgba(35,28,26,.45)}
 .brand>div{min-width:0;overflow:hidden}.brand b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media (max-width:430px){header.top:has(#back:not([style*="hidden"])) .brand>div{display:none}}
 @media (max-width:350px){.brand>div{display:none}}
+/* Modo nocturno: campos de hora, fechas, desplegables y textos legibles (antes tenían fondo blanco con letra clara) */
+[data-theme=dark] input[type=time],[data-theme=dark] input[type=date],[data-theme=dark] input[type=number],[data-theme=dark] input[type=text],[data-theme=dark] input[type=search],[data-theme=dark] input[type=email],[data-theme=dark] select,[data-theme=dark] textarea,[data-theme=dark] .vin{background:var(--paper)!important;color:var(--ink)!important;border-color:var(--line)!important;-webkit-text-fill-color:var(--ink)}
+[data-theme=dark] input::placeholder,[data-theme=dark] textarea::placeholder{color:var(--muted);-webkit-text-fill-color:var(--muted)}
+[data-theme=dark] input[type=time]::-webkit-datetime-edit,[data-theme=dark] input[type=time]::-webkit-datetime-edit-fields-wrapper,[data-theme=dark] input[type=time]::-webkit-datetime-edit-hour-field,[data-theme=dark] input[type=time]::-webkit-datetime-edit-minute-field,[data-theme=dark] input[type=time]::-webkit-datetime-edit-ampm-field,[data-theme=dark] input[type=time]::-webkit-datetime-edit-text{color:var(--ink);-webkit-text-fill-color:var(--ink)}
+[data-theme=dark] input[type=time]::-webkit-calendar-picker-indicator,[data-theme=dark] input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.85)}
+[data-theme=dark] option{background:#211916;color:#EDE3D6}
 
 </style>
 </head>
