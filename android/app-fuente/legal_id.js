@@ -4,6 +4,6 @@
 const LEGAL_ID={
  name:'Andreu Angel Alonso Hernandez',
  nif:'ES47957287X',        // NIF
- dom:'',        // domicilio profesional (no el de casa)
+ dom:'C/ Plaza Mayor, 14, 2.º 1.ª, 08580 Sant Quirze de Besora (Barcelona)',        // domicilio profesional (no el de casa)
  mail:'bibles.phoschristou@gmail.com'        // correo de contacto
 };
