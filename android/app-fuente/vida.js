@@ -140,7 +140,7 @@ function drawVidaSetup(){
   view.querySelector('[data-goal="fast"]').disabled=!a;view.querySelector('[data-lv="2"]').disabled=!a;
   if(!a){st.goals=st.goals.filter(g=>g!=='fast');if(st.level>1)st.level=1;view.querySelector('[data-goal="fast"]').classList.remove('on');view.querySelectorAll('[data-lv]').forEach(x=>x.setAttribute('aria-pressed',+x.dataset.lv===st.level))}};
  $('#vAdult').onchange=syncAdult;syncAdult();
- view.querySelectorAll('[data-goal]').forEach(b=>b.onclick=()=>{const g=b.dataset.goal,i=st.goals.indexOf(g);if(i>=0)st.goals.splice(i,1);else if(st.goals.length<5)st.goals.push(g);
+ view.querySelectorAll('[data-goal]').forEach(b=>b.onclick=()=>{const g=b.dataset.goal,i=st.goals.indexOf(g);if(i>=0)st.goals.splice(i,1);else if(st.goals.length<5)st.goals.push(g);else{toast('⚠️ '+vt('goals'));return}
   b.classList.toggle('on',st.goals.includes(g));b.setAttribute('aria-pressed',st.goals.includes(g))});
  view.querySelectorAll('[data-lv]').forEach(b=>b.onclick=()=>{st.level=+b.dataset.lv;view.querySelectorAll('[data-lv]').forEach(x=>x.setAttribute('aria-pressed',x===b))});
  $('#vSave').onclick=()=>{

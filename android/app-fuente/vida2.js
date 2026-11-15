@@ -112,7 +112,7 @@ function drawFriends(){const F=friends();
  <div class="v2add"><input id="fN" class="vin" maxlength="30" placeholder="${esc(v2t('namePh'))}"><button class="btn" id="fA">${esc(v2t('add'))}</button></div>
  <div class="v2fr">${F.map((n,i)=>`<div class="card"><div class="t">🙏 ${esc(n)}</div><div style="display:flex;gap:8px;margin-top:8px"><button class="btn" data-ch="${i}" style="flex:1">${esc(v2t('cheer'))}</button><button class="btn ghost" data-rm="${i}">${esc(v2t('remove'))}</button></div></div>`).join('')}</div>
  <button class="btn ghost" id="fI" style="width:100%;margin-top:12px">${esc(v2t('invite'))}</button>`;
- $('#fA').onclick=()=>{const n=(typeof docName==='function'?docName($('#fN').value):$('#fN').value.trim());if(!n||F.length>=8)return;F.push(n);store.set('vidaFriends',F);drawFriends()};
+ $('#fA').onclick=()=>{const n=(typeof docName==='function'?docName($('#fN').value):$('#fN').value.trim());if(!n){$('#fN').focus();$('#fN').classList.add('shake');setTimeout(()=>$('#fN')&&$('#fN').classList.remove('shake'),400);return}if(F.length>=8)return;F.push(n);store.set('vidaFriends',F);drawFriends()};
  view.querySelectorAll('[data-ch]').forEach(b=>b.onclick=()=>{const L=vlog(),k=todayKey(),d=L[k]||{};if(activeGoals(vida()).includes('others')){d.others=true;L[k]=d;store.set('vidaLog',L)}shareText(v2t('cheerMsg',{n:F[+b.dataset.ch]}))});
  view.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{F.splice(+b.dataset.rm,1);store.set('vidaFriends',F);drawFriends()});
  $('#fI').onclick=()=>shareText(v2t('inviteMsg'))}

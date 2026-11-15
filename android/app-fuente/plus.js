@@ -212,7 +212,7 @@ function drawDiary(){
  <textarea id="dTxt" class="dtxt" rows="4" placeholder="${esc(qt('write'))}"></textarea><button class="btn" id="dAdd" style="width:100%;margin-top:8px">${esc(qt('add'))}</button>
  <div class="dlist">${L.length?L.slice().reverse().map(e=>`<div class="dent"><div class="note">${ico[e.k]||'•'} ${esc(qt(e.k))} · ${esc(fmt(e.ts))}</div><p>${esc(e.txt)}</p><button class="linkbtn" data-del="${e.id}">${esc(qt('del'))}</button></div>`).join(''):`<p class="note">${esc(qt('empty'))}</p>`}</div>`;
  view.querySelectorAll('[data-dk]').forEach(b=>b.onclick=()=>{S.dk=b.dataset.dk;view.querySelectorAll('[data-dk]').forEach(x=>x.classList.toggle('on',x===b))});
- $('#dAdd').onclick=()=>{const v=$('#dTxt').value.trim();if(!v)return;const L2=store.get('diary',[]);L2.push({id:Date.now().toString(36),ts:Date.now(),k:S.dk,txt:v.slice(0,4000)});store.set('diary',L2);drawDiary()};
+ $('#dAdd').onclick=()=>{const v=$('#dTxt').value.trim();if(!v){$('#dTxt').focus();$('#dTxt').classList.add('shake');setTimeout(()=>$('#dTxt')&&$('#dTxt').classList.remove('shake'),400);return}const L2=store.get('diary',[]);L2.push({id:Date.now().toString(36),ts:Date.now(),k:S.dk,txt:v.slice(0,4000)});store.set('diary',L2);drawDiary()};
  view.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{if(b.dataset.sure){store.set('diary',store.get('diary',[]).filter(e=>e.id!==b.dataset.del));drawDiary()}else{b.dataset.sure='1';b.textContent='✓ '+qt('del')+'?'}});
 }
 
