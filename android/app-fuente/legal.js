@@ -1,7 +1,7 @@
 // Documentos legales dentro de la app (versión en español, que es la que prevalece)
 const LEGAL_VER='1.0 · 2026-11-15';
 const LEGAL_DOCS=[
-{id:'privacidad',ico:'🔒',t:'Política de privacidad',url:'https://phosbiblias.com/privacidad-app',b:`
+{id:'privacidad',ico:'🔒',t:'Política de privacidad',url:'https://phosbiblias.com/privacidad.html#app',b:`
 ## 1. Quién trata tus datos
 El responsable del tratamiento es el creador de contenido de Phos, identificado al final de este documento. Puedes escribirle por cualquier asunto de privacidad a la dirección de contacto que figura allí.
 ## 2. Lo esencial
@@ -42,7 +42,7 @@ Phos no está dirigida a menores de 14 años. En España, por debajo de esa edad
 Puedes pedir acceso, rectificación, supresión, oposición, limitación y portabilidad, y retirar tu consentimiento cuando quieras, escribiendo a la dirección de contacto. Se responderá en un mes como máximo. También puedes reclamar ante la Agencia Española de Protección de Datos (aepd.es).
 ## 11. Cambios
 Si esta política cambia de forma importante, la app te avisará antes.`},
-{id:'condiciones',ico:'📜',t:'Condiciones de uso y contratación',url:'https://phosbiblias.com/condiciones-app',b:`
+{id:'condiciones',ico:'📜',t:'Condiciones de uso y contratación',url:'',b:`
 ## 1. Partes y objeto
 Estas condiciones regulan el uso de la app Phos y las compras hechas en ella, entre la persona usuaria y el creador de contenido de Phos, identificado al final. Las compras requieren aceptarlas de forma expresa antes de pagar.
 ## 2. Qué es gratis
@@ -72,7 +72,7 @@ Se pone el cuidado razonable en que la app funcione y el contenido sea correcto,
 Los cambios importantes se avisan en la app con antelación. Si no los aceptas, puedes dejar de usar la app y cancelar Premium.
 ## 10. Ley y reclamaciones
 Se aplica la ley española. Como consumidor, puedes reclamar en los juzgados de tu domicilio o acudir al sistema arbitral de consumo de tu comunidad autónoma. Si estas condiciones se traducen, prevalece la versión en español.`},
-{id:'camino',ico:'⛰️',t:'Camino de la Verdad',url:'https://phosbiblias.com/camino-de-la-verdad',b:`
+{id:'camino',ico:'⛰️',t:'Camino de la Verdad',url:'',b:`
 ## 1. Qué es
 Una herramienta personal para ordenar tu vida de fe con metas sencillas: oración, lectura, gratitud, misericordia, examen de conciencia, servicio a los demás, descanso y cuidado del cuerpo. Incluye diario, revisiones, medallas, plantillas por etapa de la vida, compañeros de camino y un widget.
 ## 2. Lo que no es
@@ -96,7 +96,7 @@ Al aceptar el aviso del Camino confirmas que:
 2. consientes que la app guarde en tu dispositivo los datos del Camino;
 3. sabes que puedes retirar este consentimiento en cualquier momento borrando esos datos.
 La app genera un documento de aceptación en Mi Phos con la fecha, la versión del texto, tus metas y tu nivel, sin direcciones ni números de identificación.`},
-{id:'salud',ico:'🩺',t:'Salud y hábitos',url:'https://phosbiblias.com/salud-y-habitos',b:`
+{id:'salud',ico:'🩺',t:'Salud y hábitos',url:'',b:`
 ## 1. Qué incluye
 - Rutinas guiadas: paseo con un salmo, estiramientos con oración y ejercicio suave.
 - Ayunos y abstinencias según el calendario de cada Iglesia, con recetas.
@@ -123,7 +123,7 @@ Lo que anotes puede revelar datos de salud (art. 9 RGPD). Se guarda solo en tu d
 Tú decides cómo y cuánto usar este contenido. No se responde de los daños que deriven de usarlo en contra de estas indicaciones o del consejo de un profesional. Esto no limita tus derechos como consumidor.
 ## 9. Aceptación
 Al pulsar «Entendido» confirmas que has leído este aviso, que usarás el contenido con prudencia y que consultarás a un profesional si estás en alguno de los casos del punto 3.`},
-{id:'borrado',ico:'🗑️',t:'Borrado de datos y aviso legal',url:'https://phosbiblias.com/eliminar-datos',b:`
+{id:'borrado',ico:'🗑️',t:'Borrado de datos y aviso legal',url:'https://phosbiblias.com/privacidad.html#borrar-datos',b:`
 ## 1. Cómo borrar tus datos
 Phos no necesita cuenta: tus datos están en tu móvil.
 1. Mi Phos › Borrar mis datos: elimina preferencias, progreso, Camino de la Verdad, Salud y hábitos, documentos de aceptación y el registro de errores.
@@ -174,7 +174,7 @@ function legalHTML(d){let h='',list=null;const close=()=>{if(list){h+=`</${list}
   else if(l.startsWith('- ')){if(list!=='ul'){close();h+='<ul class="lgl">';list='ul'}h+=`<li>${esc(l.slice(2))}</li>`}
   else if(/^\d+\. /.test(l)){if(list!=='ol'){close();h+='<ol class="lgl">';list='ol'}h+=`<li>${esc(l.replace(/^\d+\. /,''))}</li>`}
   else{close();h+=`<p>${esc(l)}</p>`}});close();return h}
-function legalText(d){return d.t+'\n'+lgx('ver')+' '+LEGAL_VER+'\n\n'+d.b.trim().replace(/^## /gm,'\n')+'\n\n'+lgx('sign')+'\n'+legalSign()+'\n'+d.url}
+function legalText(d){return d.t+'\n'+lgx('ver')+' '+LEGAL_VER+'\n\n'+d.b.trim().replace(/^## /gm,'\n')+'\n\n'+lgx('sign')+'\n'+legalSign()+(d.url?'\n'+d.url:'')}
 
 // Se abre dentro del diálogo Info
 function legalOpen(id){const dlg=$('#info'),body=$('#infoBody');if(!dlg||!body)return;
@@ -184,9 +184,9 @@ function legalOpen(id){const dlg=$('#info'),body=$('#infoBody');if(!dlg||!body)r
   body.querySelectorAll('[data-lg]').forEach(b=>b.onclick=()=>legalOpen(b.dataset.lg))}
  else{$('#infoTitle').textContent=d.ico+' '+d.t;
   body.innerHTML=`<button class="btn ghost lgb" id="lgBack">${esc(lgx('back'))}</button>${n?`<p class="note">${esc(n)}</p>`:''}<p class="note">${esc(lgx('ver'))} ${esc(LEGAL_VER)}</p><div class="lgdoc">${legalHTML(d)}<p class="lgs"><b>${esc(lgx('sign'))}</b><br>${esc(legalSign())}</p></div>
-  <button class="btn" id="lgShare" style="width:100%;margin-top:10px">${esc(lgx('share'))}</button><button class="btn ghost" id="lgWeb" style="width:100%;margin-top:10px">${esc(lgx('web'))}</button>`;
+  <button class="btn" id="lgShare" style="width:100%;margin-top:10px">${esc(lgx('share'))}</button>${d.url?`<button class="btn ghost" id="lgWeb" style="width:100%;margin-top:10px">${esc(lgx('web'))}</button>`:''}`;
   $('#lgBack').onclick=()=>legalOpen();$('#lgShare').onclick=()=>shareText(legalText(d));
-  $('#lgWeb').onclick=()=>{const a=document.createElement('a');a.href=d.url;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove()};
+  if($('#lgWeb'))$('#lgWeb').onclick=()=>{const a=document.createElement('a');a.href=d.url;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove()};
   body.scrollTop=0;dlg.scrollTop=0}
  if(!dlg.open)dlg.showModal()}
 
