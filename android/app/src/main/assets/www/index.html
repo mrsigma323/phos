@@ -2828,8 +2828,9 @@ window.PhosPay={
  onEntitlement(e){const was=isPremium();store.set('premium',{on:!!(e&&e.premium),ts:Date.now()});
   if(was!==isPremium()){scheduleReminders();render()}},
  onPurchase(p){PAY.busy=false;const tip=p&&p.tip;if(typeof vidaPurchase==='function')vidaPurchase(p||{});
-  if(!tip){store.set('premium',{on:true,ts:Date.now()});scheduleReminders()}
-  toast(pt(tip?'thanksTip':'thanksSub'));render()},
+  const sub=p&&Array.isArray(p.products)?p.products.includes('phos_premium'):(!tip&&!(p&&p.lives));
+  if(sub){store.set('premium',{on:true,ts:Date.now()});scheduleReminders()}
+  if(tip||sub)toast(pt(tip?'thanksTip':'thanksSub'));render()},
  onError(code,msg){PAY.busy=false;if(code===1)return render();/* 1 = el usuario canceló */
   PAY.err=pt('payErr')+(msg?' · '+msg:'');render()}
 };
