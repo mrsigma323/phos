@@ -7,7 +7,12 @@ const TIPS=['apoyo_2','apoyo_5','apoyo_10'];
 const PAY={products:null,err:null,busy:false};
 // En la APK de prueba (compilación de depuración) Premium está desbloqueado; en la de Google Play, nunca.
 const TEST_BUILD=!!(window.PhosApp&&PhosApp.isTestBuild&&PhosApp.isTestBuild());
-const isPremium=()=>TEST_BUILD||!!store.get('premium',{on:false}).on;
+// Códigos de acceso de prueba (revisión de Google Play y testers): Premium 30 días en el dispositivo donde se activa.
+// Solo se guarda una huella de cada código. Para anular uno, quita su huella de la lista.
+const REV_H=[2638350467,3914618036,943279247,3762697544];
+const revFnv=t=>{let h=0x811c9dc5;for(const b of new TextEncoder().encode(t)){h^=b;h=Math.imul(h,0x01000193)>>>0}return h};
+const revOn=()=>{const r=store.get('revAccess',null);return !!(r&&r.until>Date.now()&&REV_H.includes(r.h))};
+const isPremium=()=>TEST_BUILD||!!store.get('premium',{on:false}).on||revOn();
 const LEGAL_URL='https://phosbiblias.com/condiciones-aportaciones.html',PRIV_URL='https://phosbiblias.com/privacidad.html';
 const CROWN='<svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z"/></svg>';
 
@@ -174,3 +179,16 @@ header.top{gap:4px;padding-left:8px;padding-right:8px}header.top .iconbtn{width:
 if(TEST_BUILD)setTimeout(()=>toast('🧪 Versión de prueba · Premium desbloqueado'),2200);
 if(IN_APP){try{PhosApp.billingRefresh()}catch(e){}setTimeout(scheduleReminders,1500)}
 if(location.hash&&/^#(premium|apoyo|notif|plan|retos|hoy|vida|ora(:[a-z]+)?)$/.test(location.hash))setTimeout(()=>phosOpen(location.hash.slice(1)),0);
+
+// «Tengo un código» en la pantalla Premium
+const REVX={es:['Tengo un código','Escribe el código','Activar','Código no válido','Premium activado durante 30 días','Acceso de prueba activo hasta el'],en:['I have a code','Enter the code','Activate','Invalid code','Premium activated for 30 days','Test access active until']};
+const rvx=i=>(REVX[LANG]||REVX.en)[i];
+const _drawPremiumR=drawPremium;
+drawPremium=function(){const r=_drawPremiumR.apply(this,arguments);const w=document.createElement('div');w.className='revbox';
+ if(revOn()){const u=new Date(store.get('revAccess',{}).until);w.innerHTML=`<p class="note">🔑 ${esc(rvx(5))} ${esc(u.toLocaleDateString(LANG))}</p>`;view.appendChild(w);return r}
+ if(isPremium())return r;
+ w.innerHTML=`<button class="btn ghost" id="revOpen" style="width:100%;margin-top:14px">${esc(rvx(0))}</button><div id="revForm" hidden style="margin-top:10px"><input id="revIn" class="oraq" placeholder="${esc(rvx(1))}" autocomplete="off" autocapitalize="characters"><button class="btn" id="revGo" style="width:100%;margin-top:8px">${esc(rvx(2))}</button></div>`;
+ view.appendChild(w);$('#revOpen').onclick=()=>{$('#revForm').hidden=false;$('#revIn').focus()};
+ $('#revGo').onclick=()=>{const h=revFnv(($('#revIn').value||'').toUpperCase().replace(/[^A-Z0-9]/g,''));
+  if(REV_H.includes(h)){const o=store.get('revAccess',null);store.set('revAccess',{h,until:(o&&o.h===h&&o.until)||Date.now()+30*864e5});toast('👑 '+rvx(4));scheduleReminders();render()}else toast('⚠️ '+rvx(3))};return r};
+PVIEWS.premium=drawPremium;
