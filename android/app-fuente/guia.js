@@ -6,7 +6,7 @@ es:{next:"Siguiente",skip:"Omitir",done:"Terminar",step:"Paso {n} de {t}",
  m2:"Cada día, el tiempo litúrgico, la fiesta o el santo y un versículo. Con «Compartir» lo envías como imagen.",
  m3:"Phos Premium: lo activas y lo gestionas con Google Play.",m3p:"Tu Phos Premium está activo. Desde aquí lo gestionas en Google Play.",
  m4:"Cambia el idioma de la app cuando quieras.",
- m5:"Por último, pon a punto tu Phos: recordatorios, tu Camino de la Verdad y tu plan de lectura. Lo tienes todo en Mi Phos.",goMine:"Ir a Mi Phos",
+ m6:"Y recuerda: en Mi Phos tienes la «Guía completa de Phos», que explica cada apartado paso a paso. Ábrela cuando quieras, sobre todo si no te acuerdas de cómo funciona algo.",goGuide:"Abrir la guía",m5:"Por último, pon a punto tu Phos: recordatorios, tu Camino de la Verdad y tu plan de lectura. Lo tienes todo en Mi Phos.",goMine:"Ir a Mi Phos",
  setupT:"Pon a punto tu Phos",setupLead:"{n} de {t} pasos hechos",sNotif:"Elige tus recordatorios",sVida:"Traza tu Camino de la Verdad",sPlan:"Empieza un plan de lectura",sAcct:"Inicia sesión (opcional)",hide:"Ocultar",
  pend:"{n} pendiente(s)",msgNew:"{n} mensaje(s) nuevo(s)"},
 en:{next:"Next",skip:"Skip",done:"Finish",step:"Step {n} of {t}",
@@ -14,7 +14,7 @@ en:{next:"Next",skip:"Skip",done:"Finish",step:"Step {n} of {t}",
  m2:"Every day: the liturgical season, the feast or saint and a verse. Tap «Share» to send it as an image.",
  m3:"Phos Premium: you activate and manage it with Google Play.",m3p:"Your Phos Premium is active. Manage it on Google Play from here.",
  m4:"Change the app language whenever you like.",
- m5:"Finally, set up your Phos: reminders, your Way of Truth and your reading plan. It's all in My Phos.",goMine:"Go to My Phos",
+ m6:"And remember: in My Phos you have the «Complete guide to Phos», which explains every section step by step. Open it whenever you like, especially if you forget how something works.",goGuide:"Open the guide",m5:"Finally, set up your Phos: reminders, your Way of Truth and your reading plan. It's all in My Phos.",goMine:"Go to My Phos",
  setupT:"Set up your Phos",setupLead:"{n} of {t} steps done",sNotif:"Choose your reminders",sVida:"Map out your Way of Truth",sPlan:"Start a reading plan",sAcct:"Sign in (optional)",hide:"Hide",
  pend:"{n} pending",msgNew:"{n} new message(s)"},
 pt:{next:"Seguinte",skip:"Saltar",done:"Terminar",step:"Passo {n} de {t}",
@@ -22,7 +22,7 @@ pt:{next:"Seguinte",skip:"Saltar",done:"Terminar",step:"Passo {n} de {t}",
  m2:"Todos os dias: o tempo litúrgico, a festa ou o santo e um versículo. Com «Partilhar» envia-o como imagem.",
  m3:"Phos Premium: ativa-o e gere-o com o Google Play.",m3p:"O seu Phos Premium está ativo. Daqui gere-o no Google Play.",
  m4:"Mude o idioma da app quando quiser.",
- m5:"Por fim, prepare o seu Phos: lembretes, o seu Caminho da Verdade e o seu plano de leitura. Está tudo em Meu Phos.",goMine:"Ir para Meu Phos",
+ m6:"E lembre-se: em Meu Phos tem o «Guia completo do Phos», que explica cada secção passo a passo. Abra-o quando quiser, sobretudo se não se lembrar de como funciona algo.",goGuide:"Abrir o guia",m5:"Por fim, prepare o seu Phos: lembretes, o seu Caminho da Verdade e o seu plano de leitura. Está tudo em Meu Phos.",goMine:"Ir para Meu Phos",
  setupT:"Prepare o seu Phos",setupLead:"{n} de {t} passos feitos",sNotif:"Escolha os seus lembretes",sVida:"Trace o seu Caminho da Verdade",sPlan:"Comece um plano de leitura",sAcct:"Entrar (opcional)",hide:"Ocultar",
  pend:"{n} pendente(s)",msgNew:"{n} mensagem(ns) nova(s)"},
 fr:{next:"Suivant",skip:"Passer",done:"Terminer",step:"Étape {n} sur {t}",
@@ -30,7 +30,7 @@ fr:{next:"Suivant",skip:"Passer",done:"Terminer",step:"Étape {n} sur {t}",
  m2:"Chaque jour : le temps liturgique, la fête ou le saint et un verset. Avec « Partager », envoyez-le en image.",
  m3:"Phos Premium : vous l’activez et le gérez avec Google Play.",m3p:"Votre Phos Premium est actif. Gérez-le ici sur Google Play.",
  m4:"Changez la langue de l’application quand vous voulez.",
- m5:"Enfin, préparez votre Phos : rappels, Chemin de Vérité et plan de lecture. Tout est dans Mon Phos.",goMine:"Aller à Mon Phos",
+ m6:"Et n’oubliez pas : dans Mon Phos, vous avez le « Guide complet de Phos », qui explique chaque rubrique pas à pas. Ouvrez-le quand vous voulez, surtout si vous ne savez plus comment fonctionne quelque chose.",goGuide:"Ouvrir le guide",m5:"Enfin, préparez votre Phos : rappels, Chemin de Vérité et plan de lecture. Tout est dans Mon Phos.",goMine:"Aller à Mon Phos",
  setupT:"Préparez votre Phos",setupLead:"{n} étape(s) sur {t} faite(s)",sNotif:"Choisissez vos rappels",sVida:"Tracez votre Chemin de Vérité",sPlan:"Commencez un plan de lecture",sAcct:"Connectez-vous (facultatif)",hide:"Masquer",
  pend:"{n} en attente",msgNew:"{n} nouveau(x) message(s)"},
 it:{next:"Avanti",skip:"Salta",done:"Fine",step:"Passo {n} di {t}",
@@ -38,7 +38,7 @@ it:{next:"Avanti",skip:"Salta",done:"Fine",step:"Passo {n} di {t}",
  m2:"Ogni giorno: il tempo liturgico, la festa o il santo e un versetto. Con «Condividi» lo invii come immagine.",
  m3:"Phos Premium: lo attivi e lo gestisci con Google Play.",m3p:"Il tuo Phos Premium è attivo. Da qui lo gestisci su Google Play.",
  m4:"Cambia la lingua dell’app quando vuoi.",
- m5:"Infine, prepara il tuo Phos: promemoria, Cammino della Verità e piano di lettura. È tutto in Il mio Phos.",goMine:"Vai a Il mio Phos",
+ m6:"E ricorda: in Il mio Phos hai la «Guida completa di Phos», che spiega ogni sezione passo dopo passo. Aprila quando vuoi, soprattutto se non ricordi come funziona qualcosa.",goGuide:"Apri la guida",m5:"Infine, prepara il tuo Phos: promemoria, Cammino della Verità e piano di lettura. È tutto in Il mio Phos.",goMine:"Vai a Il mio Phos",
  setupT:"Prepara il tuo Phos",setupLead:"{n} di {t} passi fatti",sNotif:"Scegli i promemoria",sVida:"Traccia il tuo Cammino della Verità",sPlan:"Inizia un piano di lettura",sAcct:"Accedi (facoltativo)",hide:"Nascondi",
  pend:"{n} in sospeso",msgNew:"{n} nuovo/i messaggio/i"},
 de:{next:"Weiter",skip:"Überspringen",done:"Fertig",step:"Schritt {n} von {t}",
@@ -46,7 +46,7 @@ de:{next:"Weiter",skip:"Überspringen",done:"Fertig",step:"Schritt {n} von {t}",
  m2:"Jeden Tag: Kirchenjahreszeit, Fest oder Heiliger und ein Vers. Mit «Teilen» schickst du ihn als Bild.",
  m3:"Phos Premium: Du aktivierst und verwaltest es über Google Play.",m3p:"Dein Phos Premium ist aktiv. Von hier aus verwaltest du es bei Google Play.",
  m4:"Ändere die Sprache der App, wann immer du willst.",
- m5:"Zum Schluss: Richte dein Phos ein – Erinnerungen, Weg der Wahrheit und Leseplan. Alles findest du unter Mein Phos.",goMine:"Zu Mein Phos",
+ m6:"Und denk daran: Unter Mein Phos findest du die „Vollständige Anleitung zu Phos“, die jeden Bereich Schritt für Schritt erklärt. Öffne sie jederzeit, vor allem wenn du nicht mehr weißt, wie etwas funktioniert.",goGuide:"Anleitung öffnen",m5:"Zum Schluss: Richte dein Phos ein – Erinnerungen, Weg der Wahrheit und Leseplan. Alles findest du unter Mein Phos.",goMine:"Zu Mein Phos",
  setupT:"Richte dein Phos ein",setupLead:"{n} von {t} Schritten erledigt",sNotif:"Erinnerungen wählen",sVida:"Deinen Weg der Wahrheit festlegen",sPlan:"Leseplan beginnen",sAcct:"Anmelden (optional)",hide:"Ausblenden",
  pend:"{n} offen",msgNew:"{n} neue Nachricht(en)"},
 el:{next:"Επόμενο",skip:"Παράλειψη",done:"Τέλος",step:"Βήμα {n} από {t}",
@@ -54,7 +54,7 @@ el:{next:"Επόμενο",skip:"Παράλειψη",done:"Τέλος",step:"Βή
  m2:"Κάθε μέρα: η λειτουργική περίοδος, η εορτή ή ο άγιος και ένας στίχος. Με «Κοινοποίηση» τον στέλνεις ως εικόνα.",
  m3:"Phos Premium: το ενεργοποιείς και το διαχειρίζεσαι με το Google Play.",m3p:"Το Phos Premium σου είναι ενεργό. Από εδώ το διαχειρίζεσαι στο Google Play.",
  m4:"Άλλαξε τη γλώσσα της εφαρμογής όποτε θέλεις.",
- m5:"Τέλος, ρύθμισε το Phos σου: υπενθυμίσεις, Οδό της Αληθείας και πρόγραμμα ανάγνωσης. Όλα είναι στο Το Phos μου.",goMine:"Στο Το Phos μου",
+ m6:"Και θυμήσου: στο Το Phos μου έχεις τον «Πλήρη οδηγό του Phos», που εξηγεί κάθε ενότητα βήμα βήμα. Άνοιξέ τον όποτε θέλεις, ειδικά αν ξεχάσεις πώς λειτουργεί κάτι.",goGuide:"Άνοιγμα οδηγού",m5:"Τέλος, ρύθμισε το Phos σου: υπενθυμίσεις, Οδό της Αληθείας και πρόγραμμα ανάγνωσης. Όλα είναι στο Το Phos μου.",goMine:"Στο Το Phos μου",
  setupT:"Ρύθμισε το Phos σου",setupLead:"{n} από {t} βήματα",sNotif:"Διάλεξε υπενθυμίσεις",sVida:"Χάραξε την Οδό της Αληθείας σου",sPlan:"Ξεκίνα πρόγραμμα ανάγνωσης",sAcct:"Σύνδεση (προαιρετικά)",hide:"Απόκρυψη",
  pend:"{n} εκκρεμούν",msgNew:"{n} νέα μηνύματα"},
 ru:{next:"Далее",skip:"Пропустить",done:"Готово",step:"Шаг {n} из {t}",
@@ -62,7 +62,7 @@ ru:{next:"Далее",skip:"Пропустить",done:"Готово",step:"Ша
  m2:"Каждый день: литургический период, праздник или святой и стих. Кнопкой «Поделиться» отправьте его картинкой.",
  m3:"Phos Premium: подключается и управляется через Google Play.",m3p:"Ваш Phos Premium активен. Отсюда им можно управлять в Google Play.",
  m4:"Меняйте язык приложения когда угодно.",
- m5:"Напоследок настройте Phos: напоминания, Путь истины и план чтения. Всё это в разделе «Мой Phos».",goMine:"В «Мой Phos»",
+ m6:"И помните: в разделе «Мой Phos» есть «Полное руководство по Phos», где каждый раздел объяснён шаг за шагом. Открывайте его когда угодно, особенно если забыли, как что-то работает.",goGuide:"Открыть руководство",m5:"Напоследок настройте Phos: напоминания, Путь истины и план чтения. Всё это в разделе «Мой Phos».",goMine:"В «Мой Phos»",
  setupT:"Настройте свой Phos",setupLead:"Выполнено шагов: {n} из {t}",sNotif:"Выберите напоминания",sVida:"Проложите свой Путь истины",sPlan:"Начните план чтения",sAcct:"Войдите (необязательно)",hide:"Скрыть",
  pend:"Ожидает: {n}",msgNew:"Новых сообщений: {n}"},
 ro:{next:"Următorul",skip:"Omite",done:"Gata",step:"Pasul {n} din {t}",
@@ -70,7 +70,7 @@ ro:{next:"Următorul",skip:"Omite",done:"Gata",step:"Pasul {n} din {t}",
  m2:"În fiecare zi: perioada liturgică, praznicul sau sfântul și un verset. Cu «Distribuie» îl trimiți ca imagine.",
  m3:"Phos Premium: îl activezi și îl gestionezi prin Google Play.",m3p:"Phos Premium este activ. De aici îl gestionezi în Google Play.",
  m4:"Schimbă limba aplicației oricând vrei.",
- m5:"La final, pregătește-ți Phos-ul: mementouri, Calea Adevărului și planul de lectură. Totul este în Phos-ul meu.",goMine:"Mergi la Phos-ul meu",
+ m6:"Și nu uita: în Phos-ul meu ai «Ghidul complet Phos», care explică fiecare secțiune pas cu pas. Deschide-l oricând, mai ales dacă nu-ți amintești cum funcționează ceva.",goGuide:"Deschide ghidul",m5:"La final, pregătește-ți Phos-ul: mementouri, Calea Adevărului și planul de lectură. Totul este în Phos-ul meu.",goMine:"Mergi la Phos-ul meu",
  setupT:"Pregătește-ți Phos-ul",setupLead:"{n} din {t} pași făcuți",sNotif:"Alege mementourile",sVida:"Trasează-ți Calea Adevărului",sPlan:"Începe un plan de lectură",sAcct:"Conectează-te (opțional)",hide:"Ascunde",
  pend:"{n} în așteptare",msgNew:"{n} mesaj(e) nou(i)"}};
 const gt=(k,o)=>{let s=(GX[LANG]&&GX[LANG][k])||GX.en[k]||k;if(o)for(const x in o)s=s.replace('{'+x+'}',o[x]);return s};
@@ -118,7 +118,7 @@ const _storeSetG=store.set;store.set=function(k,v){_storeSetG.call(store,k,v);if
 
 // ===== Guía paso a paso =====
 function tourSteps(){return [
- {sel:'#menuBtn',k:'m1'},{sel:'#votd',k:'m2'},{sel:'#premBtn',k:isPremium()?'m3p':'m3'},{sel:'#langBtn',k:'m4'},{sel:null,k:'m5',mine:true}].filter(s=>!s.sel||document.querySelector(s.sel))}
+ {sel:'#menuBtn',k:'m1'},{sel:'#votd',k:'m2'},{sel:'#premBtn',k:isPremium()?'m3p':'m3'},{sel:'#langBtn',k:'m4'},{sel:null,k:'m5'},{sel:null,k:'m6',mine:true}].filter(s=>!s.sel||document.querySelector(s.sel))}
 function tour(i){
  const T=tourSteps();if(i>=T.length)return endTour(false);const s=T[i];
  let ov=$('#tour');if(!ov){ov=document.createElement('div');ov.id='tour';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');document.body.appendChild(ov)}
@@ -129,11 +129,11 @@ function tour(i){
  ov.innerHTML=`${ring||'<div class="tshade"></div>'}<div class="tbox" style="${pos==='center'?'top:50%;transform:translate(-50%,-50%)':pos}">
   <div class="note">${esc(gt('step',{n:i+1,t:T.length}))}</div><p>${esc(gt(s.k))}</p>
   <div class="tbtns"><button class="linkbtn" id="tSkip">${esc(gt('skip'))}</button>
-  ${s.mine?`<button class="btn ghost" id="tDone">${esc(gt('done'))}</button><button class="btn" id="tMine">${esc(gt('goMine'))}</button>`:`<button class="btn" id="tNext">${esc(gt('next'))}</button>`}</div></div>`;
+  ${s.mine?`<button class="btn ghost" id="tDone">${esc(gt('done'))}</button><button class="btn" id="tMine">${esc(gt('goGuide'))}</button>`:`<button class="btn" id="tNext">${esc(gt('next'))}</button>`}</div></div>`;
  $('#tSkip').onclick=()=>endTour(false);
  const n=$('#tNext');if(n)n.onclick=()=>tour(i+1);const d=$('#tDone');if(d)d.onclick=()=>endTour(false);const m=$('#tMine');if(m)m.onclick=()=>endTour(true);
 }
-function endTour(mine){store.set('tourDone',Date.now());const ov=$('#tour');if(ov)ov.remove();window.scrollTo(0,0);if(mine)go('mine',{sec:'mine'})}
+function endTour(mine){store.set('tourDone',Date.now());const ov=$('#tour');if(ov)ov.remove();window.scrollTo(0,0);if(mine){go('mine',{sec:'mine'});go('m_guide')}}
 function maybeTour(){if(store.get('tourDone',null)||$('#welcome')||$('#tour'))return;if(S.sec!=='today')go('today',{sec:'today'});setTimeout(()=>tour(0),500)}
 const _closeWelcomeG=closeWelcome;
 closeWelcome=function(){_closeWelcomeG();setTimeout(maybeTour,700)};

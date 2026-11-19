@@ -289,3 +289,8 @@ body.haslisten main{padding-bottom:96px}
 #view .card.main .note{color:#EBD9C9}
 #view .card.main .ed{color:#FBF3E2;border-color:rgba(251,243,226,.4);background:transparent}#view .card.main .ed b{color:inherit}
 [data-theme=dark] #view .card.main .t{color:#FBF3E2}
+/* Guía completa */
+.gsec{padding:0;overflow:hidden}.gsec summary{list-style:none;cursor:pointer;padding:16px;font-weight:700;font-size:18px;display:flex;align-items:center;gap:10px}
+.gsec summary::-webkit-details-marker{display:none}.gsec summary::after{content:'›';margin-left:auto;font-size:24px;transition:transform .2s;color:var(--muted)}
+.gsec[open] summary::after{transform:rotate(90deg)}.gsec>*:not(summary){margin-left:16px;margin-right:16px}.gsec .orarow{margin-bottom:16px}
+.gpr{background:rgba(226,194,122,.18);border-radius:12px;padding:10px 12px;margin-top:8px}.gpr0{margin-top:8px}
