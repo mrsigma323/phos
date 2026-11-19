@@ -59,7 +59,7 @@ const ORA_BK={ortodoxa:'o',catolica:'c',protestante:'p'};
 const oraBr=()=>{const v=store.get('oraBr',null);return ['o','c','p','all'].includes(v)?v:(ORA_BK[tdBr()]||'o')};
 const oraFav=()=>store.get('oraFav',[]);
 const oraL=o=>o&&(o[LANG]||o.en||o.es)||'';
-const oraFb=p=>!p.k&&LANG!=='es'&&LANG!=='en';
+const oraFb=p=>!p.k&&!(p.x&&p.x[LANG])&&LANG!=='es'&&LANG!=='en';
 function oraTitle(p){if(p.t[LANG])return p.t[LANG];if(p.k){try{const n=p.k==='ourf'?null:prName(p.k);if(n)return n}catch(e){}}return p.t.en}
 function oraText(p){if(p.k){try{return p.k==='ourf'?(OURF[LANG]||OURF.en):(prText(p.k)||'')}catch(e){return ''}}return oraL(p.x)}
 const oraNorm=s=>(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');

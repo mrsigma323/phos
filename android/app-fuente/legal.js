@@ -140,34 +140,48 @@ es:{legal:'Documentos legales',legalL:'Privacidad, condiciones, Camino, salud y 
  note:'',wipe:'Borrar mis datos',wipeL:'Elimina todo lo guardado en este móvil',wipeQ:'Se borrarán preferencias, progreso, vidas, Camino, Salud, documentos y registro. Las compras no se pierden: Premium se recupera desde Google Play. Pulsa otra vez para confirmar.',wipeOk:'Datos borrados',
  hTitle:'Antes de empezar',hLead:'El contenido de salud, ejercicio y ayuno es orientativo y no sustituye a un profesional sanitario.',hOk:'Entendido',hRead:'Leer el aviso completo'},
 en:{legal:'Legal documents',legalL:'Privacy, terms, the Way, health and deletion',back:'‹ Back',ver:'Version',web:'View on the web',share:'Share',sign:'Identification of the content creator',
- note:'These documents are in Spanish, the version that prevails. A translation is on its way.',wipe:'Delete my data',wipeL:'Removes everything stored on this phone',wipeQ:'Preferences, progress, lives, the Way, Health, documents and log will be deleted. Purchases are not lost: Premium is restored from Google Play. Tap again to confirm.',wipeOk:'Data deleted',
+ note:'Translation for information. If there is any doubt, the Spanish version prevails.',wipe:'Delete my data',wipeL:'Removes everything stored on this phone',wipeQ:'Preferences, progress, lives, the Way, Health, documents and log will be deleted. Purchases are not lost: Premium is restored from Google Play. Tap again to confirm.',wipeOk:'Data deleted',
  hTitle:'Before you start',hLead:'Health, exercise and fasting content is for guidance only and does not replace a health professional.',hOk:'Got it',hRead:'Read the full notice'},
 pt:{legal:'Documentos legais',legalL:'Privacidade, condições, Caminho, saúde e eliminação',back:'‹ Voltar',ver:'Versão',web:'Ver na web',share:'Partilhar',sign:'Identificação do criador de conteúdo',
- note:'Estes documentos estão em espanhol, a versão que prevalece. A tradução está a caminho.',wipe:'Apagar os meus dados',wipeL:'Elimina tudo o que está guardado neste telemóvel',wipeQ:'Serão apagados preferências, progresso, vidas, Caminho, Saúde, documentos e registo. As compras não se perdem: o Premium recupera-se no Google Play. Toque outra vez para confirmar.',wipeOk:'Dados apagados',
+ note:'Tradução informativa. Em caso de dúvida, prevalece a versão em espanhol.',wipe:'Apagar os meus dados',wipeL:'Elimina tudo o que está guardado neste telemóvel',wipeQ:'Serão apagados preferências, progresso, vidas, Caminho, Saúde, documentos e registo. As compras não se perdem: o Premium recupera-se no Google Play. Toque outra vez para confirmar.',wipeOk:'Dados apagados',
  hTitle:'Antes de começar',hLead:'O conteúdo de saúde, exercício e jejum é orientativo e não substitui um profissional de saúde.',hOk:'Entendido',hRead:'Ler o aviso completo'},
 fr:{legal:'Documents légaux',legalL:'Confidentialité, conditions, Chemin, santé et suppression',back:'‹ Retour',ver:'Version',web:'Voir sur le web',share:'Partager',sign:'Identification du créateur de contenu',
- note:'Ces documents sont en espagnol, la version qui fait foi. Une traduction arrive bientôt.',wipe:'Supprimer mes données',wipeL:'Efface tout ce qui est enregistré sur ce téléphone',wipeQ:'Préférences, progression, vies, Chemin, Santé, documents et journal seront supprimés. Les achats ne sont pas perdus : Premium se restaure depuis Google Play. Touchez encore pour confirmer.',wipeOk:'Données supprimées',
+ note:'Traduction à titre informatif. En cas de doute, la version espagnole fait foi.',wipe:'Supprimer mes données',wipeL:'Efface tout ce qui est enregistré sur ce téléphone',wipeQ:'Préférences, progression, vies, Chemin, Santé, documents et journal seront supprimés. Les achats ne sont pas perdus : Premium se restaure depuis Google Play. Touchez encore pour confirmer.',wipeOk:'Données supprimées',
  hTitle:'Avant de commencer',hLead:'Les contenus sur la santé, l’exercice et le jeûne sont indicatifs et ne remplacent pas un professionnel de santé.',hOk:'J’ai compris',hRead:'Lire l’avis complet'},
 it:{legal:'Documenti legali',legalL:'Privacy, condizioni, Cammino, salute e cancellazione',back:'‹ Indietro',ver:'Versione',web:'Vedi sul web',share:'Condividi',sign:'Identificazione del creatore di contenuti',
- note:'Questi documenti sono in spagnolo, la versione che prevale. La traduzione è in arrivo.',wipe:'Cancella i miei dati',wipeL:'Elimina tutto ciò che è salvato su questo telefono',wipeQ:'Verranno cancellati preferenze, progressi, vite, Cammino, Salute, documenti e registro. Gli acquisti non si perdono: Premium si ripristina da Google Play. Tocca di nuovo per confermare.',wipeOk:'Dati cancellati',
+ note:'Traduzione a scopo informativo. In caso di dubbio, prevale la versione in spagnolo.',wipe:'Cancella i miei dati',wipeL:'Elimina tutto ciò che è salvato su questo telefono',wipeQ:'Verranno cancellati preferenze, progressi, vite, Cammino, Salute, documenti e registro. Gli acquisti non si perdono: Premium si ripristina da Google Play. Tocca di nuovo per confermare.',wipeOk:'Dati cancellati',
  hTitle:'Prima di iniziare',hLead:'I contenuti su salute, esercizio e digiuno sono orientativi e non sostituiscono un professionista sanitario.',hOk:'Ho capito',hRead:'Leggi l’avviso completo'},
 de:{legal:'Rechtliche Dokumente',legalL:'Datenschutz, Bedingungen, Weg, Gesundheit und Löschung',back:'‹ Zurück',ver:'Version',web:'Im Web ansehen',share:'Teilen',sign:'Angaben zum Inhaltsersteller',
- note:'Diese Dokumente sind auf Spanisch, der maßgeblichen Fassung. Eine Übersetzung folgt.',wipe:'Meine Daten löschen',wipeL:'Entfernt alles, was auf diesem Handy gespeichert ist',wipeQ:'Einstellungen, Fortschritt, Leben, Weg, Gesundheit, Dokumente und Protokoll werden gelöscht. Käufe gehen nicht verloren: Premium wird über Google Play wiederhergestellt. Zum Bestätigen erneut tippen.',wipeOk:'Daten gelöscht',
+ note:'Übersetzung zur Information. Im Zweifel ist die spanische Fassung maßgeblich.',wipe:'Meine Daten löschen',wipeL:'Entfernt alles, was auf diesem Handy gespeichert ist',wipeQ:'Einstellungen, Fortschritt, Leben, Weg, Gesundheit, Dokumente und Protokoll werden gelöscht. Käufe gehen nicht verloren: Premium wird über Google Play wiederhergestellt. Zum Bestätigen erneut tippen.',wipeOk:'Daten gelöscht',
  hTitle:'Bevor du beginnst',hLead:'Inhalte zu Gesundheit, Bewegung und Fasten dienen nur zur Orientierung und ersetzen keine Fachperson.',hOk:'Verstanden',hRead:'Ganzen Hinweis lesen'},
 el:{legal:'Νομικά έγγραφα',legalL:'Απόρρητο, όροι, Οδός, υγεία και διαγραφή',back:'‹ Πίσω',ver:'Έκδοση',web:'Δες το στο διαδίκτυο',share:'Κοινοποίηση',sign:'Στοιχεία του δημιουργού περιεχομένου',
- note:'Τα έγγραφα είναι στα ισπανικά, που είναι η έκδοση που υπερισχύει. Η μετάφραση έρχεται σύντομα.',wipe:'Διαγραφή των δεδομένων μου',wipeL:'Σβήνει ό,τι είναι αποθηκευμένο σε αυτό το κινητό',wipeQ:'Θα διαγραφούν προτιμήσεις, πρόοδος, ζωές, Οδός, Υγεία, έγγραφα και αρχείο. Οι αγορές δεν χάνονται: το Premium επανέρχεται από το Google Play. Πάτα ξανά για επιβεβαίωση.',wipeOk:'Τα δεδομένα διαγράφηκαν',
+ note:'Μετάφραση για ενημέρωση. Σε περίπτωση αμφιβολίας, υπερισχύει η ισπανική έκδοση.',wipe:'Διαγραφή των δεδομένων μου',wipeL:'Σβήνει ό,τι είναι αποθηκευμένο σε αυτό το κινητό',wipeQ:'Θα διαγραφούν προτιμήσεις, πρόοδος, ζωές, Οδός, Υγεία, έγγραφα και αρχείο. Οι αγορές δεν χάνονται: το Premium επανέρχεται από το Google Play. Πάτα ξανά για επιβεβαίωση.',wipeOk:'Τα δεδομένα διαγράφηκαν',
  hTitle:'Πριν ξεκινήσεις',hLead:'Το περιεχόμενο για υγεία, άσκηση και νηστεία είναι ενδεικτικό και δεν αντικαθιστά έναν επαγγελματία υγείας.',hOk:'Κατάλαβα',hRead:'Διάβασε όλη την ενημέρωση'},
 ru:{legal:'Юридические документы',legalL:'Конфиденциальность, условия, Путь, здоровье и удаление',back:'‹ Назад',ver:'Версия',web:'Открыть на сайте',share:'Поделиться',sign:'Данные автора контента',
- note:'Документы на испанском языке — эта версия имеет приоритет. Перевод скоро появится.',wipe:'Удалить мои данные',wipeL:'Удаляет всё, что сохранено на этом телефоне',wipeQ:'Будут удалены настройки, прогресс, жизни, Путь, Здоровье, документы и журнал. Покупки не пропадут: Premium восстанавливается через Google Play. Нажмите ещё раз для подтверждения.',wipeOk:'Данные удалены',
+ note:'Перевод для информации. В случае сомнений преимущественную силу имеет испанская версия.',wipe:'Удалить мои данные',wipeL:'Удаляет всё, что сохранено на этом телефоне',wipeQ:'Будут удалены настройки, прогресс, жизни, Путь, Здоровье, документы и журнал. Покупки не пропадут: Premium восстанавливается через Google Play. Нажмите ещё раз для подтверждения.',wipeOk:'Данные удалены',
  hTitle:'Перед началом',hLead:'Материалы о здоровье, упражнениях и посте носят ознакомительный характер и не заменяют врача.',hOk:'Понятно',hRead:'Прочитать полностью'},
 ro:{legal:'Documente legale',legalL:'Confidențialitate, condiții, Cale, sănătate și ștergere',back:'‹ Înapoi',ver:'Versiune',web:'Vezi pe web',share:'Distribuie',sign:'Identificarea creatorului de conținut',
- note:'Documentele sunt în spaniolă, versiunea care prevalează. Traducerea vine în curând.',wipe:'Șterge datele mele',wipeL:'Elimină tot ce este salvat pe acest telefon',wipeQ:'Se vor șterge preferințele, progresul, viețile, Calea, Sănătatea, documentele și jurnalul. Cumpărăturile nu se pierd: Premium se restabilește din Google Play. Apasă din nou pentru a confirma.',wipeOk:'Date șterse',
+ note:'Traducere informativă. În caz de îndoială, prevalează versiunea în spaniolă.',wipe:'Șterge datele mele',wipeL:'Elimină tot ce este salvat pe acest telefon',wipeQ:'Se vor șterge preferințele, progresul, viețile, Calea, Sănătatea, documentele și jurnalul. Cumpărăturile nu se pierd: Premium se restabilește din Google Play. Apasă din nou pentru a confirma.',wipeOk:'Date șterse',
  hTitle:'Înainte de a începe',hLead:'Conținutul despre sănătate, mișcare și post este orientativ și nu înlocuiește un specialist.',hOk:'Am înțeles',hRead:'Citește avertismentul complet'}
 };
 function lgx(k){const T=LGX[typeof LANG!=='undefined'&&LGX[LANG]?LANG:'en']||LGX.es;return T[k]!=null&&T[k]!==''?T[k]:(LGX.es[k]||'')}
 
-function legalSign(){const I=(typeof LEGAL_ID!=='undefined'&&LEGAL_ID)||{};const p=['Creador de contenido de Phos: '+(I.name||'')];
- if(I.nif)p.push('NIF '+I.nif);if(I.dom)p.push('domicilio '+I.dom);if(I.mail)p.push('contacto '+I.mail);return p.join(' · ')}
+// Traducciones de los documentos (LEGAL_TR[idioma][id]=[título, texto]); el español prevalece
+const LEGAL_TR={};
+const LGSW={es:['Creador de contenido de Phos','NIF','domicilio','contacto','Ver el original en español','Ver la traducción'],
+ en:['Content creator of Phos','Tax ID (NIF)','address','contact','View the Spanish original','View the translation'],
+ pt:['Criador de conteúdo do Phos','NIF','morada','contacto','Ver o original em espanhol','Ver a tradução'],
+ fr:['Créateur de contenu de Phos','NIF','adresse','contact','Voir l’original en espagnol','Voir la traduction'],
+ it:['Creatore di contenuti di Phos','NIF','indirizzo','contatto','Vedi l’originale in spagnolo','Vedi la traduzione'],
+ de:['Inhaltsersteller von Phos','Steuernummer (NIF)','Anschrift','Kontakt','Spanisches Original ansehen','Übersetzung ansehen'],
+ el:['Δημιουργός περιεχομένου του Phos','ΑΦΜ (NIF)','διεύθυνση','επικοινωνία','Δες το ισπανικό πρωτότυπο','Δες τη μετάφραση'],
+ ru:['Создатель контента Phos','NIF','адрес','контакт','Открыть оригинал на испанском','Открыть перевод'],
+ ro:['Creatorul de conținut al Phos','NIF','adresă','contact','Vezi originalul în spaniolă','Vezi traducerea']};
+let LG_ORIG=false;
+const lsw=i=>(LGSW[typeof LANG!=='undefined'&&LGSW[LANG]?LANG:'es'])[i];
+function ldoc(d){if(LG_ORIG||typeof LANG==='undefined')return d;const r=LEGAL_TR[LANG]&&LEGAL_TR[LANG][d.id];return r?Object.assign({},d,{t:r[0],b:r[1]}):d}
+function legalSign(){const I=(typeof LEGAL_ID!=='undefined'&&LEGAL_ID)||{};const p=[lsw(0)+': '+(I.name||'')];
+ if(I.nif)p.push(lsw(1)+' '+I.nif);if(I.dom)p.push(lsw(2)+' '+I.dom);if(I.mail)p.push(lsw(3)+' '+I.mail);return p.join(' · ')}
 function legalHTML(d){let h='',list=null;const close=()=>{if(list){h+=`</${list}>`;list=null}};
  d.b.trim().split('\n').forEach(l=>{l=l.trim();if(!l)return;
   if(l.startsWith('## ')){close();h+=`<h3 class="lgh">${esc(l.slice(3))}</h3>`}
@@ -178,13 +192,14 @@ function legalText(d){return d.t+'\n'+lgx('ver')+' '+LEGAL_VER+'\n\n'+d.b.trim()
 
 // Se abre dentro del diálogo Info
 function legalOpen(id){const dlg=$('#info'),body=$('#infoBody');if(!dlg||!body)return;
- const d=LEGAL_DOCS.find(x=>x.id===id);const n=lgx('note');
+ const d0=LEGAL_DOCS.find(x=>x.id===id),d=d0&&ldoc(d0),tr=!!(typeof LANG!=='undefined'&&LEGAL_TR[LANG]);const n=tr&&!LG_ORIG?lgx('note'):'';
  if(!d){$('#infoTitle').textContent='⚖️ '+lgx('legal');
-  body.innerHTML=(n?`<p class="note">${esc(n)}</p>`:'')+LEGAL_DOCS.map(x=>`<button class="card rcard lgc" data-lg="${x.id}"><div class="t"><span class="rico">${x.ico}</span>${esc(x.t)}</div></button>`).join('')+`<p class="note">${esc(lgx('ver'))} ${esc(LEGAL_VER)}</p>`;
+  body.innerHTML=(n?`<p class="note">${esc(n)}</p>`:'')+LEGAL_DOCS.map(ldoc).map(x=>`<button class="card rcard lgc" data-lg="${x.id}"><div class="t"><span class="rico">${x.ico}</span>${esc(x.t)}</div></button>`).join('')+`<p class="note">${esc(lgx('ver'))} ${esc(LEGAL_VER)}</p>`;
   body.querySelectorAll('[data-lg]').forEach(b=>b.onclick=()=>legalOpen(b.dataset.lg))}
  else{$('#infoTitle').textContent=d.ico+' '+d.t;
   body.innerHTML=`<button class="btn ghost lgb" id="lgBack">${esc(lgx('back'))}</button>${n?`<p class="note">${esc(n)}</p>`:''}<p class="note">${esc(lgx('ver'))} ${esc(LEGAL_VER)}</p><div class="lgdoc">${legalHTML(d)}<p class="lgs"><b>${esc(lgx('sign'))}</b><br>${esc(legalSign())}</p></div>
-  <button class="btn" id="lgShare" style="width:100%;margin-top:10px">${esc(lgx('share'))}</button>${d.url?`<button class="btn ghost" id="lgWeb" style="width:100%;margin-top:10px">${esc(lgx('web'))}</button>`:''}`;
+  <button class="btn" id="lgShare" style="width:100%;margin-top:10px">${esc(lgx('share'))}</button>${d.url?`<button class="btn ghost" id="lgWeb" style="width:100%;margin-top:10px">${esc(lgx('web'))}</button>`:''}${tr?`<button class="btn ghost" id="lgOrig" style="width:100%;margin-top:10px">${esc(lsw(LG_ORIG?5:4))}</button>`:''}`;
+  if($('#lgOrig'))$('#lgOrig').onclick=()=>{LG_ORIG=!LG_ORIG;legalOpen(id)};
   $('#lgBack').onclick=()=>legalOpen();$('#lgShare').onclick=()=>shareText(legalText(d));
   if($('#lgWeb'))$('#lgWeb').onclick=()=>{const a=document.createElement('a');a.href=d.url;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove()};
   body.scrollTop=0;dlg.scrollTop=0}
