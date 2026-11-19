@@ -10,6 +10,14 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebResourceRequest;
@@ -32,15 +40,45 @@ public class MainActivity extends Activity {
     TextToSpeech tts;
     boolean ttsReady = false;
     Billing billing;
+    View topPad, botPad;
+    static final int WINE = 0xFF4A1416, CREAM = 0xFFF6F1E7, DARK = 0xFF17110F;
 
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
-        getWindow().setStatusBarColor(Color.rgb(74, 20, 22));
-        getWindow().setNavigationBarColor(Color.rgb(246, 241, 231));
+        // Pantalla completa controlada: desde Android 15 el sistema dibuja la app bajo las barras
+        // (de estado y de navegación). Reservamos su espacio con dos franjas de color para que
+        // ningún botón quede tapado, en todas las versiones y con gestos o con botones.
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        getWindow().setStatusBarColor(Color.TRANSPARENT);
+        getWindow().setNavigationBarColor(Color.TRANSPARENT);
+        if (Build.VERSION.SDK_INT >= 29) { getWindow().setNavigationBarContrastEnforced(false); getWindow().setStatusBarContrastEnforced(false); }
+        if (Build.VERSION.SDK_INT >= 28) {
+            WindowManager.LayoutParams lp = getWindow().getAttributes();
+            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            getWindow().setAttributes(lp);
+        }
+        LinearLayout root = new LinearLayout(this);
+        root.setOrientation(LinearLayout.VERTICAL);
+        root.setBackgroundColor(WINE);
+        topPad = new View(this); topPad.setBackgroundColor(WINE);
+        botPad = new View(this);
         web = new WebView(this);
-        web.setBackgroundColor(0xFF4A1416); // mismo vino que la pantalla de carga: sin destello blanco
-        setContentView(web);
+        web.setBackgroundColor(WINE); // mismo vino que la pantalla de carga: sin destello blanco
+        root.addView(topPad, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0));
+        root.addView(web, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f));
+        root.addView(botPad, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0));
+        setContentView(root);
+        setBars(false);
+        ViewCompat.setOnApplyWindowInsetsListener(root, (v, ins) -> {
+            Insets sb = ins.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+            Insets kb = ins.getInsets(WindowInsetsCompat.Type.ime());
+            v.setPadding(sb.left, 0, sb.right, 0);
+            topPad.getLayoutParams().height = sb.top;
+            botPad.getLayoutParams().height = Math.max(sb.bottom, kb.bottom);
+            topPad.requestLayout(); botPad.requestLayout();
+            return WindowInsetsCompat.CONSUMED;
+        });
         WebSettings s = web.getSettings();
         s.setJavaScriptEnabled(true);
         s.setDomStorageEnabled(true);
@@ -119,6 +157,10 @@ public class MainActivity extends Activity {
     }
 
     class Bridge {
+        // ---------- Tema: color de la franja inferior del sistema ----------
+        @JavascriptInterface
+        public void setTheme(boolean dark) { runOnUiThread(() -> setBars(dark)); }
+
         // ---------- Voz ----------
         @JavascriptInterface
         public void speak(String text, String lang) {
@@ -211,4 +253,14 @@ public class MainActivity extends Activity {
         if (web != null) web.destroy();
         super.onDestroy();
     }
+    /** Colores de las franjas del sistema según el tema de la app (claro u oscuro). */
+    void setBars(boolean dark) {
+        // Antes de Android 8 los iconos de la barra de navegación son siempre blancos: franja oscura.
+        boolean lightNav = !dark && Build.VERSION.SDK_INT >= 26;
+        botPad.setBackgroundColor(dark ? DARK : (lightNav ? CREAM : WINE));
+        WindowInsetsControllerCompat c = WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+        c.setAppearanceLightStatusBars(false);
+        c.setAppearanceLightNavigationBars(lightNav);
+    }
+
 }

@@ -13,7 +13,7 @@ ro:["Versetul zilei","Plan de lectură: Biblia într-un an","Ziua {n} din 365","
 for(const l in T3)T3K.forEach((k,i)=>T[l][k]=T3[l][i]);
 
 // ---------- Modo noche ----------
-function applyTheme(){const m=store.get('theme','auto');document.documentElement.dataset.theme=m==='auto'?(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):m}
+function applyTheme(){const m=store.get('theme','auto');document.documentElement.dataset.theme=m==='auto'?(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):m;try{if(window.PhosApp&&PhosApp.setTheme)PhosApp.setTheme(document.documentElement.dataset.theme==='dark')}catch(e){}}
 (function(){const b=document.createElement('button');b.className='iconbtn';b.id='themeBtn';
  b.innerHTML='<svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg>';
  const lb=$('#langBtn');lb.parentNode.insertBefore(b,lb);

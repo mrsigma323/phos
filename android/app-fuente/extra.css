@@ -260,3 +260,8 @@
 .orata{width:100%;box-sizing:border-box;padding:12px;border-radius:12px;border:1.5px solid var(--line);font:inherit;font-size:16px;line-height:1.5;background:#fff;color:var(--ink)}
 [data-theme=dark] .orarow .chip,[data-theme=dark] .oraq,[data-theme=dark] .orasort select,[data-theme=dark] .orata{background:var(--paper);color:var(--ink);border-color:var(--line)}
 [data-theme=dark] .orarow .chip[aria-pressed="true"]{background:#E2C27A;color:#2A0E10;border-color:#E2C27A}
+/* La barra «Escuchar» flota abajo: dejamos sitio para que no tape «Anterior / Siguiente» */
+body.haslisten main{padding-bottom:96px}
+.listenbar>*{flex:0 1 auto;min-width:0}
+.listenbar .lbtn{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.listenbar>*:not(:first-child){flex-shrink:0}
