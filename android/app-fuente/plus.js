@@ -142,10 +142,10 @@ function split(list,n){const out=[];for(let d=0;d<n;d++)out.push(list.slice(Math
 function planDays(id){
  const ed=planEd();const all=c=>chsOf(ed,c).map(ch=>[c,ch]);
  if(id==='year')return split(bookMeta(ed).books.flatMap(b=>all(b.c)),365);
- if(id==='gospels')return split(['MAT','MRK','LUK','JOH'].flatMap(all),40);
+ if(id==='gospels')return split(['MAT','MAR','LUK','JOH'].flatMap(all),40);
  if(id==='psalms')return split(all('PSA'),30);
  if(id==='advent')return [...Array(20)].map((_,k)=>[['ISA',String(40+k)]]).concat([[['MAT','1']],[['LUK','1']],[['JOH','1']],[['LUK','2']]]);
- if(id==='lent')return [[['PSA',psa(ed,51)]]].concat(all('MRK').map(x=>[x]),[15,16,17,18,19,20,21].map(n=>[['LUK',String(n)]]),[6,32,38,102,130,143].map(n=>[['PSA',psa(ed,n)]]),[12,13,14,15,16,17,18,19,20,21].map(n=>[['JOH',String(n)]]));
+ if(id==='lent')return [[['PSA',psa(ed,51)]]].concat(all('MAR').map(x=>[x]),[15,16,17,18,19,20,21].map(n=>[['LUK',String(n)]]),[6,32,38,102,130,143].map(n=>[['PSA',psa(ed,n)]]),[12,13,14,15,16,17,18,19,20,21].map(n=>[['JOH',String(n)]]));
  return [];
 }
 const planSt=()=>store.get('plans',{});

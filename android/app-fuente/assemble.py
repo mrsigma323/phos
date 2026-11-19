@@ -40,7 +40,7 @@ else:
     js = r("errlog.js") + "\n" + "\n".join(r(f) for f in parts)
     js += "\n" + r("app.js").replace("__VIVLOS__", r("vivlos.json"))
     js += "\n" + r("sections.js")
-    rest = ["features.js"] + LEARN_FILES + OTHER + ["mejoras_i18n.js", "premium_i18n.js", "premium.js", "plus_i18n.js", "retos_data.js", "retos.js", "plus.js", "vida.js", "welcome.js", "mejoras.js", "guia.js", "vidas.js", "focus.js", "nivel.js", "nivel2.js", "nivel3.js", "tr_base.js", "tr_pt.js", "tr_fr.js", "tr_it.js", "tr_de.js", "tr_el.js", "tr_ru.js", "tr_ro.js", "tr_apply.js", "simbolos.js", "docs.js", "libros_extra_data.js", "libros_ui.js", "vida2.js", "vida2_tr.js", "errlog_ui.js", "legal_id.js", "legal.js", "oraciones_data.js", "oraciones.js"]
+    rest = ["features.js"] + LEARN_FILES + OTHER + ["mejoras_i18n.js", "premium_i18n.js", "premium.js", "plus_i18n.js", "retos_data.js", "retos.js", "plus.js", "vida.js", "welcome.js", "mejoras.js", "guia.js", "vidas.js", "focus.js", "nivel.js", "nivel2.js", "nivel3.js", "tr_base.js", "tr_pt.js", "tr_fr.js", "tr_it.js", "tr_de.js", "tr_el.js", "tr_ru.js", "tr_ro.js", "tr_apply.js", "simbolos.js", "docs.js", "libros_extra_data.js", "libros_ui.js", "vida2.js", "vida2_tr.js", "errlog_ui.js", "legal_id.js", "legal.js", "oraciones_data.js", "oraciones.js", "lectura.js"]
 for f in rest:
     if os.path.exists(D + f): js += "\n" + r(f)
 if WEB:
