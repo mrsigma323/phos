@@ -150,3 +150,16 @@ const REFL={"ref":{"rest":[[["GEN",2,1,3],["EXO",20,8,11]],[["DEU",5,12,15],["MA
 const VOTD="JOH 3:16|PSA 23:1|PHI 4:13|ROM 8:28|PRO 3:5|ISA 41:10|MAT 11:28|JER 29:11|1CO 13:4|PSA 46:1|MAT 5:9|JOH 14:6|ROM 12:12|GAL 5:22|HEB 11:1|1JO 4:8|PSA 119:105|MAT 6:33|ISA 40:31|JOS 1:9|PSA 27:1|JOH 1:1|MAT 5:3|LUK 6:31|2TI 1:7|JAM 1:5|PSA 34:8|ROM 5:8|EPH 2:8|COL 3:23|1PE 5:7|PSA 37:4|PRO 16:3|MIC 6:8|MAT 22:37|JOH 15:13|ROM 15:13|PSA 121:1|LAM 3:22|2CO 5:17".split('|');
 
 const BN={"GEN":"Génesis","EXO":"Éxodo","LEV":"Levítico","NUM":"Números","DEU":"Deuteronomio","JOS":"Josué","JDG":"Jueces","RUT":"Rut","1SA":"1 Samuel","2SA":"2 Samuel","1KI":"1 Reyes","2KI":"2 Reyes","1CH":"1 Crónicas","2CH":"2 Crónicas","EZR":"Esdras","NEH":"Nehemías","EST":"Ester","JOB":"Job","PSA":"Salmos","PRO":"Proverbios","ECC":"Eclesiastés","SOL":"Cantar de los Cantares","ISA":"Isaías","JER":"Jeremías","LAM":"Lamentaciones","EZE":"Ezequiel","DAN":"Daniel","HOS":"Oseas","JOE":"Joel","AMO":"Amós","OBA":"Abdías","JON":"Jonás","MIC":"Miqueas","NAH":"Nahúm","HAB":"Habacuc","ZEP":"Sofonías","HAG":"Ageo","ZEC":"Zacarías","MAL":"Malaquías","TOB":"Tobías","JDT":"Judit","ESG":"Ester","WIS":"Sabiduría","SIR":"Sirácida (Eclesiástico)","BAR":"Baruc","EPJ":"Carta de Jeremías","PRA":"Oración de Azarías","SUS":"Susana","BEL":"Bel y el dragón","1MA":"1 Macabeos","2MA":"2 Macabeos","3MA":"3 Macabeos","1ES":"1 Esdras","4ES":"Esdras","DNG":"Daniel","MAT":"Mateo","MAR":"Marcos","LUK":"Lucas","JOH":"Juan","ACT":"Hechos","ROM":"Romanos","1CO":"1 Corintios","2CO":"2 Corintios","GAL":"Gálatas","EPH":"Efesios","PHI":"Filipenses","COL":"Colosenses","1TH":"1 Tesalonicenses","2TH":"2 Tesalonicenses","1TI":"1 Timoteo","2TI":"2 Timoteo","TIT":"Tito","PHM":"Filemón","HEB":"Hebreos","JAM":"Santiago","1PE":"1 Pedro","2PE":"2 Pedro","1JO":"1 Juan","2JO":"2 Juan","3JO":"3 Juan","JUD":"Judas","REV":"Apocalipsis"};
+// Aviso discreto de la prueba de la app en todas las páginas (se cierra con la cruz y no vuelve en 7 días)
+(function(){
+ const GRUPO='https://groups.google.com/g/phos-alpha-testers';
+ const init=()=>{
+  if(store.get('appBarHasta',0)>Date.now()||document.getElementById('appPrueba'))return;
+  const h=document.querySelector('header.top');if(!h)return;
+  const bar=document.createElement('div');bar.className='beta';bar.id='appPrueba';bar.setAttribute('role','note');
+  bar.innerHTML='<p>📱 <b>La app de Phos ya está en prueba para Android.</b> Sé de los primeros en usarla: <a href="'+GRUPO+'" target="_blank" rel="noopener">únete a los testers →</a></p><button type="button" class="betax" aria-label="Cerrar aviso">×</button>';
+  h.before(bar);
+  bar.querySelector('button').onclick=()=>{store.set('appBarHasta',Date.now()+7*864e5);bar.remove()};
+ };
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
